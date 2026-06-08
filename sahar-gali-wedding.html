@@ -228,6 +228,8 @@ footer{background:#080402;text-align:center;padding:56px 20px;}
 .file-row:last-child{border-bottom:none;}
 .file-icon-box{width:36px;height:36px;background:rgba(196,154,60,.1);border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:16px;}
 .file-name{flex:1;font-size:13px;color:var(--cream);}
+.file-name a{color:var(--gold);text-decoration:none;}
+.file-name a:hover{text-decoration:underline;}
 .file-meta{font-size:11px;color:var(--stone);}
 
 /* content editor */
@@ -1085,8 +1087,9 @@ function refreshFiles(){
   document.getElementById('fileList').innerHTML=files.length===0?`<p style="color:var(--stone);font-size:13px;">אין קבצים עדיין</p>`:
     files.map((f,i)=>`<div class="file-row">
       <div class="file-icon-box">${getFileIcon(f.name)}</div>
-      <div class="file-name">${f.name}</div>
-      <div class="file-meta">${f.size} · ${f.date}</div>
+      <div class="file-name">${f.data?`<a href="#" onclick="openFile(${i});return false;">${f.name}</a>`:f.name}</div>
+      <div class="file-meta">${f.size} · ${f.date}${f.data?'':' · <span style="color:#E07070">יש להעלות מחדש</span>'}</div>
+      ${f.data?`<button class="adm-btn adm-btn-sm" onclick="openFile(${i})">פתיחה</button><button class="adm-btn adm-btn-sm" onclick="downloadFile(${i})">הורדה</button>`:''}
       <button class="adm-btn adm-btn-sm adm-btn-red" onclick="removeFile(${i})">✕</button>
     </div>`).join('');
 }
@@ -1100,10 +1103,29 @@ function getFileIcon(n){
 }
 function handleFiles(fileList){
   const files=get(LS.files);
-  Array.from(fileList).forEach(f=>{
-    files.push({name:f.name,size:formatSize(f.size),date:new Date().toLocaleDateString('he-IL')});
+  const pending=Array.from(fileList);
+  if(!pending.length)return;
+  let done=0;
+  pending.forEach(f=>{
+    const reader=new FileReader();
+    reader.onload=e=>{
+      files.push({name:f.name,size:formatSize(f.size),date:new Date().toLocaleDateString('he-IL'),type:f.type||'',data:e.target.result});
+      if(++done===pending.length){set(LS.files,files);refreshFiles();}
+    };
+    reader.onerror=()=>{if(++done===pending.length){set(LS.files,files);refreshFiles();}};
+    reader.readAsDataURL(f);
   });
-  set(LS.files,files);refreshFiles();
+}
+function openFile(i){
+  const f=get(LS.files)[i];
+  if(!f?.data){alert('הקובץ נשמר רק כשם. מחק והעלה אותו מחדש כדי לפתוח.');return;}
+  window.open(f.data,'_blank');
+}
+function downloadFile(i){
+  const f=get(LS.files)[i];
+  if(!f?.data)return;
+  const a=document.createElement('a');
+  a.href=f.data;a.download=f.name;a.click();
 }
 function formatSize(b){if(b<1024)return b+'B';if(b<1048576)return Math.round(b/1024)+'KB';return (b/1048576).toFixed(1)+'MB';}
 function removeFile(i){const f=get(LS.files);f.splice(i,1);set(LS.files,f);refreshFiles();}
