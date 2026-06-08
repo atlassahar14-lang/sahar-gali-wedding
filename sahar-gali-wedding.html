@@ -502,6 +502,7 @@ footer{background:#080402;text-align:center;padding:56px 20px;}
     <button class="adm-tab active" onclick="switchTab('guests')">👥 אורחים</button>
     <button class="adm-tab" onclick="switchTab('rooms')">🏠 חילוק חדרים</button>
     <button class="adm-tab" onclick="switchTab('transfers')">🚐 הסעות</button>
+    <button class="adm-tab" onclick="switchTab('suppliers')">🤝 ספקים</button>
     <button class="adm-tab" onclick="switchTab('budget')">💰 תקציב</button>
     <button class="adm-tab" onclick="switchTab('tasks')">✅ משימות</button>
     <button class="adm-tab" onclick="switchTab('files')">📁 קבצים</button>
@@ -590,6 +591,57 @@ footer{background:#080402;text-align:center;padding:56px 20px;}
           <table class="adm-table">
             <thead><tr><th>שם</th><th>טלפון</th><th>מגיעים</th><th>מאיפה</th><th>ימים</th><th>בקשות</th></tr></thead>
             <tbody id="transferTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUPPLIERS -->
+    <div class="adm-panel" id="panel-suppliers">
+      <div class="adm-section-title">ניהול ספקים</div>
+      <div class="stats-row" id="supplierStats"></div>
+      <div class="adm-card">
+        <h3>הוספת ספק</h3>
+        <div class="adm-row">
+          <input class="adm-input" id="s-name" placeholder="שם איש קשר">
+          <input class="adm-input" id="s-company" placeholder="שם העסק / חברה">
+          <select class="adm-input" id="s-cat" style="max-width:170px;">
+            <option>צלם / וידאו</option><option>קייטרינג / שף</option><option>פרחים</option>
+            <option>מוזיקה / DJ</option><option>עיצוב / דקור</option><option>איפור / שיער</option>
+            <option>שמלה / חליפה</option><option>הסעות</option><option>וילה / אירוח</option>
+            <option>רב / טקס</option><option>אחר</option>
+          </select>
+          <input class="adm-input" id="s-phone" placeholder="טלפון" style="max-width:140px;direction:ltr;">
+          <input class="adm-input" id="s-email" placeholder="אימייל" style="direction:ltr;">
+        </div>
+        <div class="adm-row" style="margin-top:10px;">
+          <input class="adm-input" id="s-from" placeholder="מאיפה (עיר / מדינה)">
+          <select class="adm-input" id="s-lodging" style="max-width:130px;">
+            <option value="לא">לינה — לא</option><option value="כן">לינה — כן</option>
+          </select>
+          <select class="adm-input" id="s-transfer" style="max-width:130px;">
+            <option value="לא">הסעה — לא</option><option value="כן">הסעה — כן</option>
+          </select>
+          <select class="adm-input" id="s-status" style="max-width:140px;">
+            <option>בשיחות</option><option>נחתם</option><option>שולם</option><option>בוטל</option>
+          </select>
+          <input class="adm-input" id="s-arrival" type="date" style="max-width:160px;" title="תאריך הגעה צפוי">
+          <input class="adm-input" id="s-notes" placeholder="הערות (מחיר, שעות, בקשות...)">
+          <button class="adm-btn" onclick="addSupplier()">הוסף ספק</button>
+        </div>
+      </div>
+      <div class="adm-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+          <h3 style="margin:0;">רשימת ספקים</h3>
+          <button class="adm-btn adm-btn-sm" onclick="exportSuppliersCSV()">ייצוא CSV</button>
+        </div>
+        <div style="overflow-x:auto;">
+          <table class="adm-table">
+            <thead><tr>
+              <th>שם</th><th>סוג</th><th>עסק</th><th>טלפון</th><th>אימייל</th>
+              <th>מאיפה</th><th>לינה</th><th>הסעה</th><th>סטטוס</th><th>הגעה</th><th>הערות</th><th></th>
+            </tr></thead>
+            <tbody id="supplierTable"></tbody>
           </table>
         </div>
       </div>
@@ -817,12 +869,13 @@ function switchTab(name){
   document.getElementById('panel-'+name).classList.add('active');
   if(name==='rooms')refreshRooms();
   if(name==='transfers')refreshTransfers();
+  if(name==='suppliers')refreshSuppliers();
 }
 
 // ===== DATA (localStorage) =====
 const LS={
   guests:'wg_guests',budget:'wg_budget',expenses:'wg_expenses',
-  tasks:'wg_tasks',files:'wg_files',content:'wg_content',rooms:'wg_rooms'
+  tasks:'wg_tasks',files:'wg_files',content:'wg_content',rooms:'wg_rooms',suppliers:'wg_suppliers'
 };
 function get(k){try{return JSON.parse(localStorage.getItem(k))||[];}catch{return[];}}
 function getObj(k){try{return JSON.parse(localStorage.getItem(k))||{};}catch{return{};}}
@@ -1004,6 +1057,79 @@ function refreshTransfers(){
     </tr>`).join('');
 }
 
+// ===== SUPPLIERS =====
+function getSuppliers(){return get(LS.suppliers);}
+function saveSuppliers(s){set(LS.suppliers,s);}
+function yesNoBadge(v){return`<span class="badge ${v==='כן'?'badge-maybe':'badge-no'}">${v||'לא'}</span>`;}
+function supplierStatusBadge(s){
+  if(s==='נחתם'||s==='שולם')return'badge-yes';
+  if(s==='בוטל')return'badge-no';
+  return'badge-maybe';
+}
+function addSupplier(){
+  const name=document.getElementById('s-name').value.trim();
+  if(!name)return;
+  const suppliers=getSuppliers();
+  suppliers.push({
+    name,
+    company:document.getElementById('s-company').value.trim(),
+    cat:document.getElementById('s-cat').value,
+    phone:document.getElementById('s-phone').value.trim(),
+    email:document.getElementById('s-email').value.trim(),
+    from:document.getElementById('s-from').value.trim(),
+    lodging:document.getElementById('s-lodging').value,
+    transfer:document.getElementById('s-transfer').value,
+    status:document.getElementById('s-status').value,
+    arrival:document.getElementById('s-arrival').value,
+    notes:document.getElementById('s-notes').value.trim(),
+    ts:Date.now()
+  });
+  saveSuppliers(suppliers);
+  ['s-name','s-company','s-phone','s-email','s-from','s-arrival','s-notes'].forEach(id=>document.getElementById(id).value='');
+  refreshSuppliers();
+}
+function removeSupplier(i){
+  const suppliers=getSuppliers();
+  suppliers.splice(i,1);
+  saveSuppliers(suppliers);
+  refreshSuppliers();
+}
+function refreshSuppliers(){
+  const suppliers=getSuppliers();
+  const lodging=suppliers.filter(s=>s.lodging==='כן').length;
+  const transfer=suppliers.filter(s=>s.transfer==='כן').length;
+  const signed=suppliers.filter(s=>s.status==='נחתם'||s.status==='שולם').length;
+  document.getElementById('supplierStats').innerHTML=`
+    <div class="stat-box"><div class="stat-num">${suppliers.length}</div><div class="stat-label">סה"כ ספקים</div></div>
+    <div class="stat-box"><div class="stat-num">${lodging}</div><div class="stat-label">דורשים לינה</div></div>
+    <div class="stat-box"><div class="stat-num">${transfer}</div><div class="stat-label">דורשים הסעה</div></div>
+    <div class="stat-box"><div class="stat-num">${signed}</div><div class="stat-label">נחתמו / שולמו</div></div>
+  `;
+  document.getElementById('supplierTable').innerHTML=suppliers.length===0?`<tr><td colspan="12" style="text-align:center;padding:20px;color:var(--stone);">אין ספקים עדיין</td></tr>`:
+    suppliers.map((s,i)=>`<tr>
+      <td style="color:var(--cream);">${s.name}</td>
+      <td><span class="expense-cat">${s.cat}</span></td>
+      <td style="font-size:12px;">${s.company||'—'}</td>
+      <td style="direction:ltr;font-size:12px;">${s.phone||'—'}</td>
+      <td style="direction:ltr;font-size:12px;">${s.email||'—'}</td>
+      <td style="font-size:12px;">${s.from||'—'}</td>
+      <td>${yesNoBadge(s.lodging)}</td>
+      <td>${yesNoBadge(s.transfer)}</td>
+      <td><span class="badge ${supplierStatusBadge(s.status)}">${s.status}</span></td>
+      <td style="font-size:12px;">${s.arrival||'—'}</td>
+      <td style="font-size:12px;max-width:140px;">${s.notes||'—'}</td>
+      <td><button class="adm-btn adm-btn-sm adm-btn-red" onclick="removeSupplier(${i})">✕</button></td>
+    </tr>`).join('');
+}
+function exportSuppliersCSV(){
+  const s=getSuppliers();
+  const h='שם,סוג,עסק,טלפון,אימייל,מאיפה,לינה,הסעה,סטטוס,הגעה,הערות\n';
+  const rows=s.map(r=>`"${r.name}","${r.cat}","${r.company||''}","${r.phone||''}","${r.email||''}","${r.from||''}","${r.lodging}","${r.transfer}","${r.status}","${r.arrival||''}","${r.notes||''}"`).join('\n');
+  const blob=new Blob(['\uFEFF'+h+rows],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download='ספקים_חתונה.csv';a.click();
+}
+
 // ===== BUDGET =====
 function refreshBudget(){
   const exps=get(LS.expenses);
@@ -1147,7 +1273,7 @@ function saveContent(){
 }
 
 // ===== INIT =====
-function refreshAll(){initTasks();refreshGuests();refreshRooms();refreshTransfers();refreshBudget();refreshTasks();refreshFiles();loadContent();}
+function refreshAll(){initTasks();refreshGuests();refreshRooms();refreshTransfers();refreshSuppliers();refreshBudget();refreshTasks();refreshFiles();loadContent();}
 loadContent();
 </script>
 </body>
