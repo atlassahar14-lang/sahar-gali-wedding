@@ -20,35 +20,11 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content
 nav.scrolled{background:rgba(14,6,3,0.97);}
 nav a{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--stone);text-decoration:none;transition:color .3s;white-space:nowrap;}
 nav a:hover{color:var(--gold);}
-.admin-btn{position:fixed;bottom:22px;left:22px;z-index:300;width:38px;height:38px;border-radius:50%;background:rgba(30,15,5,0.7);border:0.5px solid rgba(196,154,60,0.2);color:rgba(196,154,60,0.4);cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;transition:all .3s;backdrop-filter:blur(4px);}
+.admin-btn{position:fixed;bottom:22px;left:22px;z-index:300;padding:8px 14px;border-radius:2px;background:rgba(30,15,5,0.7);border:0.5px solid rgba(196,154,60,0.2);color:rgba(196,154,60,0.45);cursor:pointer;font-size:10px;letter-spacing:2px;font-family:'Heebo',sans-serif;text-transform:uppercase;transition:all .3s;backdrop-filter:blur(4px);}
 .admin-btn:hover{border-color:var(--gold);color:var(--gold);background:rgba(30,15,5,0.9);}
 
 /* HERO */
 #hero{position:relative;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(180deg,#0E0603 0%,#2E1A0E 40%,#3D2510 70%,#2E1A0E 100%);overflow:hidden;text-align:center;padding:80px 20px 140px;}
-.stars{position:absolute;inset:0;pointer-events:none;}
-.star{position:absolute;background:#fff;border-radius:50%;animation:twinkle var(--d,3s) ease-in-out infinite alternate;opacity:0;}
-@keyframes twinkle{0%{opacity:0;transform:scale(.5)}50%{opacity:var(--op,.6)}100%{opacity:.1;transform:scale(1.2)}}
-.moon{position:absolute;top:9%;right:10%;width:65px;height:65px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#FFF5CC,#E8C84A 60%,#C49A3C);box-shadow:0 0 40px 15px rgba(196,154,60,.22);animation:moonFloat 8s ease-in-out infinite alternate;}
-@keyframes moonFloat{from{transform:translateY(0)}to{transform:translateY(-8px)}}
-.hills{position:absolute;bottom:0;left:0;right:0;height:260px;pointer-events:none;}
-.hill{position:absolute;bottom:0;border-radius:50% 50% 0 0;}
-.h1{left:-5%;width:55%;height:150px;background:#160A03;}
-.h2{right:-5%;width:50%;height:140px;background:#160A03;}
-.h3{left:20%;width:65%;height:120px;background:#1E0E06;}
-.h4{left:-2%;width:50%;height:90px;background:#241408;}
-.cypresses{position:absolute;bottom:80px;left:0;right:0;display:flex;justify-content:space-between;padding:0 3%;pointer-events:none;}
-.cy{display:flex;flex-direction:column;align-items:center;animation:sway var(--sw,6s) ease-in-out infinite alternate;transform-origin:bottom center;}
-@keyframes sway{from{transform:rotate(-1.5deg)}to{transform:rotate(1.5deg)}}
-.firefly{position:absolute;width:4px;height:4px;border-radius:50%;background:#E8D070;box-shadow:0 0 6px 2px #E8D070;animation:fly var(--ff,8s) ease-in-out infinite;opacity:0;}
-@keyframes fly{0%{transform:translate(0,0);opacity:0}20%{opacity:1}50%{transform:translate(var(--fx2,40px),var(--fy2,-30px))}80%{opacity:.8}100%{transform:translate(var(--fx3,-20px),var(--fy3,20px));opacity:0}}
-.leaf{position:absolute;width:16px;height:7px;border-radius:50%;opacity:0;animation:fall var(--fd,12s) linear infinite;animation-delay:var(--fd2,0s);}
-@keyframes fall{0%{transform:translateY(-20px) rotate(0deg);opacity:0}10%{opacity:.7}90%{opacity:.3}100%{transform:translateY(100vh) rotate(720deg) translateX(var(--fx,60px));opacity:0}}
-.branch-l,.branch-r{position:absolute;top:28%;width:160px;opacity:.3;animation:bsway 7s ease-in-out infinite alternate;}
-.branch-l{left:2%;}
-.branch-r{right:2%;transform:scaleX(-1);}
-@keyframes bsway{from{transform:rotate(-3deg)}to{transform:rotate(3deg)}}
-.branch-r{animation-name:bswayr;}
-@keyframes bswayr{from{transform:scaleX(-1) rotate(-3deg)}to{transform:scaleX(-1) rotate(3deg)}}
 .hero-label{font-size:12px;letter-spacing:5px;text-transform:uppercase;color:var(--gold);margin-bottom:18px;opacity:0;animation:fadeUp 1s .5s forwards;}
 .hero-names{font-family:'Cormorant Garamond',serif;font-size:clamp(64px,13vw,120px);font-weight:300;line-height:1;color:var(--ivory);opacity:0;animation:fadeUp 1.2s .8s forwards;}
 .amp{color:var(--gold);font-style:italic;font-size:.82em;display:block;line-height:.9;}
@@ -57,11 +33,9 @@ nav a:hover{color:var(--gold);}
 .hero-divider{width:1px;height:56px;background:linear-gradient(to bottom,transparent,var(--gold),transparent);margin:24px auto;opacity:0;animation:fadeIn 1s 1.8s forwards;}
 @keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-.scroll-hint{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0;animation:fadeIn 1s 2.5s forwards;cursor:pointer;}
-.scroll-hint span{font-size:10px;letter-spacing:3px;color:var(--stone);}
-.scroll-mouse{width:22px;height:36px;border:1px solid var(--stone);border-radius:11px;display:flex;align-items:flex-start;justify-content:center;padding-top:5px;}
-.scroll-dot{width:3px;height:7px;background:var(--gold);border-radius:2px;animation:sdot 2s ease-in-out infinite;}
-@keyframes sdot{0%,100%{transform:translateY(0);opacity:1}80%{transform:translateY(11px);opacity:0}}
+.scroll-hint{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);opacity:0;animation:fadeIn 1s 2.5s forwards;cursor:pointer;}
+.scroll-hint span{font-size:10px;letter-spacing:4px;color:var(--stone);text-transform:uppercase;}
+.scroll-hint::before{content:'';display:block;width:1px;height:32px;margin:0 auto 10px;background:linear-gradient(to bottom,var(--gold),transparent);}
 
 /* COUNTDOWN */
 #countdown{background:#0E0603;padding:70px 20px;text-align:center;position:relative;overflow:hidden;}
@@ -81,7 +55,7 @@ section{padding:80px 20px;position:relative;overflow:hidden;}
 .s-title em{font-style:italic;color:var(--gold);}
 .s-body{font-size:15px;line-height:1.9;color:var(--stone);font-weight:300;}
 .gold-line{width:44px;height:1px;background:var(--gold);margin:20px 0;}
-.vine-div{text-align:center;padding:16px;font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--gold);opacity:.25;letter-spacing:10px;}
+.section-rule{max-width:120px;height:1px;background:linear-gradient(to left,transparent,var(--gold),transparent);margin:0 auto;}
 
 /* REVEAL */
 .reveal{opacity:0;transform:translateY(28px);transition:opacity .9s ease,transform .9s ease;}
@@ -109,8 +83,6 @@ section{padding:80px 20px;position:relative;overflow:hidden;}
 .travel-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:24px;margin-top:36px;}
 .t-card{border:0.5px solid rgba(196,154,60,.2);border-radius:3px;padding:24px;transition:border-color .4s;}
 .t-card:hover{border-color:rgba(196,154,60,.5);}
-.ico,.t-card-icon,.file-drop .icon,.file-icon-box,.admin-btn{display:inline-block;filter:grayscale(100%);opacity:.85;}
-.t-card-icon{font-size:24px;margin-bottom:12px;}
 .t-card h3{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:400;color:var(--ivory);margin-bottom:8px;}
 .t-card p,.t-card ul{font-size:13px;color:var(--stone);line-height:1.8;}
 .t-card ul{direction:rtl;text-align:right;padding-right:0;padding-left:0;list-style-position:inside;}
@@ -138,8 +110,7 @@ section{padding:80px 20px;position:relative;overflow:hidden;}
 footer{background:#080402;text-align:center;padding:56px 20px;}
 .ft-names{font-family:'Cormorant Garamond',serif;font-size:clamp(32px,7vw,60px);font-weight:300;color:var(--ivory);opacity:.12;letter-spacing:4px;}
 .ft-txt{font-size:11px;letter-spacing:3px;color:var(--stone);margin-top:14px;text-transform:uppercase;}
-.ft-heart{font-size:16px;color:var(--terra);margin:0 8px;display:inline-block;animation:hb 2s ease-in-out infinite;}
-@keyframes hb{0%,100%{transform:scale(1)}50%{transform:scale(1.3)}}
+.ft-sep{color:var(--gold);margin:0 10px;opacity:.5;}
 
 /* ======= ADMIN OVERLAY ======= */
 .overlay{position:fixed;inset:0;z-index:1000;background:rgba(8,4,2,.92);display:none;align-items:center;justify-content:center;backdrop-filter:blur(6px);}
@@ -223,11 +194,11 @@ footer{background:#080402;text-align:center;padding:56px 20px;}
 .file-drop:hover{border-color:rgba(196,154,60,.6);background:rgba(196,154,60,.03);}
 .file-drop input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
 .file-drop p{color:var(--stone);font-size:13px;}
-.file-drop .icon{font-size:28px;margin-bottom:10px;}
+.file-drop .icon{font-size:11px;letter-spacing:3px;color:var(--gold);margin-bottom:10px;text-transform:uppercase;}
 .file-list{margin-top:16px;}
 .file-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:0.5px solid rgba(255,255,255,.04);}
 .file-row:last-child{border-bottom:none;}
-.file-icon-box{width:36px;height:36px;background:rgba(196,154,60,.1);border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:16px;}
+.file-icon-box{width:36px;height:36px;background:rgba(196,154,60,.1);border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:9px;letter-spacing:1px;color:var(--gold);font-weight:600;}
 .file-name{flex:1;font-size:13px;color:var(--cream);}
 .file-name a{color:var(--gold);text-decoration:none;}
 .file-name a:hover{text-decoration:underline;}
@@ -253,31 +224,17 @@ footer{background:#080402;text-align:center;padding:56px 20px;}
 </nav>
 
 <!-- Admin Button -->
-<button class="admin-btn" id="adminToggle" title="כניסת מנהלים">⚙</button>
+<button class="admin-btn" id="adminToggle" title="כניסת מנהלים">ניהול</button>
 
 <!-- HERO -->
 <section id="hero">
-  <div class="moon"></div>
-  <div class="stars" id="starsEl"></div>
-  <div id="ffEl"></div>
-  <div id="leafEl"></div>
-  <svg class="branch-l" viewBox="0 0 180 120" fill="none"><path d="M10 110 Q40 80 70 60 Q100 40 130 20" stroke="#6B7A3E" stroke-width="1.5" fill="none"/><ellipse cx="35" cy="88" rx="12" ry="5" fill="#6B7A3E" transform="rotate(-30 35 88)"/><ellipse cx="55" cy="72" rx="12" ry="5" fill="#5A6833" transform="rotate(-40 55 72)"/><ellipse cx="75" cy="55" rx="11" ry="5" fill="#6B7A3E" transform="rotate(-45 75 55)"/><ellipse cx="95" cy="42" rx="11" ry="5" fill="#5A6833" transform="rotate(-50 95 42)"/><ellipse cx="115" cy="30" rx="10" ry="4" fill="#6B7A3E" transform="rotate(-55 115 30)"/><circle cx="60" cy="68" r="3" fill="#8B3A1C" opacity=".7"/><circle cx="90" cy="46" r="2.5" fill="#8B3A1C" opacity=".7"/></svg>
-  <svg class="branch-r" viewBox="0 0 180 120" fill="none"><path d="M10 110 Q40 80 70 60 Q100 40 130 20" stroke="#6B7A3E" stroke-width="1.5" fill="none"/><ellipse cx="35" cy="88" rx="12" ry="5" fill="#6B7A3E" transform="rotate(-30 35 88)"/><ellipse cx="55" cy="72" rx="12" ry="5" fill="#5A6833" transform="rotate(-40 55 72)"/><ellipse cx="75" cy="55" rx="11" ry="5" fill="#6B7A3E" transform="rotate(-45 75 55)"/><ellipse cx="95" cy="42" rx="11" ry="5" fill="#5A6833" transform="rotate(-50 95 42)"/><circle cx="60" cy="68" r="3" fill="#8B3A1C" opacity=".7"/></svg>
-
   <p class="hero-label">מתחתנים!</p>
   <h1 class="hero-names" id="heroTitle">סהר<span class="amp">&</span>גלי</h1>
   <div class="hero-divider"></div>
   <p class="hero-date" id="heroDate">21 – 23 במאי 2027</p>
   <p class="hero-venue">Villa Pitiana · Tuscany · Italy</p>
 
-  <div class="hills">
-    <div class="hill h1"></div><div class="hill h2"></div>
-    <div class="hill h3"></div><div class="hill h4"></div>
-  </div>
-  <div class="cypresses" id="cypEl"></div>
-
   <div class="scroll-hint" onclick="document.getElementById('countdown').scrollIntoView({behavior:'smooth'})">
-    <div class="scroll-mouse"><div class="scroll-dot"></div></div>
     <span>גלול מטה</span>
   </div>
 </section>
@@ -296,7 +253,7 @@ footer{background:#080402;text-align:center;padding:56px 20px;}
   </div>
 </div>
 
-<div class="vine-div">✦ ✦ ✦</div>
+<div class="section-rule"></div>
 
 <!-- ITINERARY -->
 <section id="itinerary">
@@ -319,7 +276,7 @@ footer{background:#080402;text-align:center;padding:56px 20px;}
             <div class="tl-time">15:00 – 19:00</div>
             <div class="tl-name">הגעה ולינה</div>
             <div class="tl-desc">כניסה לחדרים בוילה פיטיאנה. פנאי חופשי לטייל בגינות, בריכה ושדרות הברושים.</div>
-            <a class="map-link" href="https://maps.google.com/?q=Villa+Pitiana+Donnini+Tuscany" target="_blank"><span class="ico">📍</span> Villa Pitiana, Donnini</a>
+            <a class="map-link" href="https://maps.google.com/?q=Villa+Pitiana+Donnini+Tuscany" target="_blank">Villa Pitiana, Donnini</a>
           </div>
           <div class="tl-item">
             <div class="tl-time">20:00</div>
@@ -340,11 +297,11 @@ footer{background:#080402;text-align:center;padding:56px 20px;}
             <div class="tl-time">16:00 – 16:45</div>
             <div class="tl-name">כניסת אורחים לטקס</div>
             <div class="tl-desc">קבלת פנים בחצר הימי-ביניימית, מוזיקת רקע חיה.</div>
-            <a class="map-link" href="https://maps.google.com/?q=Villa+Pitiana+Donnini+cloister" target="_blank"><span class="ico">📍</span> החצר הימי-ביניימית</a>
+            <a class="map-link" href="https://maps.google.com/?q=Villa+Pitiana+Donnini+cloister" target="_blank">החצר הימי-ביניימית</a>
           </div>
           <div class="tl-item">
             <div class="tl-time">17:00</div>
-            <div class="tl-name">טקס החתונה ✦</div>
+            <div class="tl-name">טקס החתונה</div>
             <div class="tl-desc">הטקס בחצר הקמורה של המנזר, בשקיעת שמש טוסקנית. רגע שלא ישכח.</div>
           </div>
           <div class="tl-item">
@@ -376,7 +333,7 @@ footer{background:#080402;text-align:center;padding:56px 20px;}
             <div class="tl-time">12:00</div>
             <div class="tl-name">בריכה ופנאי</div>
             <div class="tl-desc">זמן חופשי בבריכה הפנורמית עם נוף לגבעות — מי שרוצה.</div>
-            <a class="map-link" href="https://maps.google.com/?q=Villa+Pitiana+pool" target="_blank"><span class="ico">📍</span> בריכת הוילה</a>
+            <a class="map-link" href="https://maps.google.com/?q=Villa+Pitiana+pool" target="_blank">בריכת הוילה</a>
           </div>
           <div class="tl-item">
             <div class="tl-time">15:00</div>
@@ -389,7 +346,7 @@ footer{background:#080402;text-align:center;padding:56px 20px;}
   </div>
 </section>
 
-<div class="vine-div">✦ ✦ ✦</div>
+<div class="section-rule"></div>
 
 <!-- TRAVEL INFO -->
 <section id="travel">
@@ -403,7 +360,6 @@ footer{background:#080402;text-align:center;padding:56px 20px;}
 
     <div class="travel-grid reveal">
       <div class="t-card">
-        <div class="t-card-icon">✈️</div>
         <h3>שדות תעופה</h3>
         <ul>
           <li>35 דק' מהוילה — <strong style="color:var(--cream)">Florence (FLR)</strong></li>
@@ -413,19 +369,16 @@ footer{background:#080402;text-align:center;padding:56px 20px;}
         </ul>
       </div>
       <div class="t-card">
-        <div class="t-card-icon">🚗</div>
         <h3>התניידות</h3>
         <p>מומלץ מאוד לשכור רכב — מסלול S222 (Chiantigiana) הוא חוויה בפני עצמה. ניתן לסדר הסעות משותפות — ציינו בטופס ה-RSVP.</p>
         <br>
-        <a class="map-link" href="https://maps.google.com/?q=Via+Pitiana+7+Donnini+Reggello" target="_blank"><span class="ico">📍</span> נווט לוילה</a>
+        <a class="map-link" href="https://maps.google.com/?q=Via+Pitiana+7+Donnini+Reggello" target="_blank">נווט לוילה</a>
       </div>
       <div class="t-card">
-        <div class="t-card-icon">🏨</div>
         <h3>לינה</h3>
         <p>59 חדרים ודירות בתוך הוילה ובבתי החווה. האורחים מוזמנים להישאר כל הסוף שבוע — ציינו בטופס. לינה בתיאום נפרד.</p>
       </div>
       <div class="t-card">
-        <div class="t-card-icon">🗺️</div>
         <h3>כתובת</h3>
         <p>Via Pitiana 7<br>Donnini – Reggello (FI)<br>Tuscany, Italy</p>
         <br>
@@ -435,7 +388,7 @@ footer{background:#080402;text-align:center;padding:56px 20px;}
   </div>
 </section>
 
-<div class="vine-div">✦ ✦ ✦</div>
+<div class="section-rule"></div>
 
 <!-- RSVP -->
 <section id="rsvp">
@@ -457,10 +410,10 @@ footer{background:#080402;text-align:center;padding:56px 20px;}
           <select id="rf-transfer"><option value="לא">לא, יש לי רכב</option><option value="כן - מFCO">כן, מרומא (FCO)</option><option value="כן - מMXP">כן, ממילאנו (MXP)</option></select>
         </div>
         <div class="fg"><label>הגבלות תזונתיות / בקשות מיוחדות</label><textarea id="rf-notes" placeholder="טבעוני, ללא גלוטן, אלרגיה..."></textarea></div>
-        <button type="submit" class="rsvp-btn">אשרו הגעה ✦</button>
+        <button type="submit" class="rsvp-btn">אשרו הגעה</button>
       </form>
       <div class="rsvp-ok" id="rsvpOk">
-        תודה! נתראה בטוסקנה <span class="ico">🌿</span><br>
+        תודה! נתראה בטוסקנה<br>
         <span style="font-size:13px;color:var(--stone);font-family:'Heebo',sans-serif;font-weight:300;">פרטיכם נרשמו</span>
       </div>
     </div>
@@ -470,7 +423,7 @@ footer{background:#080402;text-align:center;padding:56px 20px;}
 <!-- FOOTER -->
 <footer>
   <div class="ft-names">סהר & גלי</div>
-  <p class="ft-txt">22.05.2027 <span class="ft-heart">♥</span> Villa Pitiana, Tuscany</p>
+  <p class="ft-txt">22.05.2027 <span class="ft-sep">—</span> Villa Pitiana, Tuscany</p>
   <p style="font-size:10px;color:rgba(138,121,104,.25);margin-top:20px;letter-spacing:2px;">CON AMORE · באהבה</p>
 </footer>
 
@@ -493,14 +446,14 @@ footer{background:#080402;text-align:center;padding:56px 20px;}
     <button class="adm-logout" onclick="adminLogout()">יציאה</button>
   </div>
   <div class="adm-tabs">
-    <button class="adm-tab active" onclick="switchTab('guests')"><span class="ico">👥</span> אורחים</button>
-    <button class="adm-tab" onclick="switchTab('rooms')"><span class="ico">🏠</span> חילוק חדרים</button>
-    <button class="adm-tab" onclick="switchTab('transfers')"><span class="ico">🚐</span> הסעות</button>
-    <button class="adm-tab" onclick="switchTab('suppliers')"><span class="ico">🤝</span> ספקים</button>
-    <button class="adm-tab" onclick="switchTab('budget')"><span class="ico">💰</span> תקציב</button>
-    <button class="adm-tab" onclick="switchTab('tasks')"><span class="ico">✅</span> משימות</button>
-    <button class="adm-tab" onclick="switchTab('files')"><span class="ico">📁</span> קבצים</button>
-    <button class="adm-tab" onclick="switchTab('content')"><span class="ico">✏️</span> עריכת תוכן</button>
+    <button class="adm-tab active" onclick="switchTab('guests')">אורחים</button>
+    <button class="adm-tab" onclick="switchTab('rooms')">חילוק חדרים</button>
+    <button class="adm-tab" onclick="switchTab('transfers')">הסעות</button>
+    <button class="adm-tab" onclick="switchTab('suppliers')">ספקים</button>
+    <button class="adm-tab" onclick="switchTab('budget')">תקציב</button>
+    <button class="adm-tab" onclick="switchTab('tasks')">משימות</button>
+    <button class="adm-tab" onclick="switchTab('files')">קבצים</button>
+    <button class="adm-tab" onclick="switchTab('content')">עריכת תוכן</button>
   </div>
   <div class="adm-body">
 
@@ -717,7 +670,7 @@ footer{background:#080402;text-align:center;padding:56px 20px;}
         <h3>העלאת קובץ</h3>
         <div class="file-drop">
           <input type="file" id="fileInput" multiple onchange="handleFiles(this.files)">
-          <div class="icon">📎</div>
+          <div class="icon">העלאה</div>
           <p>גררו קבצים לכאן, או לחצו להעלאה<br><span style="font-size:11px;color:rgba(138,121,104,.5);">חוזים, סקיצות, קבלות, תמונות</span></p>
         </div>
       </div>
@@ -744,52 +697,6 @@ footer{background:#080402;text-align:center;padding:56px 20px;}
 </div>
 
 <script>
-// ===== STARS =====
-const starsEl = document.getElementById('starsEl');
-for(let i=0;i<170;i++){
-  const s=document.createElement('div');s.className='star';
-  const sz=Math.random()*2.5+.5;
-  s.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*75}%;width:${sz}px;height:${sz}px;--d:${2+Math.random()*5}s;--op:${.3+Math.random()*.8};animation-delay:${Math.random()*6}s;`;
-  starsEl.appendChild(s);
-}
-
-// ===== FIREFLIES =====
-const ffEl=document.getElementById('ffEl');
-for(let i=0;i<16;i++){
-  const f=document.createElement('div');f.className='firefly';
-  f.style.cssText=`left:${10+Math.random()*80}%;top:${30+Math.random()*50}%;--ff:${6+Math.random()*10}s;--fx2:${-60+Math.random()*120}px;--fy2:${-60+Math.random()*80}px;--fx3:${-40+Math.random()*80}px;--fy3:${-30+Math.random()*60}px;animation-delay:${Math.random()*10}s;`;
-  ffEl.appendChild(f);
-}
-
-// ===== LEAVES =====
-const leafEl=document.getElementById('leafEl');
-const leafColors=['#6B7A3E','#8B9A52','#5A6833'];
-for(let i=0;i<10;i++){
-  const l=document.createElement('div');l.className='leaf';
-  l.style.cssText=`left:${Math.random()*100}%;top:-20px;background:${leafColors[i%3]};transform:rotate(${Math.random()*360}deg);--fd:${10+Math.random()*15}s;--fd2:${Math.random()*14}s;--fx:${-80+Math.random()*160}px;`;
-  leafEl.appendChild(l);
-}
-
-// ===== CYPRESSES =====
-const cypEl=document.getElementById('cypEl');
-for(let i=0;i<9;i++){
-  const h=60+Math.random()*80,w=h*.28;
-  const op=.3+Math.random()*.45;
-  const dur=5+Math.random()*4;
-  const delay=Math.random()*4;
-  const wrapper=document.createElement('div');
-  wrapper.className='cy';
-  wrapper.style.cssText=`--sw:${dur}s;animation-delay:${delay}s;opacity:${op};`;
-  const ch=Math.round(h*30/w);
-  wrapper.innerHTML=`<svg width="${Math.round(w)}" height="${Math.round(h)}" viewBox="0 0 30 ${ch}" xmlns="http://www.w3.org/2000/svg">
-    <ellipse cx="15" cy="${Math.round(ch*.5)}" rx="9" ry="${Math.round(ch*.5)}" fill="#1E2E0E"/>
-    <ellipse cx="15" cy="${Math.round(ch*.35)}" rx="7" ry="${Math.round(ch*.37)}" fill="#2E4018"/>
-    <ellipse cx="15" cy="${Math.round(ch*.2)}" rx="5" ry="${Math.round(ch*.22)}" fill="#3E5022"/>
-    <rect x="13" y="${Math.round(ch*.9)}" width="4" height="${Math.round(ch*.12)}" fill="#5A3A20"/>
-  </svg>`;
-  cypEl.appendChild(wrapper);
-}
-
 // ===== COUNTDOWN =====
 function tick(){
   const t=new Date('2027-05-21T17:00:00');
@@ -1214,11 +1121,11 @@ function refreshFiles(){
 }
 function getFileIcon(n){
   const ext=n.split('.').pop().toLowerCase();
-  if(['pdf'].includes(ext))return '📄';
-  if(['jpg','jpeg','png','gif','webp'].includes(ext))return '🖼️';
-  if(['doc','docx'].includes(ext))return '📝';
-  if(['xls','xlsx'].includes(ext))return '📊';
-  return '📎';
+  if(['pdf'].includes(ext))return 'PDF';
+  if(['jpg','jpeg','png','gif','webp'].includes(ext))return 'IMG';
+  if(['doc','docx'].includes(ext))return 'DOC';
+  if(['xls','xlsx'].includes(ext))return 'XLS';
+  return 'FILE';
 }
 function handleFiles(fileList){
   const files=get(LS.files);
