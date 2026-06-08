@@ -88,6 +88,13 @@ alter table files enable row level security;
 alter table content enable row level security;
 alter table suppliers enable row level security;
 
+drop policy if exists "public_all_rooms" on rooms;
+drop policy if exists "public_all_guests" on guests;
+drop policy if exists "public_all_expenses" on expenses;
+drop policy if exists "public_all_tasks" on tasks;
+drop policy if exists "public_all_files" on files;
+drop policy if exists "public_all_content" on content;
+drop policy if exists "public_all_suppliers" on suppliers;
 create policy "public_all_rooms" on rooms for all using (true) with check (true);
 create policy "public_all_guests" on guests for all using (true) with check (true);
 create policy "public_all_expenses" on expenses for all using (true) with check (true);

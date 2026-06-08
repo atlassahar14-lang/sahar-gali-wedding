@@ -699,12 +699,12 @@ footer{background:#080402;text-align:center;padding:56px 20px;}
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 // ===== SUPABASE =====
-const SUPABASE_URL='https://YOUR_PROJECT_ID.supabase.co';
-const SUPABASE_ANON_KEY='YOUR_ANON_KEY';
+const SUPABASE_URL='https://pwtakxpnntfopxfygvcu.supabase.co';
+const SUPABASE_ANON_KEY='sb_publishable_sgQjGA4_NdxTsHm0JhSgUw_z1ZM9mBs';
 const sb=window.supabase?.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
 const DB={guests:[],rooms:[],expenses:[],tasks:[],files:[],suppliers:[],content:{title:'',wedding_date:'',msg:'',budget_total:0}};
 const LS={guests:'wg_guests',budget:'wg_budget',expenses:'wg_expenses',tasks:'wg_tasks',files:'wg_files',content:'wg_content',rooms:'wg_rooms',suppliers:'wg_suppliers'};
-function sbReady(){return sb&&SUPABASE_URL&&!SUPABASE_URL.includes('YOUR_PROJECT');}
+function sbReady(){return!!sb&&!!SUPABASE_URL&&!!SUPABASE_ANON_KEY;}
 function mapGuest(g){return{id:g.id,name:g.name,phone:g.phone,count:g.count,days:g.days,status:g.status,transfer:g.transfer,notes:g.notes,roomId:g.room_id,ts:g.created_at};}
 function mapRoom(r){return{id:r.id,name:r.name,building:r.building,capacity:r.capacity,notes:r.notes};}
 function mapFile(f){return{id:f.id,name:f.name,size:f.size,date:f.file_date,type:f.mime_type,data:f.data};}
@@ -759,7 +759,16 @@ async function migrateFromLocalStorage(){
     localStorage.setItem('wg_supabase_migrated','1');
   }catch(err){console.error('Migration failed',err);}
 }
-async function dbInit(){if(!sbReady())return;await migrateFromLocalStorage();await dbLoadAll();}
+async function dbInit(){
+  if(!sbReady())return;
+  const probe=await sb.from('content').select('id').eq('id',1).maybeSingle();
+  if(probe.error&&(probe.error.code==='PGRST205'||probe.error.message?.includes('does not exist'))){
+    console.error('Supabase tables missing — run supabase-schema.sql in SQL Editor');
+    return;
+  }
+  await migrateFromLocalStorage();
+  await dbLoadAll();
+}
 
 // ===== COUNTDOWN =====
 function tick(){
