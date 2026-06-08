@@ -721,7 +721,7 @@ async function dbLoadAll(){
     sb.from('content').select('*').eq('id',1).maybeSingle(),
     sb.from('suppliers').select('*').order('created_at')
   ]);
-  for(const [name,res] of [['guests',g],['rooms',r],['expenses',e],['tasks',t],['files',f],['content',c],['suppliers',s]]){
+  for(const [name,res] of [['guests',g],['rooms',r],['expenses',e],['tasks',t],['files',f],['content',c]]){
     if(res.error){dbError('load '+name,res.error);return false;}
   }
   DB.guests=(g.data||[]).map(mapGuest);
@@ -729,7 +729,7 @@ async function dbLoadAll(){
   DB.expenses=e.data||[];
   DB.tasks=t.data||[];
   DB.files=(f.data||[]).map(mapFile);
-  DB.suppliers=(s.data||[]).map(mapSupplier);
+  DB.suppliers=s.error?[]:(s.data||[]).map(mapSupplier);
   DB.content=c.data||{id:1,title:'',wedding_date:'',msg:'',budget_total:0};
   return true;
 }

@@ -50,5 +50,24 @@ alter table suppliers add column if not exists arrival date;
 alter table suppliers add column if not exists notes text;
 alter table suppliers add column if not exists created_at timestamptz default now();
 
+create table if not exists suppliers (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  company text,
+  cat text,
+  phone text,
+  email text,
+  origin text,
+  lodging text default 'לא',
+  transfer text default 'לא',
+  status text,
+  arrival date,
+  notes text,
+  created_at timestamptz default now()
+);
+alter table suppliers enable row level security;
+drop policy if exists "public_all_suppliers" on suppliers;
+create policy "public_all_suppliers" on suppliers for all using (true) with check (true);
+
 -- רענון cache של Supabase API
 notify pgrst, 'reload schema';
