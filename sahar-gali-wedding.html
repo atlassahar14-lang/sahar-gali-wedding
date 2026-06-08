@@ -446,6 +446,7 @@ footer{background:#080402;text-align:center;padding:56px 20px;}
     <div class="rsvp-box reveal">
       <form id="rsvpForm">
         <div class="fg"><label>שם מלא</label><input type="text" id="rf-name" placeholder="שם מלא" required></div>
+        <div class="fg"><label>מספר טלפון לאיש קשר</label><input type="tel" id="rf-phone" placeholder="050-1234567" required style="direction:ltr;text-align:right;"></div>
         <div class="fg"><label>מספר מגיעים</label>
           <select id="rf-count"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5+</option></select>
         </div>
@@ -512,6 +513,7 @@ footer{background:#080402;text-align:center;padding:56px 20px;}
         <h3>הוספת אורח ידנית</h3>
         <div class="adm-row">
           <input class="adm-input" id="g-name" placeholder="שם מלא">
+          <input class="adm-input" id="g-phone" placeholder="טלפון" style="max-width:140px;direction:ltr;">
           <input class="adm-input" id="g-count" type="number" placeholder="מספר" min="1" max="10" style="max-width:100px;">
           <select class="adm-input" id="g-status" style="max-width:140px;">
             <option value="מגיע">מגיע ✓</option>
@@ -530,7 +532,7 @@ footer{background:#080402;text-align:center;padding:56px 20px;}
         </div>
         <div style="overflow-x:auto;">
           <table class="adm-table">
-            <thead><tr><th>שם</th><th>מגיעים</th><th>ימים</th><th>סטטוס</th><th>הסעה</th><th>בקשות</th><th></th></tr></thead>
+            <thead><tr><th>שם</th><th>טלפון</th><th>מגיעים</th><th>ימים</th><th>סטטוס</th><th>הסעה</th><th>בקשות</th><th></th></tr></thead>
             <tbody id="guestTable"></tbody>
           </table>
         </div>
@@ -721,6 +723,7 @@ document.getElementById('rsvpForm').addEventListener('submit',function(e){
   e.preventDefault();
   const g={
     name:document.getElementById('rf-name').value,
+    phone:document.getElementById('rf-phone').value,
     count:document.getElementById('rf-count').value,
     days:document.getElementById('rf-days').value,
     transfer:document.getElementById('rf-transfer').value,
@@ -782,9 +785,10 @@ function refreshGuests(){
     <div class="stat-box"><div class="stat-num">${no.length}</div><div class="stat-label">לא מגיעים</div></div>
   `;
   const tbody=document.getElementById('guestTable');
-  tbody.innerHTML=guests.length===0?`<tr><td colspan="7" style="text-align:center;padding:20px;color:var(--stone);">אין אורחים עדיין</td></tr>`:
+  tbody.innerHTML=guests.length===0?`<tr><td colspan="8" style="text-align:center;padding:20px;color:var(--stone);">אין אורחים עדיין</td></tr>`:
     guests.map((g,i)=>`<tr>
       <td style="color:var(--cream);">${g.name||'—'}</td>
+      <td style="direction:ltr;font-size:12px;">${g.phone||'—'}</td>
       <td>${g.count||1}</td>
       <td style="font-size:12px;">${g.days||'—'}</td>
       <td><span class="badge ${g.status==='מגיע'?'badge-yes':g.status==='לא מגיע'?'badge-no':'badge-maybe'}">${g.status}</span></td>
@@ -794,17 +798,17 @@ function refreshGuests(){
     </tr>`).join('');
 }
 function addGuest(){
-  const g={name:document.getElementById('g-name').value,count:document.getElementById('g-count').value||1,status:document.getElementById('g-status').value,days:document.getElementById('g-days').value,notes:document.getElementById('g-notes').value,transfer:'—',ts:Date.now()};
+  const g={name:document.getElementById('g-name').value,phone:document.getElementById('g-phone').value,count:document.getElementById('g-count').value||1,status:document.getElementById('g-status').value,days:document.getElementById('g-days').value,notes:document.getElementById('g-notes').value,transfer:'—',ts:Date.now()};
   if(!g.name)return;
   const guests=getGuests();guests.push(g);saveGuests(guests);
-  ['g-name','g-count','g-days','g-notes'].forEach(id=>document.getElementById(id).value='');
+  ['g-name','g-phone','g-count','g-days','g-notes'].forEach(id=>document.getElementById(id).value='');
   refreshGuests();
 }
 function removeGuest(i){const g=getGuests();g.splice(i,1);saveGuests(g);refreshGuests();}
 function exportCSV(){
   const g=getGuests();
-  const h='שם,מגיעים,ימים,סטטוס,הסעה,בקשות\n';
-  const rows=g.map(r=>`"${r.name}","${r.count}","${r.days}","${r.status}","${r.transfer}","${r.notes}"`).join('\n');
+  const h='שם,טלפון,מגיעים,ימים,סטטוס,הסעה,בקשות\n';
+  const rows=g.map(r=>`"${r.name}","${r.phone||''}","${r.count}","${r.days}","${r.status}","${r.transfer}","${r.notes}"`).join('\n');
   const blob=new Blob(['\uFEFF'+h+rows],{type:'text/csv;charset=utf-8;'});
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a');a.href=url;a.download='אורחים_חתונה.csv';a.click();
