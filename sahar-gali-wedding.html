@@ -543,16 +543,16 @@ footer{background:#080402;text-align:center;padding:56px 20px;}
       <div class="adm-card">
         <h3>סיכום</h3>
         <div class="stats-row">
-          <div class="stat-box"><div class="stat-num" id="b-total-budget">₪0</div><div class="stat-label">תקציב כולל</div></div>
-          <div class="stat-box"><div class="stat-num" id="b-spent">₪0</div><div class="stat-label">הוצאות</div></div>
-          <div class="stat-box"><div class="stat-num" id="b-left">₪0</div><div class="stat-label">יתרה</div></div>
-          <div class="stat-box"><div class="stat-num" id="b-paid">₪0</div><div class="stat-label">שולם</div></div>
+          <div class="stat-box"><div class="stat-num" id="b-total-budget">€0</div><div class="stat-label">תקציב כולל</div></div>
+          <div class="stat-box"><div class="stat-num" id="b-spent">€0</div><div class="stat-label">הוצאות</div></div>
+          <div class="stat-box"><div class="stat-num" id="b-left">€0</div><div class="stat-label">יתרה</div></div>
+          <div class="stat-box"><div class="stat-num" id="b-paid">€0</div><div class="stat-label">שולם</div></div>
         </div>
         <div class="budget-bar-wrap"><div class="budget-bar" id="b-bar" style="width:0%"></div></div>
         <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--stone);">
           <span id="b-pct">0% הוצאה מהתקציב</span>
           <div style="display:flex;gap:10px;align-items:center;">
-            <label style="font-size:11px;color:var(--stone);">תקציב כולל ₪</label>
+            <label style="font-size:11px;color:var(--stone);">תקציב כולל €</label>
             <input class="adm-input" id="b-budget-input" type="number" placeholder="200000" style="max-width:130px;" onchange="saveBudget()">
           </div>
         </div>
@@ -566,8 +566,8 @@ footer{background:#080402;text-align:center;padding:56px 20px;}
             <option>פרחים</option><option>מוזיקה</option><option>לבוש</option>
             <option>נסיעות</option><option>מגורים</option><option>שונות</option>
           </select>
-          <input class="adm-input" id="exp-total" type="number" placeholder="סכום כולל ₪">
-          <input class="adm-input" id="exp-paid" type="number" placeholder="שולם עד כה ₪">
+          <input class="adm-input" id="exp-total" type="number" placeholder="סכום כולל €">
+          <input class="adm-input" id="exp-paid" type="number" placeholder="שולם עד כה €">
           <select class="adm-input" id="exp-status" style="max-width:130px;">
             <option>שולם</option><option>מקדמה</option><option>לא שולם</option>
           </select>
@@ -819,7 +819,7 @@ function refreshBudget(){
   const paid=exps.reduce((s,e)=>s+parseInt(e.paid||0),0);
   const left=totalBudget-spent;
   const pct=totalBudget?Math.min(100,Math.round(spent/totalBudget*100)):0;
-  const fmt=n=>new Intl.NumberFormat('he-IL',{style:'currency',currency:'ILS',maximumFractionDigits:0}).format(n);
+  const fmt=n=>new Intl.NumberFormat('he-IL',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(n);
   document.getElementById('b-total-budget').textContent=fmt(totalBudget);
   document.getElementById('b-spent').textContent=fmt(spent);
   document.getElementById('b-left').textContent=fmt(left);
