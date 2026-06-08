@@ -109,6 +109,7 @@ section{padding:80px 20px;position:relative;overflow:hidden;}
 .travel-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:24px;margin-top:36px;}
 .t-card{border:0.5px solid rgba(196,154,60,.2);border-radius:3px;padding:24px;transition:border-color .4s;}
 .t-card:hover{border-color:rgba(196,154,60,.5);}
+.ico,.t-card-icon,.file-drop .icon,.file-icon-box,.admin-btn{display:inline-block;filter:grayscale(100%);opacity:.85;}
 .t-card-icon{font-size:24px;margin-bottom:12px;}
 .t-card h3{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:400;color:var(--ivory);margin-bottom:8px;}
 .t-card p,.t-card ul{font-size:13px;color:var(--stone);line-height:1.8;}
@@ -318,7 +319,7 @@ footer{background:#080402;text-align:center;padding:56px 20px;}
             <div class="tl-time">15:00 – 19:00</div>
             <div class="tl-name">הגעה ולינה</div>
             <div class="tl-desc">כניסה לחדרים בוילה פיטיאנה. פנאי חופשי לטייל בגינות, בריכה ושדרות הברושים.</div>
-            <a class="map-link" href="https://maps.google.com/?q=Villa+Pitiana+Donnini+Tuscany" target="_blank">📍 Villa Pitiana, Donnini</a>
+            <a class="map-link" href="https://maps.google.com/?q=Villa+Pitiana+Donnini+Tuscany" target="_blank"><span class="ico">📍</span> Villa Pitiana, Donnini</a>
           </div>
           <div class="tl-item">
             <div class="tl-time">20:00</div>
@@ -339,7 +340,7 @@ footer{background:#080402;text-align:center;padding:56px 20px;}
             <div class="tl-time">16:00 – 16:45</div>
             <div class="tl-name">כניסת אורחים לטקס</div>
             <div class="tl-desc">קבלת פנים בחצר הימי-ביניימית, מוזיקת רקע חיה.</div>
-            <a class="map-link" href="https://maps.google.com/?q=Villa+Pitiana+Donnini+cloister" target="_blank">📍 החצר הימי-ביניימית</a>
+            <a class="map-link" href="https://maps.google.com/?q=Villa+Pitiana+Donnini+cloister" target="_blank"><span class="ico">📍</span> החצר הימי-ביניימית</a>
           </div>
           <div class="tl-item">
             <div class="tl-time">17:00</div>
@@ -375,7 +376,7 @@ footer{background:#080402;text-align:center;padding:56px 20px;}
             <div class="tl-time">12:00</div>
             <div class="tl-name">בריכה ופנאי</div>
             <div class="tl-desc">זמן חופשי בבריכה הפנורמית עם נוף לגבעות — מי שרוצה.</div>
-            <a class="map-link" href="https://maps.google.com/?q=Villa+Pitiana+pool" target="_blank">📍 בריכת הוילה</a>
+            <a class="map-link" href="https://maps.google.com/?q=Villa+Pitiana+pool" target="_blank"><span class="ico">📍</span> בריכת הוילה</a>
           </div>
           <div class="tl-item">
             <div class="tl-time">15:00</div>
@@ -416,7 +417,7 @@ footer{background:#080402;text-align:center;padding:56px 20px;}
         <h3>התניידות</h3>
         <p>מומלץ מאוד לשכור רכב — מסלול S222 (Chiantigiana) הוא חוויה בפני עצמה. ניתן לסדר הסעות משותפות — ציינו בטופס ה-RSVP.</p>
         <br>
-        <a class="map-link" href="https://maps.google.com/?q=Via+Pitiana+7+Donnini+Reggello" target="_blank">📍 נווט לוילה</a>
+        <a class="map-link" href="https://maps.google.com/?q=Via+Pitiana+7+Donnini+Reggello" target="_blank"><span class="ico">📍</span> נווט לוילה</a>
       </div>
       <div class="t-card">
         <div class="t-card-icon">🏨</div>
@@ -459,7 +460,7 @@ footer{background:#080402;text-align:center;padding:56px 20px;}
         <button type="submit" class="rsvp-btn">אשרו הגעה ✦</button>
       </form>
       <div class="rsvp-ok" id="rsvpOk">
-        תודה! נתראה בטוסקנה 🌿<br>
+        תודה! נתראה בטוסקנה <span class="ico">🌿</span><br>
         <span style="font-size:13px;color:var(--stone);font-family:'Heebo',sans-serif;font-weight:300;">פרטיכם נרשמו</span>
       </div>
     </div>
@@ -492,14 +493,14 @@ footer{background:#080402;text-align:center;padding:56px 20px;}
     <button class="adm-logout" onclick="adminLogout()">יציאה</button>
   </div>
   <div class="adm-tabs">
-    <button class="adm-tab active" onclick="switchTab('guests')">👥 אורחים</button>
-    <button class="adm-tab" onclick="switchTab('rooms')">🏠 חילוק חדרים</button>
-    <button class="adm-tab" onclick="switchTab('transfers')">🚐 הסעות</button>
-    <button class="adm-tab" onclick="switchTab('suppliers')">🤝 ספקים</button>
-    <button class="adm-tab" onclick="switchTab('budget')">💰 תקציב</button>
-    <button class="adm-tab" onclick="switchTab('tasks')">✅ משימות</button>
-    <button class="adm-tab" onclick="switchTab('files')">📁 קבצים</button>
-    <button class="adm-tab" onclick="switchTab('content')">✏️ עריכת תוכן</button>
+    <button class="adm-tab active" onclick="switchTab('guests')"><span class="ico">👥</span> אורחים</button>
+    <button class="adm-tab" onclick="switchTab('rooms')"><span class="ico">🏠</span> חילוק חדרים</button>
+    <button class="adm-tab" onclick="switchTab('transfers')"><span class="ico">🚐</span> הסעות</button>
+    <button class="adm-tab" onclick="switchTab('suppliers')"><span class="ico">🤝</span> ספקים</button>
+    <button class="adm-tab" onclick="switchTab('budget')"><span class="ico">💰</span> תקציב</button>
+    <button class="adm-tab" onclick="switchTab('tasks')"><span class="ico">✅</span> משימות</button>
+    <button class="adm-tab" onclick="switchTab('files')"><span class="ico">📁</span> קבצים</button>
+    <button class="adm-tab" onclick="switchTab('content')"><span class="ico">✏️</span> עריכת תוכן</button>
   </div>
   <div class="adm-body">
 
