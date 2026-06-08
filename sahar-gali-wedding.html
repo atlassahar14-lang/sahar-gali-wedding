@@ -696,21 +696,22 @@ footer{background:#080402;text-align:center;padding:56px 20px;}
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.1/dist/umd/supabase.min.js"></script>
 <script>
 // ===== SUPABASE =====
 const SUPABASE_URL='https://pwtakxpnntfopxfygvcu.supabase.co';
 const SUPABASE_ANON_KEY='sb_publishable_sgQjGA4_NdxTsHm0JhSgUw_z1ZM9mBs';
-const sb=window.supabase?.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
-const DB={guests:[],rooms:[],expenses:[],tasks:[],files:[],suppliers:[],content:{title:'',wedding_date:'',msg:'',budget_total:0}};
+const sb=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+const DB={guests:[],rooms:[],expenses:[],tasks:[],files:[],suppliers:[],content:{id:1,title:'',wedding_date:'',msg:'',budget_total:0}};
 const LS={guests:'wg_guests',budget:'wg_budget',expenses:'wg_expenses',tasks:'wg_tasks',files:'wg_files',content:'wg_content',rooms:'wg_rooms',suppliers:'wg_suppliers'};
 function sbReady(){return!!sb&&!!SUPABASE_URL&&!!SUPABASE_ANON_KEY;}
+function dbError(where,err){console.error('Supabase',where,err);return err?.message||'שגיאת שמירה';}
 function mapGuest(g){return{id:g.id,name:g.name,phone:g.phone,count:g.count,days:g.days,status:g.status,transfer:g.transfer,notes:g.notes,roomId:g.room_id,ts:g.created_at};}
 function mapRoom(r){return{id:r.id,name:r.name,building:r.building,capacity:r.capacity,notes:r.notes};}
 function mapFile(f){return{id:f.id,name:f.name,size:f.size,date:f.file_date,type:f.mime_type,data:f.data};}
 function mapSupplier(s){return{id:s.id,name:s.name,company:s.company,cat:s.cat,phone:s.phone,email:s.email,from:s.origin,lodging:s.lodging,transfer:s.transfer,status:s.status,arrival:s.arrival,notes:s.notes,ts:s.created_at};}
 async function dbLoadAll(){
-  if(!sbReady())return;
+  if(!sbReady())return false;
   const [g,r,e,t,f,c,s]=await Promise.all([
     sb.from('guests').select('*').order('created_at'),
     sb.from('rooms').select('*').order('created_at'),
@@ -720,7 +721,9 @@ async function dbLoadAll(){
     sb.from('content').select('*').eq('id',1).maybeSingle(),
     sb.from('suppliers').select('*').order('created_at')
   ]);
-  if(g.error)throw g.error;if(r.error)throw r.error;if(e.error)throw e.error;if(t.error)throw t.error;if(f.error)throw f.error;if(c.error)throw c.error;if(s.error)throw s.error;
+  for(const [name,res] of [['guests',g],['rooms',r],['expenses',e],['tasks',t],['files',f],['content',c],['suppliers',s]]){
+    if(res.error){dbError('load '+name,res.error);return false;}
+  }
   DB.guests=(g.data||[]).map(mapGuest);
   DB.rooms=(r.data||[]).map(mapRoom);
   DB.expenses=e.data||[];
@@ -728,9 +731,19 @@ async function dbLoadAll(){
   DB.files=(f.data||[]).map(mapFile);
   DB.suppliers=(s.data||[]).map(mapSupplier);
   DB.content=c.data||{id:1,title:'',wedding_date:'',msg:'',budget_total:0};
+  return true;
+}
+async function ensureContentRow(){
+  if(!DB.content?.id){
+    await sb.from('content').upsert({id:1,title:'',wedding_date:'',msg:'',budget_total:0},{onConflict:'id'});
+    const {data}=await sb.from('content').select('*').eq('id',1).maybeSingle();
+    DB.content=data||{id:1,title:'',wedding_date:'',msg:'',budget_total:0};
+  }
 }
 async function migrateFromLocalStorage(){
   if(!sbReady()||localStorage.getItem('wg_supabase_migrated'))return;
+  const {count}=await sb.from('guests').select('*',{count:'exact',head:true});
+  if((count||0)>0){localStorage.setItem('wg_supabase_migrated','1');return;}
   const roomMap={};
   try{
     const oldRooms=JSON.parse(localStorage.getItem(LS.rooms)||'[]');
@@ -760,14 +773,11 @@ async function migrateFromLocalStorage(){
   }catch(err){console.error('Migration failed',err);}
 }
 async function dbInit(){
-  if(!sbReady())return;
-  const probe=await sb.from('content').select('id').eq('id',1).maybeSingle();
-  if(probe.error&&(probe.error.code==='PGRST205'||probe.error.message?.includes('does not exist'))){
-    console.error('Supabase tables missing — run supabase-schema.sql in SQL Editor');
-    return;
-  }
+  if(!sbReady()){console.error('Supabase client not ready');return;}
   await migrateFromLocalStorage();
-  await dbLoadAll();
+  if(!await dbLoadAll())return;
+  await ensureContentRow();
+  loadContent();
 }
 
 // ===== COUNTDOWN =====
@@ -813,7 +823,7 @@ document.getElementById('rsvpForm').addEventListener('submit',async function(e){
     status:'מגיע'
   };
   const {error}=await sb.from('guests').insert(row);
-  if(error){alert('שגיאה בשמירה. נסו שוב.');return;}
+  if(error){alert(dbError('rsvp',error));return;}
   await dbLoadAll();
   this.style.display='none';
   document.getElementById('rsvpOk').style.display='block';
@@ -1312,7 +1322,7 @@ async function refreshAll(){
   if(sbReady()){await initTasks();await dbLoadAll();}
   refreshGuests();refreshRooms();refreshTransfers();refreshSuppliers();refreshBudget();refreshTasks();refreshFiles();loadContent();
 }
-(async function init(){await dbInit();loadContent();})();
+(async function init(){await dbInit();})();
 </script>
 </body>
 </html>
