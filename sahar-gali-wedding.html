@@ -706,14 +706,15 @@ const DB={guests:[],rooms:[],expenses:[],tasks:[],files:[],suppliers:[],content:
 const LS={guests:'wg_guests',budget:'wg_budget',expenses:'wg_expenses',tasks:'wg_tasks',files:'wg_files',content:'wg_content',rooms:'wg_rooms',suppliers:'wg_suppliers'};
 function sbReady(){return!!sb&&!!SUPABASE_URL&&!!SUPABASE_ANON_KEY;}
 function dbError(where,err){console.error('Supabase',where,err);return err?.message||'שגיאת שמירה';}
-function mapGuest(g){return{id:g.id,name:g.name,phone:g.phone,count:g.count,days:g.days,status:g.status,transfer:g.transfer,notes:g.notes,roomId:g.room_id,ts:g.created_at};}
+const GUEST_COLS='id,name,count,days,status,transfer,notes,phone,room_id';
+function mapGuest(g){return{id:g.id,name:g.name,phone:g.phone,count:g.count,days:g.days,status:g.status,transfer:g.transfer,notes:g.notes,roomId:g.room_id};}
 function mapRoom(r){return{id:r.id,name:r.name,building:r.building,capacity:r.capacity,notes:r.notes};}
 function mapFile(f){return{id:f.id,name:f.name,size:f.size,date:f.file_date,type:f.mime_type,data:f.data};}
-function mapSupplier(s){return{id:s.id,name:s.name,company:s.company,cat:s.cat,phone:s.phone,email:s.email,from:s.origin,lodging:s.lodging,transfer:s.transfer,status:s.status,arrival:s.arrival,notes:s.notes,ts:s.created_at};}
+function mapSupplier(s){return{id:s.id,name:s.name,company:s.company,cat:s.cat,phone:s.phone,email:s.email,from:s.origin,lodging:s.lodging,transfer:s.transfer,status:s.status,arrival:s.arrival,notes:s.notes};}
 async function dbLoadAll(){
   if(!sbReady())return false;
   const [g,r,e,t,f,c,s]=await Promise.all([
-    sb.from('guests').select('*').order('created_at'),
+    sb.from('guests').select(GUEST_COLS).order('name'),
     sb.from('rooms').select('*'),
     sb.from('expenses').select('*'),
     sb.from('tasks').select('*'),
@@ -740,7 +741,7 @@ async function ensureContentRow(){
 }
 async function migrateFromLocalStorage(){
   if(!sbReady()||localStorage.getItem('wg_supabase_migrated'))return;
-  const {count}=await sb.from('guests').select('*',{count:'exact',head:true});
+  const {count}=await sb.from('guests').select('id',{count:'exact',head:true});
   if((count||0)>0){localStorage.setItem('wg_supabase_migrated','1');return;}
   const roomMap={};
   try{
@@ -824,7 +825,7 @@ document.getElementById('rsvpForm').addEventListener('submit',async function(e){
     status:'מגיע'
   };
   try{
-    const {data,error}=await sb.from('guests').insert(row).select('id').single();
+    const {data,error}=await sb.from('guests').insert(row).select(GUEST_COLS).single();
     if(error){console.error('RSVP insert failed',error,row);alert(dbError('rsvp',error));return;}
     console.log('RSVP saved to Supabase',data?.id||data);
     await dbLoadAll();
