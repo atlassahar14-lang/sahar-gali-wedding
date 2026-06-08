@@ -696,7 +696,71 @@ footer{background:#080402;text-align:center;padding:56px 20px;}
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+// ===== SUPABASE =====
+const SUPABASE_URL='https://YOUR_PROJECT_ID.supabase.co';
+const SUPABASE_ANON_KEY='YOUR_ANON_KEY';
+const sb=window.supabase?.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+const DB={guests:[],rooms:[],expenses:[],tasks:[],files:[],suppliers:[],content:{title:'',wedding_date:'',msg:'',budget_total:0}};
+const LS={guests:'wg_guests',budget:'wg_budget',expenses:'wg_expenses',tasks:'wg_tasks',files:'wg_files',content:'wg_content',rooms:'wg_rooms',suppliers:'wg_suppliers'};
+function sbReady(){return sb&&SUPABASE_URL&&!SUPABASE_URL.includes('YOUR_PROJECT');}
+function mapGuest(g){return{id:g.id,name:g.name,phone:g.phone,count:g.count,days:g.days,status:g.status,transfer:g.transfer,notes:g.notes,roomId:g.room_id,ts:g.created_at};}
+function mapRoom(r){return{id:r.id,name:r.name,building:r.building,capacity:r.capacity,notes:r.notes};}
+function mapFile(f){return{id:f.id,name:f.name,size:f.size,date:f.file_date,type:f.mime_type,data:f.data};}
+function mapSupplier(s){return{id:s.id,name:s.name,company:s.company,cat:s.cat,phone:s.phone,email:s.email,from:s.origin,lodging:s.lodging,transfer:s.transfer,status:s.status,arrival:s.arrival,notes:s.notes,ts:s.created_at};}
+async function dbLoadAll(){
+  if(!sbReady())return;
+  const [g,r,e,t,f,c,s]=await Promise.all([
+    sb.from('guests').select('*').order('created_at'),
+    sb.from('rooms').select('*').order('created_at'),
+    sb.from('expenses').select('*').order('created_at'),
+    sb.from('tasks').select('*').order('created_at'),
+    sb.from('files').select('*').order('created_at'),
+    sb.from('content').select('*').eq('id',1).maybeSingle(),
+    sb.from('suppliers').select('*').order('created_at')
+  ]);
+  if(g.error)throw g.error;if(r.error)throw r.error;if(e.error)throw e.error;if(t.error)throw t.error;if(f.error)throw f.error;if(c.error)throw c.error;if(s.error)throw s.error;
+  DB.guests=(g.data||[]).map(mapGuest);
+  DB.rooms=(r.data||[]).map(mapRoom);
+  DB.expenses=e.data||[];
+  DB.tasks=t.data||[];
+  DB.files=(f.data||[]).map(mapFile);
+  DB.suppliers=(s.data||[]).map(mapSupplier);
+  DB.content=c.data||{id:1,title:'',wedding_date:'',msg:'',budget_total:0};
+}
+async function migrateFromLocalStorage(){
+  if(!sbReady()||localStorage.getItem('wg_supabase_migrated'))return;
+  const roomMap={};
+  try{
+    const oldRooms=JSON.parse(localStorage.getItem(LS.rooms)||'[]');
+    for(const r of oldRooms){
+      const {data}=await sb.from('rooms').insert({name:r.name,building:r.building,capacity:r.capacity||2,notes:r.notes||''}).select().single();
+      if(data)roomMap[String(r.id)]=data.id;
+    }
+    const oldGuests=JSON.parse(localStorage.getItem(LS.guests)||'[]');
+    for(const g of oldGuests){
+      await sb.from('guests').insert({name:g.name,phone:g.phone||'',count:parseInt(g.count)||1,days:g.days||'',status:g.status||'מגיע',transfer:g.transfer||'',notes:g.notes||'',room_id:g.roomId?roomMap[String(g.roomId)]||null:null});
+    }
+    for(const x of JSON.parse(localStorage.getItem(LS.expenses)||'[]')){
+      await sb.from('expenses').insert({name:x.name,cat:x.cat,total:x.total||0,paid:x.paid||0,status:x.status||''});
+    }
+    const oldTasks=JSON.parse(localStorage.getItem(LS.tasks)||'[]');
+    if(oldTasks.length)for(const t of oldTasks){await sb.from('tasks').insert({name:t.name,due:t.due||null,cat:t.cat||'',done:!!t.done});}
+    for(const f of JSON.parse(localStorage.getItem(LS.files)||'[]')){
+      await sb.from('files').insert({name:f.name,size:f.size||'',file_date:f.date||'',mime_type:f.type||'',data:f.data||''});
+    }
+    for(const sp of JSON.parse(localStorage.getItem(LS.suppliers)||'[]')){
+      await sb.from('suppliers').insert({name:sp.name,company:sp.company||'',cat:sp.cat||'',phone:sp.phone||'',email:sp.email||'',origin:sp.from||'',lodging:sp.lodging||'לא',transfer:sp.transfer||'לא',status:sp.status||'',arrival:sp.arrival||null,notes:sp.notes||''});
+    }
+    const oldContent=JSON.parse(localStorage.getItem(LS.content)||'{}');
+    const oldBudget=JSON.parse(localStorage.getItem(LS.budget)||'{}');
+    await sb.from('content').upsert({id:1,title:oldContent.title||'',wedding_date:oldContent.date||'',msg:oldContent.msg||'',budget_total:parseInt(oldBudget.total)||0},{onConflict:'id'});
+    localStorage.setItem('wg_supabase_migrated','1');
+  }catch(err){console.error('Migration failed',err);}
+}
+async function dbInit(){if(!sbReady())return;await migrateFromLocalStorage();await dbLoadAll();}
+
 // ===== COUNTDOWN =====
 function tick(){
   const t=new Date('2027-05-21T17:00:00');
@@ -728,17 +792,20 @@ function showDay(i){
 }
 
 // ===== RSVP =====
-document.getElementById('rsvpForm').addEventListener('submit',function(e){
+document.getElementById('rsvpForm').addEventListener('submit',async function(e){
   e.preventDefault();
-  const g={
+  if(!sbReady()){alert('החיבור לענן לא מוגדר. פנו לסהר וגלי.');return;}
+  const row={
     name:document.getElementById('rf-name').value,
     phone:document.getElementById('rf-phone').value,
-    count:document.getElementById('rf-count').value,
+    count:parseInt(document.getElementById('rf-count').value)||1,
     transfer:document.getElementById('rf-transfer').value,
     notes:document.getElementById('rf-notes').value,
-    status:'מגיע',ts:Date.now()
+    status:'מגיע'
   };
-  let guests=getGuests();guests.push(g);saveGuests(guests);
+  const {error}=await sb.from('guests').insert(row);
+  if(error){alert('שגיאה בשמירה. נסו שוב.');return;}
+  await dbLoadAll();
   this.style.display='none';
   document.getElementById('rsvpOk').style.display='block';
 });
@@ -764,7 +831,7 @@ function tryLogin(){
 document.getElementById('pwInput').addEventListener('keydown',e=>{if(e.key==='Enter')tryLogin();});
 document.getElementById('loginOverlay').addEventListener('click',e=>{if(e.target===e.currentTarget)closeLogin();});
 
-function openAdmin(){document.getElementById('admin').classList.add('show');refreshAll();}
+async function openAdmin(){document.getElementById('admin').classList.add('show');await refreshAll();}
 function adminLogout(){document.getElementById('admin').classList.remove('show');clearAdminSession();}
 
 // ===== ADMIN TABS =====
@@ -778,16 +845,9 @@ function switchTab(name){
   if(name==='suppliers')refreshSuppliers();
 }
 
-// ===== DATA (localStorage) =====
-const LS={
-  guests:'wg_guests',budget:'wg_budget',expenses:'wg_expenses',
-  tasks:'wg_tasks',files:'wg_files',content:'wg_content',rooms:'wg_rooms',suppliers:'wg_suppliers'
-};
-function get(k){try{return JSON.parse(localStorage.getItem(k))||[];}catch{return[];}}
-function getObj(k){try{return JSON.parse(localStorage.getItem(k))||{};}catch{return{};}}
-function set(k,v){localStorage.setItem(k,JSON.stringify(v));}
-function getGuests(){return get(LS.guests);}
-function saveGuests(g){set(LS.guests,g);}
+function getGuests(){return DB.guests;}
+function getRooms(){return DB.rooms;}
+function getSuppliers(){return DB.suppliers;}
 
 // ===== GUESTS =====
 function refreshGuests(){
@@ -811,19 +871,32 @@ function refreshGuests(){
       <td><span class="badge ${g.status==='מגיע'?'badge-yes':g.status==='לא מגיע'?'badge-no':'badge-maybe'}">${g.status}</span></td>
       <td style="font-size:12px;">${g.transfer||'—'}</td>
       <td style="font-size:12px;max-width:150px;">${g.notes||'—'}</td>
-      <td><button class="adm-btn adm-btn-sm adm-btn-red" onclick="removeGuest(${i})">✕</button></td>
+      <td><button class="adm-btn adm-btn-sm adm-btn-red" onclick="removeGuest('${g.id}')">✕</button></td>
     </tr>`).join('');
   refreshRooms();
   refreshTransfers();
 }
-function addGuest(){
-  const g={name:document.getElementById('g-name').value,phone:document.getElementById('g-phone').value,count:document.getElementById('g-count').value||1,status:document.getElementById('g-status').value,days:document.getElementById('g-days').value,notes:document.getElementById('g-notes').value,transfer:'—',ts:Date.now()};
-  if(!g.name)return;
-  const guests=getGuests();guests.push(g);saveGuests(guests);
+async function addGuest(){
+  const name=document.getElementById('g-name').value;
+  if(!name||!sbReady())return;
+  const {error}=await sb.from('guests').insert({
+    name,phone:document.getElementById('g-phone').value,
+    count:parseInt(document.getElementById('g-count').value)||1,
+    status:document.getElementById('g-status').value,
+    days:document.getElementById('g-days').value,
+    notes:document.getElementById('g-notes').value,transfer:'—'
+  });
+  if(error){alert('שגיאה בשמירה');return;}
+  await dbLoadAll();
   ['g-name','g-phone','g-count','g-days','g-notes'].forEach(id=>document.getElementById(id).value='');
   refreshGuests();
 }
-function removeGuest(i){const g=getGuests();g.splice(i,1);saveGuests(g);refreshGuests();}
+async function removeGuest(id){
+  if(!sbReady())return;
+  await sb.from('guests').delete().eq('id',id);
+  await dbLoadAll();
+  refreshGuests();
+}
 function exportCSV(){
   const g=getGuests();
   const h='שם,טלפון,מגיעים,ימים,סטטוס,הסעה,בקשות\n';
@@ -834,8 +907,6 @@ function exportCSV(){
 }
 
 // ===== ROOMS =====
-function getRooms(){return get(LS.rooms);}
-function saveRooms(r){set(LS.rooms,r);}
 function normRoomId(id){return id==null||id===''?null:String(id);}
 function roomOccupancy(rooms,guests){
   const occ={};
@@ -846,38 +917,32 @@ function roomOccupancy(rooms,guests){
   });
   return occ;
 }
-function addRoom(){
+async function addRoom(){
   const name=document.getElementById('r-name').value.trim();
-  if(!name)return;
-  const rooms=getRooms();
-  rooms.push({
-    id:Date.now(),
-    name,
-    building:document.getElementById('r-building').value,
+  if(!name||!sbReady())return;
+  const {error}=await sb.from('rooms').insert({
+    name,building:document.getElementById('r-building').value,
     capacity:parseInt(document.getElementById('r-capacity').value)||2,
     notes:document.getElementById('r-notes').value.trim()
   });
-  saveRooms(rooms);
+  if(error){alert('שגיאה בשמירה');return;}
+  await dbLoadAll();
   ['r-name','r-capacity','r-notes'].forEach(id=>document.getElementById(id).value='');
   refreshRooms();
 }
-function removeRoom(i){
-  const rooms=getRooms();
-  const removed=rooms[i];
-  rooms.splice(i,1);
-  saveRooms(rooms);
-  const guests=getGuests();
-  guests.forEach(g=>{if(normRoomId(g.roomId)===String(removed.id))delete g.roomId;});
-  saveGuests(guests);
+async function removeRoom(id){
+  if(!sbReady())return;
+  await sb.from('guests').update({room_id:null}).eq('room_id',id);
+  await sb.from('rooms').delete().eq('id',id);
+  await dbLoadAll();
   refreshRooms();
 }
-function assignRoom(guestIndex,roomId){
-  const guests=getGuests();
-  if(!guests[guestIndex])return;
-  if(roomId!=null&&roomId!=='')guests[guestIndex].roomId=String(roomId);
-  else delete guests[guestIndex].roomId;
-  saveGuests(guests);
+async function assignRoom(guestId,roomId){
+  if(!sbReady())return;
+  await sb.from('guests').update({room_id:roomId||null}).eq('id',guestId);
+  await dbLoadAll();
   updateRoomSummary();
+  refreshRooms();
 }
 function updateRoomSummary(){
   const rooms=getRooms();
@@ -900,30 +965,30 @@ function updateRoomSummary(){
         <td>${used} / ${r.capacity}</td>
         <td><span class="badge ${full?'badge-maybe':'badge-yes'}">${used} אורחים</span></td>
         <td style="font-size:12px;">${r.notes||'—'}</td>
-        <td><button class="adm-btn adm-btn-sm adm-btn-red" onclick="removeRoom(${i})">✕</button></td>
+        <td><button class="adm-btn adm-btn-sm adm-btn-red" onclick="removeRoom('${r.id}')">✕</button></td>
       </tr>`;
     }).join('');
 }
 function refreshRooms(){
   const rooms=getRooms();
   const allGuests=getGuests();
-  const arriving=allGuests.map((g,i)=>({g,i})).filter(x=>x.g.status==='מגיע');
-  const guests=arriving.map(x=>x.g);
+  const arriving=allGuests.filter(g=>g.status==='מגיע');
+  const guests=arriving;
   updateRoomSummary();
   const roomOpts=rooms.map(r=>`<option value="${r.id}">${r.name} (${r.building})</option>`).join('');
   document.getElementById('roomAssignTable').innerHTML=guests.length===0?`<tr><td colspan="5" style="text-align:center;padding:20px;color:var(--stone);">אין אורחים מגיעים לשיוך</td></tr>`:
-    arriving.map(({g,gi})=>`<tr>
+    arriving.map(g=>`<tr>
         <td style="color:var(--cream);">${g.name||'—'}</td>
         <td style="direction:ltr;font-size:12px;">${g.phone||'—'}</td>
         <td>${g.count||1}</td>
-        <td><select class="adm-input" style="min-width:160px;padding:6px 8px;" onchange="assignRoom(${gi},this.value||null)">
+        <td><select class="adm-input" style="min-width:160px;padding:6px 8px;" onchange="assignRoom('${g.id}',this.value||null)">
           <option value="">— לא משויך —</option>
           ${roomOpts}
         </select></td>
         <td style="font-size:12px;">${g.days||'—'}</td>
       </tr>`).join('');
   document.querySelectorAll('#roomAssignTable select').forEach((sel,idx)=>{
-    const rid=normRoomId(arriving[idx]?.g?.roomId);
+    const rid=normRoomId(arriving[idx]?.roomId);
     sel.value=rid||'';
   });
 }
@@ -964,40 +1029,36 @@ function refreshTransfers(){
 }
 
 // ===== SUPPLIERS =====
-function getSuppliers(){return get(LS.suppliers);}
-function saveSuppliers(s){set(LS.suppliers,s);}
 function yesNoBadge(v){return`<span class="badge ${v==='כן'?'badge-maybe':'badge-no'}">${v||'לא'}</span>`;}
 function supplierStatusBadge(s){
   if(s==='נחתם'||s==='שולם')return'badge-yes';
   if(s==='בוטל')return'badge-no';
   return'badge-maybe';
 }
-function addSupplier(){
+async function addSupplier(){
   const name=document.getElementById('s-name').value.trim();
-  if(!name)return;
-  const suppliers=getSuppliers();
-  suppliers.push({
-    name,
-    company:document.getElementById('s-company').value.trim(),
+  if(!name||!sbReady())return;
+  const {error}=await sb.from('suppliers').insert({
+    name,company:document.getElementById('s-company').value.trim(),
     cat:document.getElementById('s-cat').value,
     phone:document.getElementById('s-phone').value.trim(),
     email:document.getElementById('s-email').value.trim(),
-    from:document.getElementById('s-from').value.trim(),
+    origin:document.getElementById('s-from').value.trim(),
     lodging:document.getElementById('s-lodging').value,
     transfer:document.getElementById('s-transfer').value,
     status:document.getElementById('s-status').value,
-    arrival:document.getElementById('s-arrival').value,
-    notes:document.getElementById('s-notes').value.trim(),
-    ts:Date.now()
+    arrival:document.getElementById('s-arrival').value||null,
+    notes:document.getElementById('s-notes').value.trim()
   });
-  saveSuppliers(suppliers);
+  if(error){alert('שגיאה בשמירה');return;}
+  await dbLoadAll();
   ['s-name','s-company','s-phone','s-email','s-from','s-arrival','s-notes'].forEach(id=>document.getElementById(id).value='');
   refreshSuppliers();
 }
-function removeSupplier(i){
-  const suppliers=getSuppliers();
-  suppliers.splice(i,1);
-  saveSuppliers(suppliers);
+async function removeSupplier(id){
+  if(!sbReady())return;
+  await sb.from('suppliers').delete().eq('id',id);
+  await dbLoadAll();
   refreshSuppliers();
 }
 function refreshSuppliers(){
@@ -1024,7 +1085,7 @@ function refreshSuppliers(){
       <td><span class="badge ${supplierStatusBadge(s.status)}">${s.status}</span></td>
       <td style="font-size:12px;">${s.arrival||'—'}</td>
       <td style="font-size:12px;max-width:140px;">${s.notes||'—'}</td>
-      <td><button class="adm-btn adm-btn-sm adm-btn-red" onclick="removeSupplier(${i})">✕</button></td>
+      <td><button class="adm-btn adm-btn-sm adm-btn-red" onclick="removeSupplier('${s.id}')">✕</button></td>
     </tr>`).join('');
 }
 function exportSuppliersCSV(){
@@ -1038,9 +1099,8 @@ function exportSuppliersCSV(){
 
 // ===== BUDGET =====
 function refreshBudget(){
-  const exps=get(LS.expenses);
-  const cfg=getObj(LS.budget);
-  const totalBudget=parseInt(cfg.total||0);
+  const exps=DB.expenses;
+  const totalBudget=parseInt(DB.content.budget_total||0);
   const spent=exps.reduce((s,e)=>s+parseInt(e.total||0),0);
   const paid=exps.reduce((s,e)=>s+parseInt(e.paid||0),0);
   const left=totalBudget-spent;
@@ -1062,18 +1122,35 @@ function refreshBudget(){
       <td>${fmt(e.paid)}</td>
       <td style="color:${parseInt(e.total)-parseInt(e.paid)>0?'#E08888':'#8FC890'}">${fmt(parseInt(e.total)-parseInt(e.paid))}</td>
       <td><span class="badge ${e.status==='שולם'?'badge-yes':e.status==='מקדמה'?'badge-maybe':'badge-no'}">${e.status}</span></td>
-      <td><button class="adm-btn adm-btn-sm adm-btn-red" onclick="removeExp(${i})">✕</button></td>
+      <td><button class="adm-btn adm-btn-sm adm-btn-red" onclick="removeExp('${e.id}')">✕</button></td>
     </tr>`).join('');
 }
-function saveBudget(){set(LS.budget,{total:document.getElementById('b-budget-input').value});refreshBudget();}
-function addExpense(){
-  const e={name:document.getElementById('exp-name').value,cat:document.getElementById('exp-cat').value,total:document.getElementById('exp-total').value||0,paid:document.getElementById('exp-paid').value||0,status:document.getElementById('exp-status').value};
-  if(!e.name)return;
-  const exps=get(LS.expenses);exps.push(e);set(LS.expenses,exps);
+async function saveBudget(){
+  if(!sbReady())return;
+  await sb.from('content').upsert({id:1,budget_total:parseInt(document.getElementById('b-budget-input').value)||0,title:DB.content.title||'',wedding_date:DB.content.wedding_date||'',msg:DB.content.msg||''},{onConflict:'id'});
+  await dbLoadAll();
+  refreshBudget();
+}
+async function addExpense(){
+  const name=document.getElementById('exp-name').value;
+  if(!name||!sbReady())return;
+  const {error}=await sb.from('expenses').insert({
+    name,cat:document.getElementById('exp-cat').value,
+    total:document.getElementById('exp-total').value||0,
+    paid:document.getElementById('exp-paid').value||0,
+    status:document.getElementById('exp-status').value
+  });
+  if(error){alert('שגיאה בשמירה');return;}
+  await dbLoadAll();
   ['exp-name','exp-total','exp-paid'].forEach(id=>document.getElementById(id).value='');
   refreshBudget();
 }
-function removeExp(i){const e=get(LS.expenses);e.splice(i,1);set(LS.expenses,e);refreshBudget();}
+async function removeExp(id){
+  if(!sbReady())return;
+  await sb.from('expenses').delete().eq('id',id);
+  await dbLoadAll();
+  refreshBudget();
+}
 
 // ===== TASKS =====
 const defaultTasks=[
@@ -1085,44 +1162,65 @@ const defaultTasks=[
   {name:'הזמנת פרחים',due:'2026-09-01',cat:'ספקים',done:false},
   {name:'תפריט ואלרגיות',due:'2027-04-01',cat:'קייטרינג',done:false},
 ];
-function initTasks(){if(!localStorage.getItem(LS.tasks))set(LS.tasks,defaultTasks);}
+async function initTasks(){
+  if(!sbReady())return;
+  const {count}=await sb.from('tasks').select('*',{count:'exact',head:true});
+  if(!count)await sb.from('tasks').insert(defaultTasks.map(t=>({name:t.name,due:t.due,cat:t.cat,done:t.done})));
+}
 function refreshTasks(){
-  const tasks=get(LS.tasks);
+  const tasks=DB.tasks;
   const now=new Date();
   document.getElementById('taskList').innerHTML=tasks.length===0?`<p style="color:var(--stone);font-size:13px;">אין משימות</p>`:
     tasks.map((t,i)=>{
       const due=t.due?new Date(t.due):null;
       const overdue=due&&due<now&&!t.done;
       return `<div class="task-item">
-        <div class="task-cb ${t.done?'done':''}" onclick="toggleTask(${i})">${t.done?'✓':''}</div>
+        <div class="task-cb ${t.done?'done':''}" onclick="toggleTask('${t.id}')">${t.done?'✓':''}</div>
         <div class="task-info">
           <div class="task-name ${t.done?'done':''}">${t.name} <span style="font-size:11px;color:var(--stone);">(${t.cat})</span></div>
           ${t.due?`<div class="task-due ${overdue?'overdue':''}">יעד: ${t.due}${overdue?' — באיחור ⚠':''}  </div>`:''}
         </div>
-        <button class="adm-btn adm-btn-sm adm-btn-red" onclick="removeTask(${i})">✕</button>
+        <button class="adm-btn adm-btn-sm adm-btn-red" onclick="removeTask('${t.id}')">✕</button>
       </div>`;
     }).join('');
 }
-function addTask(){
-  const t={name:document.getElementById('t-name').value,due:document.getElementById('t-due').value,cat:document.getElementById('t-cat').value,done:false};
-  if(!t.name)return;
-  const tasks=get(LS.tasks);tasks.push(t);set(LS.tasks,tasks);
+async function addTask(){
+  const name=document.getElementById('t-name').value;
+  if(!name||!sbReady())return;
+  const {error}=await sb.from('tasks').insert({
+    name,due:document.getElementById('t-due').value||null,
+    cat:document.getElementById('t-cat').value,done:false
+  });
+  if(error){alert('שגיאה בשמירה');return;}
+  await dbLoadAll();
   ['t-name','t-due'].forEach(id=>document.getElementById(id).value='');
   refreshTasks();
 }
-function toggleTask(i){const tasks=get(LS.tasks);tasks[i].done=!tasks[i].done;set(LS.tasks,tasks);refreshTasks();}
-function removeTask(i){const tasks=get(LS.tasks);tasks.splice(i,1);set(LS.tasks,tasks);refreshTasks();}
+async function toggleTask(id){
+  if(!sbReady())return;
+  const t=DB.tasks.find(x=>x.id===id);
+  if(!t)return;
+  await sb.from('tasks').update({done:!t.done}).eq('id',id);
+  await dbLoadAll();
+  refreshTasks();
+}
+async function removeTask(id){
+  if(!sbReady())return;
+  await sb.from('tasks').delete().eq('id',id);
+  await dbLoadAll();
+  refreshTasks();
+}
 
 // ===== FILES =====
 function refreshFiles(){
-  const files=get(LS.files);
+  const files=DB.files;
   document.getElementById('fileList').innerHTML=files.length===0?`<p style="color:var(--stone);font-size:13px;">אין קבצים עדיין</p>`:
-    files.map((f,i)=>`<div class="file-row">
+    files.map(f=>`<div class="file-row">
       <div class="file-icon-box">${getFileIcon(f.name)}</div>
-      <div class="file-name">${f.data?`<a href="#" onclick="openFile(${i});return false;">${f.name}</a>`:f.name}</div>
+      <div class="file-name">${f.data?`<a href="#" onclick="openFile('${f.id}');return false;">${f.name}</a>`:f.name}</div>
       <div class="file-meta">${f.size} · ${f.date}${f.data?'':' · <span style="color:#E07070">יש להעלות מחדש</span>'}</div>
-      ${f.data?`<button class="adm-btn adm-btn-sm" onclick="openFile(${i})">פתיחה</button><button class="adm-btn adm-btn-sm" onclick="downloadFile(${i})">הורדה</button>`:''}
-      <button class="adm-btn adm-btn-sm adm-btn-red" onclick="removeFile(${i})">✕</button>
+      ${f.data?`<button class="adm-btn adm-btn-sm" onclick="openFile('${f.id}')">פתיחה</button><button class="adm-btn adm-btn-sm" onclick="downloadFile('${f.id}')">הורדה</button>`:''}
+      <button class="adm-btn adm-btn-sm adm-btn-red" onclick="removeFile('${f.id}')">✕</button>
     </div>`).join('');
 }
 function getFileIcon(n){
@@ -1134,53 +1232,78 @@ function getFileIcon(n){
   return 'FILE';
 }
 function handleFiles(fileList){
-  const files=get(LS.files);
+  if(!sbReady()){alert('החיבור לענן לא מוגדר');return;}
   const pending=Array.from(fileList);
   if(!pending.length)return;
-  let done=0;
+  let done=0,failed=false;
   pending.forEach(f=>{
     const reader=new FileReader();
-    reader.onload=e=>{
-      files.push({name:f.name,size:formatSize(f.size),date:new Date().toLocaleDateString('he-IL'),type:f.type||'',data:e.target.result});
-      if(++done===pending.length){set(LS.files,files);refreshFiles();}
+    reader.onload=async e=>{
+      const {error}=await sb.from('files').insert({
+        name:f.name,size:formatSize(f.size),file_date:new Date().toLocaleDateString('he-IL'),
+        mime_type:f.type||'',data:e.target.result
+      });
+      if(error)failed=true;
+      if(++done===pending.length){
+        await dbLoadAll();
+        refreshFiles();
+        if(failed)alert('חלק מהקבצים לא נשמרו');
+      }
     };
-    reader.onerror=()=>{if(++done===pending.length){set(LS.files,files);refreshFiles();}};
+    reader.onerror=()=>{if(++done===pending.length)refreshFiles();};
     reader.readAsDataURL(f);
   });
 }
-function openFile(i){
-  const f=get(LS.files)[i];
+function openFile(id){
+  const f=DB.files.find(x=>x.id===id);
   if(!f?.data){alert('הקובץ נשמר רק כשם. מחק והעלה אותו מחדש כדי לפתוח.');return;}
   window.open(f.data,'_blank');
 }
-function downloadFile(i){
-  const f=get(LS.files)[i];
+function downloadFile(id){
+  const f=DB.files.find(x=>x.id===id);
   if(!f?.data)return;
   const a=document.createElement('a');
   a.href=f.data;a.download=f.name;a.click();
 }
 function formatSize(b){if(b<1024)return b+'B';if(b<1048576)return Math.round(b/1024)+'KB';return (b/1048576).toFixed(1)+'MB';}
-function removeFile(i){const f=get(LS.files);f.splice(i,1);set(LS.files,f);refreshFiles();}
+async function removeFile(id){
+  if(!sbReady())return;
+  await sb.from('files').delete().eq('id',id);
+  await dbLoadAll();
+  refreshFiles();
+}
 
 // ===== CONTENT =====
 function loadContent(){
-  const c=getObj(LS.content);
+  const c=DB.content;
   if(c.title){document.getElementById('c-title').value=c.title;document.getElementById('heroTitle').innerHTML=c.title.replace('&','<span class="amp">&</span>');}
-  if(c.date){document.getElementById('c-date').value=c.date;document.getElementById('heroDate').textContent=c.date;}
+  if(c.wedding_date){document.getElementById('c-date').value=c.wedding_date;document.getElementById('heroDate').textContent=c.wedding_date;}
   if(c.msg)document.getElementById('c-msg').value=c.msg;
 }
-function saveContent(){
-  const c={title:document.getElementById('c-title').value,date:document.getElementById('c-date').value,msg:document.getElementById('c-msg').value};
-  set(LS.content,c);
-  if(c.title)document.getElementById('heroTitle').innerHTML=c.title.replace('&','<span class="amp">&</span>');
-  if(c.date)document.getElementById('heroDate').textContent=c.date;
+async function saveContent(){
+  if(!sbReady())return;
+  const row={
+    id:1,
+    title:document.getElementById('c-title').value,
+    wedding_date:document.getElementById('c-date').value,
+    msg:document.getElementById('c-msg').value,
+    budget_total:parseInt(DB.content.budget_total)||0
+  };
+  const {error}=await sb.from('content').upsert(row,{onConflict:'id'});
+  if(error){alert('שגיאה בשמירה');return;}
+  await dbLoadAll();
+  if(row.title)document.getElementById('heroTitle').innerHTML=row.title.replace('&','<span class="amp">&</span>');
+  if(row.wedding_date)document.getElementById('heroDate').textContent=row.wedding_date;
   const toast=document.getElementById('c-toast');
   toast.style.display='block';setTimeout(()=>toast.style.display='none',3000);
 }
 
 // ===== INIT =====
-function refreshAll(){initTasks();refreshGuests();refreshRooms();refreshTransfers();refreshSuppliers();refreshBudget();refreshTasks();refreshFiles();loadContent();}
-loadContent();
+async function refreshAll(){
+  if(sbReady()){await initTasks();await dbLoadAll();}
+  refreshGuests();refreshRooms();refreshTransfers();refreshSuppliers();refreshBudget();refreshTasks();refreshFiles();loadContent();
+}
+(async function init(){await dbInit();loadContent();})();
 </script>
 </body>
 </html>
