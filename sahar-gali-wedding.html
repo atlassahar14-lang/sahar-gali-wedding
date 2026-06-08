@@ -811,20 +811,31 @@ function showDay(i){
 // ===== RSVP =====
 document.getElementById('rsvpForm').addEventListener('submit',async function(e){
   e.preventDefault();
-  if(!sbReady()){alert('החיבור לענן לא מוגדר. פנו לסהר וגלי.');return;}
+  if(!sbReady()){console.error('RSVP: Supabase not ready');alert('החיבור לענן לא מוגדר. פנו לסהר וגלי.');return;}
+  const btn=this.querySelector('.rsvp-btn');
+  const prev=btn.textContent;
+  btn.disabled=true;btn.textContent='שולח...';
   const row={
-    name:document.getElementById('rf-name').value,
-    phone:document.getElementById('rf-phone').value,
-    count:parseInt(document.getElementById('rf-count').value)||1,
+    name:document.getElementById('rf-name').value.trim(),
+    phone:document.getElementById('rf-phone').value.trim(),
+    count:parseInt(document.getElementById('rf-count').value,10)||1,
     transfer:document.getElementById('rf-transfer').value,
-    notes:document.getElementById('rf-notes').value,
+    notes:document.getElementById('rf-notes').value.trim(),
     status:'מגיע'
   };
-  const {error}=await sb.from('guests').insert(row);
-  if(error){alert(dbError('rsvp',error));return;}
-  await dbLoadAll();
-  this.style.display='none';
-  document.getElementById('rsvpOk').style.display='block';
+  try{
+    const {data,error}=await sb.from('guests').insert(row).select('id').single();
+    if(error){console.error('RSVP insert failed',error,row);alert(dbError('rsvp',error));return;}
+    console.log('RSVP saved to Supabase',data?.id||data);
+    await dbLoadAll();
+    this.style.display='none';
+    document.getElementById('rsvpOk').style.display='block';
+  }catch(err){
+    console.error('RSVP unexpected error',err);
+    alert('שגיאה בשמירה. נסו שוב או פנו לסהר וגלי.');
+  }finally{
+    btn.disabled=false;btn.textContent=prev;
+  }
 });
 
 // ===== ADMIN LOGIN =====

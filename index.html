@@ -3,773 +3,1335 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ארונשטיין פיקוח וניהול</title>
-<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<title>סהר & גלי | 21–23 מאי 2027</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Heebo:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{--primary:#1a3c5e;--primary-light:#2563a8;--accent:#e8a020;--bg:#f0f4f8;--card:#fff;--text:#1a2332;--text-muted:#6b7a8d;--border:#dde3ea;--success:#22c55e;--warning:#f59e0b;--danger:#ef4444;--sidebar:240px}
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
-#login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0f2744,#1a3c5e,#2563a8);position:relative;overflow:hidden}
-#login-screen::before{content:'';position:absolute;width:600px;height:600px;border-radius:50%;background:rgba(255,255,255,.04);top:-200px;left:-200px}
-.login-card{background:#fff;border-radius:20px;padding:48px 40px;width:420px;max-width:95vw;box-shadow:0 24px 64px rgba(0,0,0,.25);position:relative;z-index:1}
-.login-logo{text-align:center;margin-bottom:32px}
-.login-logo .icon{font-size:48px;display:block;margin-bottom:12px}
-.login-logo h1{font-size:26px;font-weight:800;color:var(--primary)}
-.login-logo p{font-size:14px;color:var(--text-muted);margin-top:4px}
-.form-group{margin-bottom:18px}
-.form-group label{display:block;font-size:13px;font-weight:600;color:var(--text-muted);margin-bottom:6px}
-.form-group input,.form-group select,.form-group textarea{width:100%;padding:12px 16px;border:2px solid var(--border);border-radius:10px;font-family:'Heebo',sans-serif;font-size:15px;color:var(--text);transition:border-color .2s;background:#fff;direction:rtl}
-.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--primary-light)}
-.form-group textarea{min-height:80px;resize:vertical}
-.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border:none;border-radius:10px;font-family:'Heebo',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:all .2s}
-.btn-primary{background:var(--primary);color:#fff;width:100%;justify-content:center}
-.btn-primary:hover{background:var(--primary-light);transform:translateY(-1px)}
-.btn-accent{background:var(--accent);color:#fff}
-.btn-accent:hover{background:#d4911a}
-.btn-outline{background:transparent;border:2px solid var(--border);color:var(--text)}
-.btn-outline:hover{border-color:var(--primary-light);color:var(--primary-light)}
-.btn-danger{background:var(--danger);color:#fff}
-.btn-sm{padding:7px 14px;font-size:13px}
-.btn-icon{width:auto;padding:7px 12px}
-.error-msg{background:#fef2f2;color:var(--danger);padding:10px 14px;border-radius:8px;font-size:13px;margin-top:10px;display:none}
-.error-msg.show{display:block}
-#app{display:none;min-height:100vh}
-.app-layout{display:flex;min-height:100vh}
-.sidebar{width:var(--sidebar);background:var(--primary);color:#fff;display:flex;flex-direction:column;position:fixed;top:0;right:0;height:100vh;z-index:100;overflow-y:auto}
-.sidebar-logo{padding:24px 20px;border-bottom:1px solid rgba(255,255,255,.1)}
-.sidebar-logo .logo-icon{font-size:28px}
-.sidebar-logo h2{font-size:16px;font-weight:700;margin-top:6px}
-.sidebar-logo p{font-size:11px;opacity:.6;margin-top:2px}
-.sidebar-nav{padding:16px 12px;flex:1}
-.nav-section-title{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;opacity:.4;padding:12px 8px 6px}
-.nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;cursor:pointer;font-size:14px;font-weight:500;transition:all .2s;margin-bottom:2px;opacity:.75}
-.nav-item:hover{background:rgba(255,255,255,.1);opacity:1}
-.nav-item.active{background:rgba(255,255,255,.15);opacity:1;font-weight:600}
-.nav-item .nav-icon{font-size:18px;width:24px;text-align:center}
-.sidebar-footer{padding:16px;border-top:1px solid rgba(255,255,255,.1)}
-.user-info{display:flex;align-items:center;gap:10px;margin-bottom:12px}
-.user-avatar{width:36px;height:36px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
-.user-name{font-size:13px;font-weight:600}
-.user-role{font-size:11px;opacity:.6}
-.btn-logout{width:100%;padding:8px;background:rgba(255,255,255,.1);border:none;border-radius:8px;color:#fff;font-family:'Heebo',sans-serif;font-size:13px;cursor:pointer;transition:background .2s}
-.btn-logout:hover{background:rgba(255,255,255,.2)}
-.main-content{flex:1;margin-right:var(--sidebar);padding:32px;min-height:100vh}
-.page-header{margin-bottom:28px}
-.page-header h1{font-size:26px;font-weight:800;color:var(--primary)}
-.page-header p{font-size:14px;color:var(--text-muted);margin-top:4px}
-.card{background:var(--card);border-radius:16px;padding:24px;box-shadow:0 2px 12px rgba(0,0,0,.06);border:1px solid var(--border)}
-.card-title{font-size:16px;font-weight:700;color:var(--primary);margin-bottom:16px;display:flex;align-items:center;gap:8px}
-.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;margin-bottom:24px}
-.stat-card{background:var(--card);border-radius:14px;padding:20px;border:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,.05)}
-.stat-icon{font-size:28px;margin-bottom:10px}
-.stat-value{font-size:28px;font-weight:800;color:var(--primary)}
-.stat-label{font-size:12px;color:var(--text-muted);margin-top:4px}
-.projects-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px}
-.project-card{background:var(--card);border-radius:16px;padding:22px;border:1px solid var(--border);cursor:pointer;transition:all .2s;box-shadow:0 2px 8px rgba(0,0,0,.05)}
-.project-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,.1);border-color:var(--primary-light)}
-.project-card-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px}
-.project-name{font-size:17px;font-weight:700;color:var(--primary)}
-.project-address{font-size:12px;color:var(--text-muted);margin-top:3px}
-.status-badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap}
-.status-active{background:#dcfce7;color:#166534}
-.status-paused{background:#fef9c3;color:#854d0e}
-.status-done{background:#dbeafe;color:#1e40af}
-.progress-bar-wrap{background:var(--bg);border-radius:8px;height:8px;margin:14px 0 8px;overflow:hidden}
-.progress-bar{height:100%;border-radius:8px;background:linear-gradient(90deg,var(--primary-light),var(--accent));transition:width .5s ease}
-.progress-label{display:flex;justify-content:space-between;font-size:12px;color:var(--text-muted)}
-.project-meta{display:flex;gap:12px;margin-top:14px;font-size:12px;color:var(--text-muted)}
-.back-btn{display:inline-flex;align-items:center;gap:6px;color:var(--text-muted);cursor:pointer;font-size:14px;margin-bottom:20px;transition:color .2s;background:none;border:none;font-family:'Heebo',sans-serif}
-.back-btn:hover{color:var(--primary)}
-.tabs{display:flex;gap:4px;margin-bottom:24px;background:var(--card);padding:6px;border-radius:12px;border:1px solid var(--border);flex-wrap:wrap}
-.tab{padding:9px 16px;border-radius:8px;cursor:pointer;font-size:14px;font-weight:500;color:var(--text-muted);transition:all .2s;border:none;background:none;font-family:'Heebo',sans-serif;display:flex;align-items:center;gap:6px}
-.tab:hover{color:var(--primary);background:var(--bg)}
-.tab.active{background:var(--primary);color:#fff;font-weight:600}
-.tab-content{display:none}
-.tab-content.active{display:block}
-.timeline-phases{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;margin-bottom:24px}
-.phase-card{background:var(--card);border-radius:14px;padding:18px;border:2px solid var(--border);transition:border-color .2s}
-.phase-card.done{border-color:var(--success)}
-.phase-card.active{border-color:var(--accent)}
-.phase-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-.phase-name{font-size:15px;font-weight:700}
-.phase-status{font-size:11px;font-weight:600;padding:3px 8px;border-radius:12px}
-.phase-status.done{background:#dcfce7;color:#166534}
-.phase-status.active{background:#fef9c3;color:#854d0e}
-.phase-status.pending{background:#f1f5f9;color:#64748b}
-.budget-summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;margin-bottom:24px}
-.budget-item{background:var(--card);border-radius:14px;padding:18px;border:1px solid var(--border);text-align:center}
-.budget-item .amount{font-size:22px;font-weight:800;margin-top:8px}
-.amount.total{color:var(--primary)}
-.amount.paid{color:var(--success)}
-.amount.remaining{color:var(--warning)}
-.budget-item .label{font-size:12px;color:var(--text-muted)}
-.payments-table{width:100%;border-collapse:collapse}
-.payments-table th{text-align:right;padding:10px 14px;font-size:12px;font-weight:600;color:var(--text-muted);border-bottom:2px solid var(--border);background:var(--bg)}
-.payments-table td{padding:12px 14px;font-size:14px;border-bottom:1px solid var(--border)}
-.payments-table tr:last-child td{border-bottom:none}
-.doc-categories{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
-.doc-category{background:var(--card);border-radius:14px;padding:20px;border:1px solid var(--border)}
-.doc-category-title{font-size:15px;font-weight:700;color:var(--primary);margin-bottom:14px;display:flex;align-items:center;gap:8px}
-.doc-item{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px}
-.doc-item:last-child{border-bottom:none}
-.gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
-.gallery-item{aspect-ratio:1;border-radius:12px;overflow:hidden;background:var(--bg);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;cursor:pointer;transition:transform .2s}
-.gallery-item:hover{transform:scale(1.02)}
-.gallery-item img{width:100%;height:100%;object-fit:cover}
-.messages-list{display:flex;flex-direction:column;gap:12px;max-height:450px;overflow-y:auto;margin-bottom:20px;padding:4px}
-.message-bubble{padding:12px 16px;border-radius:14px;max-width:80%;font-size:14px;line-height:1.5}
-.message-bubble.admin{background:var(--primary);color:#fff;align-self:flex-start;border-radius:4px 14px 14px 14px}
-.message-bubble.client{background:var(--card);border:1px solid var(--border);align-self:flex-end;border-radius:14px 4px 14px 14px}
-.message-meta{font-size:11px;opacity:.6;margin-top:6px}
-.message-input-wrap{display:flex;gap:10px}
-.message-input-wrap input{flex:1;padding:12px 16px;border:2px solid var(--border);border-radius:10px;font-family:'Heebo',sans-serif;font-size:14px;direction:rtl}
-.message-input-wrap input:focus{outline:none;border-color:var(--primary-light)}
-.users-list{display:flex;flex-direction:column;gap:10px}
-.user-row{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:var(--card);border-radius:12px;border:1px solid var(--border)}
-.user-row-info{display:flex;align-items:center;gap:12px}
-.user-row-avatar{width:40px;height:40px;border-radius:50%;background:var(--primary-light);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px}
-.user-row-name{font-size:15px;font-weight:600}
-.user-row-meta{font-size:12px;color:var(--text-muted)}
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;z-index:1000}
-.modal-overlay.open{display:flex}
-.modal{background:#fff;border-radius:20px;padding:32px;width:500px;max-width:95vw;max-height:90vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.2)}
-.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}
-.modal-title{font-size:20px;font-weight:700;color:var(--primary)}
-.modal-close{background:var(--bg);border:none;width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center}
-.modal-footer{display:flex;gap:10px;margin-top:24px;justify-content:flex-end}
-.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.flex-between{display:flex;justify-content:space-between;align-items:center}
-.flex-gap{display:flex;gap:10px;align-items:center}
-.mb-16{margin-bottom:16px}
-.mb-24{margin-bottom:24px}
-.empty-state{text-align:center;padding:48px 24px;color:var(--text-muted)}
-.empty-state .empty-icon{font-size:48px;margin-bottom:12px}
-.divider{border:none;border-top:1px solid var(--border);margin:20px 0}
-.badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600}
-.badge-blue{background:#dbeafe;color:#1e40af}
-.section-actions{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
-.section-title{font-size:16px;font-weight:700;color:var(--primary)}
-.upload-label{display:inline-flex;align-items:center;gap:8px;padding:7px 14px;background:var(--primary);color:#fff;border-radius:10px;font-family:'Heebo',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s}
-.upload-label:hover{background:var(--primary-light)}
-.upload-label input{display:none}
-@media(max-width:768px){:root{--sidebar:200px}.main-content{padding:16px}}
-@media(max-width:560px){.sidebar{display:none}.main-content{margin-right:0}}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --cream:#F7EDD8;--ivory:#FBF5E6;--terra:#B5603A;--gold:#C49A3C;
+  --olive:#6B7A3E;--deep:#2E1A0E;--stone:#8A7968;--blush:#D4A090;
+  --rust:#8B3A1C;--bg:#190C04;
+}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);font-family:'Heebo',sans-serif;color:var(--cream);overflow-x:hidden;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content:center;align-items:center;gap:clamp(14px,3vw,36px);padding:16px 20px;background:linear-gradient(to bottom,rgba(14,6,3,0.95),transparent);transition:background .4s;}
+nav.scrolled{background:rgba(14,6,3,0.97);}
+nav a{font-size:clamp(14px,2.2vw,17px);font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--cream);text-decoration:none;transition:color .3s;white-space:nowrap;}
+nav a:hover{color:var(--gold);}
+.admin-btn{position:fixed;bottom:22px;left:22px;z-index:300;padding:8px 14px;border-radius:2px;background:rgba(30,15,5,0.7);border:0.5px solid rgba(196,154,60,0.2);color:rgba(196,154,60,0.45);cursor:pointer;font-size:10px;letter-spacing:2px;font-family:'Heebo',sans-serif;text-transform:uppercase;transition:all .3s;backdrop-filter:blur(4px);}
+.admin-btn:hover{border-color:var(--gold);color:var(--gold);background:rgba(30,15,5,0.9);}
+
+/* HERO */
+#hero{position:relative;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(180deg,#0E0603 0%,#2E1A0E 40%,#3D2510 70%,#2E1A0E 100%);overflow:hidden;text-align:center;padding:80px 20px 140px;}
+.hero-label{font-size:12px;letter-spacing:5px;text-transform:uppercase;color:var(--gold);margin-bottom:18px;opacity:0;animation:fadeUp 1s .5s forwards;}
+.hero-names{font-family:'Cormorant Garamond',serif;font-size:clamp(64px,13vw,120px);font-weight:300;line-height:1;color:var(--ivory);opacity:0;animation:fadeUp 1.2s .8s forwards;}
+.amp{color:var(--gold);font-style:italic;font-size:.82em;display:block;line-height:.9;}
+.hero-date{font-family:'Cormorant Garamond',serif;font-size:clamp(17px,3vw,24px);font-weight:300;letter-spacing:2px;color:var(--blush);margin-top:16px;opacity:0;animation:fadeUp 1s 1.2s forwards;}
+.hero-venue{font-size:12px;color:var(--stone);letter-spacing:3px;text-transform:uppercase;margin-top:8px;opacity:0;animation:fadeUp 1s 1.5s forwards;}
+.hero-divider{width:1px;height:56px;background:linear-gradient(to bottom,transparent,var(--gold),transparent);margin:24px auto;opacity:0;animation:fadeIn 1s 1.8s forwards;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.scroll-hint{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);opacity:0;animation:fadeIn 1s 2.5s forwards;cursor:pointer;}
+.scroll-hint span{font-size:10px;letter-spacing:4px;color:var(--stone);text-transform:uppercase;}
+.scroll-hint::before{content:'';display:block;width:1px;height:32px;margin:0 auto 10px;background:linear-gradient(to bottom,var(--gold),transparent);}
+
+/* COUNTDOWN */
+#countdown{background:#0E0603;padding:70px 20px;text-align:center;position:relative;overflow:hidden;}
+#countdown::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%236B7A3E' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E");}
+.cd-label{font-size:12px;letter-spacing:5px;color:var(--gold);text-transform:uppercase;margin-bottom:36px;}
+.cd-grid{display:flex;justify-content:center;align-items:flex-end;gap:clamp(14px,4vw,48px);flex-wrap:wrap;direction:ltr;}
+.cd-unit{display:flex;flex-direction:column;align-items:center;gap:8px;}
+.cd-num{font-family:'Cormorant Garamond',serif;font-size:clamp(50px,10vw,88px);font-weight:300;color:var(--ivory);line-height:1;min-width:1.8ch;}
+.cd-name{font-size:10px;letter-spacing:3px;color:var(--stone);text-transform:uppercase;}
+.cd-sep{font-family:'Cormorant Garamond',serif;font-size:64px;color:var(--terra);opacity:.35;line-height:1;padding-bottom:14px;}
+
+/* SECTIONS */
+section{padding:80px 20px;position:relative;overflow:hidden;}
+.inner{max-width:860px;margin:0 auto;}
+.s-tag{font-size:11px;letter-spacing:5px;text-transform:uppercase;color:var(--gold);margin-bottom:14px;display:block;}
+.s-title{font-family:'Cormorant Garamond',serif;font-size:clamp(34px,6vw,56px);font-weight:300;color:var(--ivory);line-height:1.1;margin-bottom:24px;}
+.s-title em{font-style:italic;color:var(--gold);}
+.s-body{font-size:15px;line-height:1.9;color:var(--stone);font-weight:300;}
+.gold-line{width:44px;height:1px;background:var(--gold);margin:20px 0;}
+.section-rule{max-width:120px;height:1px;background:linear-gradient(to left,transparent,var(--gold),transparent);margin:0 auto;}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .9s ease,transform .9s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+/* ITINERARY */
+#itinerary{background:#160A03;}
+.day-tabs{display:flex;gap:0;margin-bottom:40px;border:0.5px solid rgba(196,154,60,.25);border-radius:3px;overflow:hidden;}
+.day-tab{flex:1;padding:12px 6px;text-align:center;cursor:pointer;font-size:12px;letter-spacing:2px;color:var(--stone);background:transparent;border:none;text-transform:uppercase;transition:all .3s;font-family:'Heebo',sans-serif;}
+.day-tab.active{background:var(--gold);color:var(--deep);font-weight:600;}
+.day-panel{display:none;}
+.day-panel.active{display:block;}
+.tl{position:relative;padding-right:28px;}
+.tl::before{content:'';position:absolute;right:0;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,transparent,var(--gold) 10%,var(--gold) 90%,transparent);}
+.tl-item{position:relative;padding:0 26px 36px 0;}
+.tl-item::before{content:'';position:absolute;right:-4.5px;top:6px;width:9px;height:9px;border-radius:50%;background:var(--gold);box-shadow:0 0 10px 3px rgba(196,154,60,.3);}
+.tl-time{font-size:11px;letter-spacing:3px;color:var(--terra);text-transform:uppercase;margin-bottom:3px;}
+.tl-name{font-family:'Cormorant Garamond',serif;font-size:21px;font-weight:400;color:var(--ivory);margin-bottom:5px;}
+.tl-desc{font-size:13px;color:var(--stone);line-height:1.7;margin-bottom:8px;}
+.map-link{display:inline-flex;align-items:center;gap:5px;font-size:11px;letter-spacing:2px;color:var(--gold);text-decoration:none;border:0.5px solid rgba(196,154,60,.3);padding:4px 10px;border-radius:2px;transition:all .3s;}
+.map-link:hover{border-color:var(--gold);background:rgba(196,154,60,.07);}
+
+/* TRAVEL */
+#travel{background:#1A0C04;}
+.travel-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:24px;margin-top:36px;}
+.t-card{border:0.5px solid rgba(196,154,60,.2);border-radius:3px;padding:24px;transition:border-color .4s;}
+.t-card:hover{border-color:rgba(196,154,60,.5);}
+.t-card h3{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:400;color:var(--ivory);margin-bottom:8px;}
+.t-card p,.t-card ul{font-size:13px;color:var(--stone);line-height:1.8;}
+.t-card ul{direction:rtl;text-align:right;padding-right:0;padding-left:0;list-style-position:inside;}
+.t-card li{margin-bottom:4px;}
+.t-card a{color:var(--gold);text-decoration:none;}
+
+/* RSVP */
+#rsvp{background:#0E0603;text-align:center;}
+.rsvp-box{max-width:540px;margin:36px auto 0;border:0.5px solid rgba(196,154,60,.28);padding:44px 36px;border-radius:3px;position:relative;text-align:right;}
+.rsvp-box::before,.rsvp-box::after{content:'';position:absolute;width:26px;height:26px;border-color:var(--gold);border-style:solid;opacity:.4;}
+.rsvp-box::before{top:10px;right:10px;border-width:1px 1px 0 0;}
+.rsvp-box::after{bottom:10px;left:10px;border-width:0 0 1px 1px;}
+.fg{margin-bottom:16px;}
+.fg label{display:block;font-size:10px;letter-spacing:2px;color:var(--stone);text-transform:uppercase;margin-bottom:7px;}
+.fg input,.fg select,.fg textarea{width:100%;background:rgba(255,255,255,.04);border:0.5px solid rgba(196,154,60,.28);border-radius:2px;padding:11px 13px;font-family:'Heebo',sans-serif;font-size:14px;color:var(--cream);outline:none;transition:border-color .3s;direction:rtl;}
+.fg input::placeholder,.fg textarea::placeholder{color:rgba(138,121,104,.45);}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--gold);}
+.fg select option{background:#1A0C04;}
+.fg textarea{resize:vertical;min-height:80px;}
+.rsvp-btn{width:100%;margin-top:8px;padding:14px;background:var(--gold);color:var(--deep);border:none;border-radius:2px;font-family:'Heebo',sans-serif;font-size:13px;letter-spacing:3px;text-transform:uppercase;cursor:pointer;transition:all .3s;font-weight:600;}
+.rsvp-btn:hover{background:var(--terra);color:var(--ivory);}
+.rsvp-ok{display:none;font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--gold);padding:20px;text-align:center;}
+
+/* FOOTER */
+footer{background:#080402;text-align:center;padding:56px 20px;}
+.ft-names{font-family:'Cormorant Garamond',serif;font-size:clamp(32px,7vw,60px);font-weight:300;color:var(--ivory);opacity:.12;letter-spacing:4px;}
+.ft-txt{font-size:11px;letter-spacing:3px;color:var(--stone);margin-top:14px;text-transform:uppercase;}
+.ft-sep{color:var(--gold);margin:0 10px;opacity:.5;}
+
+/* ======= ADMIN OVERLAY ======= */
+.overlay{position:fixed;inset:0;z-index:1000;background:rgba(8,4,2,.92);display:none;align-items:center;justify-content:center;backdrop-filter:blur(6px);}
+.overlay.show{display:flex;}
+.modal{background:#1A0C04;border:0.5px solid rgba(196,154,60,.35);border-radius:4px;padding:44px 40px;max-width:420px;width:90%;text-align:center;position:relative;}
+.modal-close{position:absolute;top:14px;left:14px;background:none;border:none;color:var(--stone);font-size:20px;cursor:pointer;line-height:1;transition:color .3s;}
+.modal-close:hover{color:var(--gold);}
+.modal h2{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;color:var(--ivory);margin-bottom:8px;}
+.modal p{font-size:12px;color:var(--stone);letter-spacing:1px;margin-bottom:28px;}
+.modal input{width:100%;background:rgba(255,255,255,.04);border:0.5px solid rgba(196,154,60,.3);border-radius:2px;padding:12px 14px;font-family:'Heebo',sans-serif;font-size:15px;color:var(--cream);outline:none;text-align:center;letter-spacing:4px;direction:ltr;}
+.modal input:focus{border-color:var(--gold);}
+.modal-btn{margin-top:16px;width:100%;padding:13px;background:var(--gold);color:var(--deep);border:none;border-radius:2px;font-family:'Heebo',sans-serif;font-size:12px;letter-spacing:3px;text-transform:uppercase;cursor:pointer;font-weight:600;transition:all .3s;}
+.modal-btn:hover{background:var(--terra);color:var(--ivory);}
+.modal-err{font-size:12px;color:#E05555;margin-top:10px;display:none;}
+
+/* ======= ADMIN DASHBOARD ======= */
+#admin{display:none;position:fixed;inset:0;z-index:900;background:#0F0A06;overflow-y:auto;}
+#admin.show{display:block;}
+.adm-header{background:#160B03;border-bottom:0.5px solid rgba(196,154,60,.2);padding:16px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;}
+.adm-header h1{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:400;color:var(--ivory);}
+.adm-header h1 em{color:var(--gold);font-style:italic;}
+.adm-logout{background:none;border:0.5px solid rgba(196,154,60,.3);border-radius:2px;color:var(--stone);padding:7px 16px;font-size:11px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;font-family:'Heebo',sans-serif;transition:all .3s;}
+.adm-logout:hover{border-color:var(--terra);color:var(--terra);}
+.adm-tabs{display:flex;overflow-x:auto;gap:0;border-bottom:0.5px solid rgba(196,154,60,.15);padding:0 24px;background:#130803;}
+.adm-tab{padding:14px 20px;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--stone);cursor:pointer;border:none;background:none;white-space:nowrap;font-family:'Heebo',sans-serif;border-bottom:2px solid transparent;transition:all .3s;}
+.adm-tab.active{color:var(--gold);border-bottom-color:var(--gold);}
+.adm-body{padding:28px 24px;max-width:1000px;}
+.adm-panel{display:none;}
+.adm-panel.active{display:block;}
+.adm-section-title{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:300;color:var(--ivory);margin-bottom:20px;}
+
+/* admin cards */
+.adm-card{background:#1A0C04;border:0.5px solid rgba(196,154,60,.18);border-radius:3px;padding:20px;margin-bottom:16px;}
+.adm-card h3{font-size:13px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:12px;}
+.adm-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px;}
+.adm-input{flex:1;min-width:140px;background:rgba(255,255,255,.04);border:0.5px solid rgba(196,154,60,.25);border-radius:2px;padding:9px 11px;font-family:'Heebo',sans-serif;font-size:13px;color:var(--cream);outline:none;direction:rtl;}
+.adm-input:focus{border-color:var(--gold);}
+.adm-input option{background:#1A0C04;}
+.adm-btn{padding:9px 18px;background:var(--gold);color:var(--deep);border:none;border-radius:2px;font-size:12px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;font-family:'Heebo',sans-serif;font-weight:600;white-space:nowrap;transition:all .3s;}
+.adm-btn:hover{background:var(--terra);color:var(--ivory);}
+.adm-btn-sm{padding:6px 12px;font-size:11px;}
+.adm-btn-red{background:rgba(160,50,50,.2);color:#E07070;border:0.5px solid rgba(160,50,50,.3);}
+.adm-btn-red:hover{background:rgba(160,50,50,.4);color:#F09090;}
+
+/* tables */
+.adm-table{width:100%;border-collapse:collapse;font-size:13px;}
+.adm-table th{text-align:right;padding:8px 10px;color:var(--gold);font-weight:500;font-size:11px;letter-spacing:2px;text-transform:uppercase;border-bottom:0.5px solid rgba(196,154,60,.2);}
+.adm-table td{padding:10px 10px;color:var(--stone);border-bottom:0.5px solid rgba(255,255,255,.04);vertical-align:middle;}
+.adm-table tr:last-child td{border-bottom:none;}
+.adm-table tr:hover td{background:rgba(196,154,60,.03);}
+.badge{display:inline-block;font-size:10px;padding:2px 8px;border-radius:2px;letter-spacing:1px;}
+.badge-yes{background:rgba(80,140,80,.2);color:#8FC890;}
+.badge-no{background:rgba(140,60,60,.2);color:#E08888;}
+.badge-maybe{background:rgba(180,140,60,.2);color:#D4B060;}
+
+/* stats row */
+.stats-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px;}
+.stat-box{flex:1;min-width:120px;background:#1A0C04;border:0.5px solid rgba(196,154,60,.18);border-radius:3px;padding:16px;text-align:center;}
+.stat-num{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:300;color:var(--ivory);}
+.stat-label{font-size:10px;letter-spacing:2px;color:var(--stone);text-transform:uppercase;margin-top:4px;}
+
+/* budget */
+.budget-total{font-family:'Cormorant Garamond',serif;font-size:42px;font-weight:300;color:var(--ivory);}
+.budget-bar-wrap{background:rgba(255,255,255,.06);border-radius:2px;height:6px;margin:12px 0;}
+.budget-bar{height:6px;border-radius:2px;background:var(--gold);transition:width .5s;}
+.expense-cat{display:inline-block;font-size:10px;padding:2px 8px;background:rgba(196,154,60,.12);color:var(--gold);border-radius:2px;letter-spacing:1px;}
+
+/* tasks */
+.task-item{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:0.5px solid rgba(255,255,255,.04);}
+.task-item:last-child{border-bottom:none;}
+.task-cb{width:18px;height:18px;min-width:18px;border:0.5px solid rgba(196,154,60,.4);border-radius:2px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--gold);transition:all .3s;background:none;}
+.task-cb.done{background:rgba(196,154,60,.15);}
+.task-info{flex:1;}
+.task-name{font-size:14px;color:var(--cream);line-height:1.4;}
+.task-name.done{text-decoration:line-through;color:var(--stone);}
+.task-due{font-size:11px;color:var(--stone);margin-top:2px;}
+.task-due.overdue{color:#E07070;}
+
+/* file manager */
+.file-drop{border:1px dashed rgba(196,154,60,.3);border-radius:3px;padding:36px;text-align:center;cursor:pointer;transition:all .3s;position:relative;}
+.file-drop:hover{border-color:rgba(196,154,60,.6);background:rgba(196,154,60,.03);}
+.file-drop input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+.file-drop p{color:var(--stone);font-size:13px;}
+.file-drop .icon{font-size:11px;letter-spacing:3px;color:var(--gold);margin-bottom:10px;text-transform:uppercase;}
+.file-list{margin-top:16px;}
+.file-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:0.5px solid rgba(255,255,255,.04);}
+.file-row:last-child{border-bottom:none;}
+.file-icon-box{width:36px;height:36px;background:rgba(196,154,60,.1);border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:9px;letter-spacing:1px;color:var(--gold);font-weight:600;}
+.file-name{flex:1;font-size:13px;color:var(--cream);}
+.file-name a{color:var(--gold);text-decoration:none;}
+.file-name a:hover{text-decoration:underline;}
+.file-meta{font-size:11px;color:var(--stone);}
+
+/* content editor */
+.content-field{margin-bottom:20px;}
+.content-field label{display:block;font-size:11px;letter-spacing:2px;color:var(--stone);text-transform:uppercase;margin-bottom:8px;}
+.content-field input,.content-field textarea{width:100%;background:rgba(255,255,255,.04);border:0.5px solid rgba(196,154,60,.25);border-radius:2px;padding:10px 12px;font-family:'Heebo',sans-serif;font-size:14px;color:var(--cream);outline:none;direction:rtl;transition:border-color .3s;}
+.content-field input:focus,.content-field textarea:focus{border-color:var(--gold);}
+.content-field textarea{resize:vertical;min-height:80px;}
+.save-toast{display:none;font-size:12px;color:#8FC890;margin-top:8px;letter-spacing:1px;}
 </style>
 </head>
 <body>
-<div id="login-screen">
-  <div class="login-card">
-    <div class="login-logo">
-      <span class="icon">🏗️</span>
-      <h1>ארונשטיין פיקוח וניהול</h1>
-      <p>מערכת ניהול פרויקטי בנייה</p>
-    </div>
-    <div class="form-group"><label>שם משתמש</label><input type="text" id="login-user" placeholder="הכנס שם משתמש"/></div>
-    <div class="form-group"><label>סיסמה</label><input type="password" id="login-pass" placeholder="הכנס סיסמה"/></div>
-    <button class="btn btn-primary" onclick="doLogin()">כניסה לחשבון</button>
-    <div class="error-msg" id="login-error">שם משתמש או סיסמה שגויים</div>
-    <p style="text-align:center;margin-top:20px;font-size:12px;color:var(--text-muted)">פרטי הגישה מסופקים על ידי ארונשטיין פיקוח וניהול</p>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#hero">בית</a>
+  <a href="#itinerary">לוז</a>
+  <a href="#travel">מידע למטייל</a>
+  <a href="#rsvp">אישור הגעה</a>
+</nav>
+
+<!-- Admin Button -->
+<button class="admin-btn" id="adminToggle" title="כניסת מנהלים">ניהול</button>
+
+<!-- HERO -->
+<section id="hero">
+  <p class="hero-label">מתחתנים!</p>
+  <h1 class="hero-names" id="heroTitle">סהר<span class="amp">&</span>גלי</h1>
+  <div class="hero-divider"></div>
+  <p class="hero-date" id="heroDate">21 – 23 במאי 2027</p>
+  <p class="hero-venue">Villa Pitiana · Tuscany · Italy</p>
+
+  <div class="scroll-hint" onclick="document.getElementById('countdown').scrollIntoView({behavior:'smooth'})">
+    <span>גלול מטה</span>
+  </div>
+</section>
+
+<!-- COUNTDOWN -->
+<div id="countdown">
+  <p class="cd-label">עוד כמה זמן עד לחתונה</p>
+  <div class="cd-grid">
+    <div class="cd-unit"><div class="cd-num" id="cd-d">000</div><div class="cd-name">ימים</div></div>
+    <div class="cd-sep">·</div>
+    <div class="cd-unit"><div class="cd-num" id="cd-h">00</div><div class="cd-name">שעות</div></div>
+    <div class="cd-sep">·</div>
+    <div class="cd-unit"><div class="cd-num" id="cd-m">00</div><div class="cd-name">דקות</div></div>
+    <div class="cd-sep">·</div>
+    <div class="cd-unit"><div class="cd-num" id="cd-s">00</div><div class="cd-name">שניות</div></div>
   </div>
 </div>
 
-<div id="app">
-  <div class="app-layout">
-    <aside class="sidebar">
-      <div class="sidebar-logo">
-        <div class="logo-icon">🏗️</div>
-        <h2>ארונשטיין פיקוח וניהול</h2>
-        <p>מערכת ניהול</p>
+<div class="section-rule"></div>
+
+<!-- ITINERARY -->
+<section id="itinerary">
+  <div class="inner">
+    <div class="reveal">
+      <span class="s-tag">לוז האירוע</span>
+      <h2 class="s-title">שלושה ימים של טוסקנה</h2>
+      <div class="gold-line"></div>
+    </div>
+    <div class="reveal">
+      <div class="day-tabs">
+        <button class="day-tab active" onclick="showDay(0)">שישי 21.5</button>
+        <button class="day-tab" onclick="showDay(1)">שבת 22.5</button>
+        <button class="day-tab" onclick="showDay(2)">ראשון 23.5</button>
       </div>
-      <nav class="sidebar-nav" id="sidebar-nav"></nav>
-      <div class="sidebar-footer">
-        <div class="user-info">
-          <div class="user-avatar" id="user-avatar-sb">א</div>
-          <div><div class="user-name" id="user-name-sb">משתמש</div><div class="user-role" id="user-role-sb">תפקיד</div></div>
+
+      <div class="day-panel active" id="day0">
+        <div class="tl">
+          <div class="tl-item">
+            <div class="tl-time">15:00 – 19:00</div>
+            <div class="tl-name">הגעה ולינה</div>
+            <div class="tl-desc">כניסה לחדרים בוילה פיטיאנה. פנאי חופשי לטייל בגינות, בריכה ושדרות הברושים.</div>
+            <a class="map-link" href="https://maps.google.com/?q=Villa+Pitiana+Donnini+Tuscany" target="_blank">Villa Pitiana, Donnini</a>
+          </div>
+          <div class="tl-item">
+            <div class="tl-time">20:00</div>
+            <div class="tl-name">ארוחת ערב פתיחה</div>
+            <div class="tl-desc">ארוחה משפחתית ולא פורמלית בחצר הוילה — יין טוסקני, אנטיפסטי ופגישות ראשונות.</div>
+          </div>
         </div>
-        <button class="btn-logout" onclick="doLogout()">🚪 יציאה</button>
       </div>
-    </aside>
-    <main class="main-content" id="main-content"></main>
-  </div>
-</div>
 
-<!-- Modal: Project -->
-<div class="modal-overlay" id="modal-project">
+      <div class="day-panel" id="day1">
+        <div class="tl">
+          <div class="tl-item">
+            <div class="tl-time">10:00</div>
+            <div class="tl-name">ברנץ' בוקר</div>
+            <div class="tl-desc">ארוחת בוקר מורחבת בגינה האנגלית עם מבט לגבעות הוואלדארנו.</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-time">16:00 – 16:45</div>
+            <div class="tl-name">כניסת אורחים לטקס</div>
+            <div class="tl-desc">קבלת פנים בחצר הימי-ביניימית, מוזיקת רקע חיה.</div>
+            <a class="map-link" href="https://maps.google.com/?q=Villa+Pitiana+Donnini+cloister" target="_blank">החצר הימי-ביניימית</a>
+          </div>
+          <div class="tl-item">
+            <div class="tl-time">17:00</div>
+            <div class="tl-name">טקס החתונה</div>
+            <div class="tl-desc">הטקס בחצר הקמורה של המנזר, בשקיעת שמש טוסקנית. רגע שלא ישכח.</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-time">18:30</div>
+            <div class="tl-name">קוקטייל ואנטיפסטי</div>
+            <div class="tl-desc">ברכות, שמפניה, ונשנושים על המרפסת הפנורמית.</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-time">20:30</div>
+            <div class="tl-name">ארוחת ערב חגיגית</div>
+            <div class="tl-desc">בסלון המצוייר בפרסקאות — תפריט שף טוסקני מלא, יינות הוילה ואווירה של פעם.</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-time">23:00 →</div>
+            <div class="tl-name">ריקודים מתחת לכוכבים</div>
+            <div class="tl-desc">מוזיקה ליד הבריכה עד שהלילה מחליט שנגמרנו.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="day-panel" id="day2">
+        <div class="tl">
+          <div class="tl-item">
+            <div class="tl-time">09:30</div>
+            <div class="tl-name">ברנץ' פרידה</div>
+            <div class="tl-desc">ארוחת בוקר עצלנית עם ריחות קפה, גבינות טריות ולחם בית.</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-time">12:00</div>
+            <div class="tl-name">בריכה ופנאי</div>
+            <div class="tl-desc">זמן חופשי בבריכה הפנורמית עם נוף לגבעות — מי שרוצה.</div>
+            <a class="map-link" href="https://maps.google.com/?q=Villa+Pitiana+pool" target="_blank">בריכת הוילה</a>
+          </div>
+          <div class="tl-item">
+            <div class="tl-time">15:00</div>
+            <div class="tl-name">פרידה ונסיעה</div>
+            <div class="tl-desc">Arrivederci! נתראה בארץ עם זיכרונות מלאים.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-rule"></div>
+
+<!-- TRAVEL INFO -->
+<section id="travel">
+  <div class="inner">
+    <div class="reveal">
+      <span class="s-tag">מידע למטייל</span>
+      <h2 class="s-title">איך<br><em>מגיעים?</em></h2>
+      <div class="gold-line"></div>
+      <p class="s-body">Villa Pitiana נמצאת ב-Donnini–Reggello, כ-35 דקות מזרחית לפירנצה.</p>
+    </div>
+
+    <div class="travel-grid reveal">
+      <div class="t-card">
+        <h3>שדות תעופה</h3>
+        <ul>
+          <li>35 דק' מהוילה — <strong style="color:var(--cream)">Florence (FLR)</strong></li>
+          <li>90 דק' — <strong style="color:var(--cream)">Pisa (PSA)</strong></li>
+          <li>90 דק' — <strong style="color:var(--cream)">Bologna (BLQ)</strong></li>
+          <li>2.5 שעות — <strong style="color:var(--cream)">Rome FCO</strong></li>
+        </ul>
+      </div>
+      <div class="t-card">
+        <h3>התניידות</h3>
+        <p>מומלץ מאוד לשכור רכב — מסלול S222 (Chiantigiana) הוא חוויה בפני עצמה. ניתן לסדר הסעות משותפות — ציינו בטופס ה-RSVP.</p>
+        <br>
+        <a class="map-link" href="https://maps.google.com/?q=Via+Pitiana+7+Donnini+Reggello" target="_blank">נווט לוילה</a>
+      </div>
+      <div class="t-card">
+        <h3>לינה</h3>
+        <p>59 חדרים ודירות בתוך הוילה ובבתי החווה. האורחים מוזמנים להישאר כל הסוף שבוע — ציינו בטופס. לינה בתיאום נפרד.</p>
+      </div>
+      <div class="t-card">
+        <h3>כתובת</h3>
+        <p>Via Pitiana 7<br>Donnini – Reggello (FI)<br>Tuscany, Italy</p>
+        <br>
+        <a class="t-card" style="display:inline-block;padding:6px 14px;border:0.5px solid rgba(196,154,60,.3);border-radius:2px;font-size:11px;letter-spacing:2px;color:var(--gold);text-decoration:none;" href="https://www.villapitiana.com" target="_blank">villapitiana.com ↗</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-rule"></div>
+
+<!-- RSVP -->
+<section id="rsvp">
+  <div class="inner">
+    <div class="reveal">
+      <span class="s-tag">אישור הגעה</span>
+      <h2 class="s-title">אנחנו רוצים<br>אתכם <em>שם</em></h2>
+      <div class="gold-line" style="margin:0 auto 20px;"></div>
+      <p class="s-body">אנא אשרו הגעה עד <strong style="color:var(--ivory)">1 בינואר 2027</strong></p>
+    </div>
+    <div class="rsvp-box reveal">
+      <form id="rsvpForm">
+        <div class="fg"><label>שם מלא</label><input type="text" id="rf-name" placeholder="שם מלא" required></div>
+        <div class="fg"><label>מספר טלפון לאיש קשר</label><input type="tel" id="rf-phone" placeholder="050-1234567" required style="direction:ltr;text-align:right;"></div>
+        <div class="fg"><label>מספר מגיעים</label>
+          <select id="rf-count"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5+</option></select>
+        </div>
+        <div class="fg"><label>צריכים הסעה?</label>
+          <select id="rf-transfer"><option value="לא">לא, יש לי רכב</option><option value="כן - מFCO">כן, מרומא (FCO)</option><option value="כן - מMXP">כן, ממילאנו (MXP)</option></select>
+        </div>
+        <div class="fg"><label>הגבלות תזונתיות / בקשות מיוחדות</label><textarea id="rf-notes" placeholder="טבעוני, ללא גלוטן, אלרגיה..."></textarea></div>
+        <button type="submit" class="rsvp-btn">אשרו הגעה</button>
+      </form>
+      <div class="rsvp-ok" id="rsvpOk">
+        תודה! נתראה בטוסקנה<br>
+        <span style="font-size:13px;color:var(--stone);font-family:'Heebo',sans-serif;font-weight:300;">פרטיכם נרשמו</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="ft-names">סהר & גלי</div>
+  <p class="ft-txt">22.05.2027 <span class="ft-sep">—</span> Villa Pitiana, Tuscany</p>
+  <p style="font-size:10px;color:rgba(138,121,104,.25);margin-top:20px;letter-spacing:2px;">CON AMORE · באהבה</p>
+</footer>
+
+<!-- ===== LOGIN MODAL ===== -->
+<div class="overlay" id="loginOverlay">
   <div class="modal">
-    <div class="modal-header"><div class="modal-title" id="modal-proj-title">פרויקט חדש</div><button class="modal-close" onclick="closeModal('modal-project')">✕</button></div>
-    <div class="form-group"><label>שם הפרויקט</label><input type="text" id="proj-name" placeholder="לדוגמה: בית פרטי - כפר סבא"/></div>
-    <div class="form-group"><label>כתובת</label><input type="text" id="proj-addr" placeholder="רחוב, עיר"/></div>
-    <div class="form-group"><label>תיאור</label><textarea id="proj-desc" placeholder="תיאור קצר"></textarea></div>
-    <div class="grid-2">
-      <div class="form-group"><label>תאריך התחלה</label><input type="date" id="proj-start"/></div>
-      <div class="form-group"><label>תאריך סיום משוער</label><input type="date" id="proj-end"/></div>
-    </div>
-    <div class="form-group"><label>תקציב כולל (₪)</label><input type="number" id="proj-budget" placeholder="0"/></div>
-    <div class="form-group"><label>סטטוס</label><select id="proj-status"><option value="active">בביצוע</option><option value="paused">מושהה</option><option value="done">הושלם</option></select></div>
-    <div class="modal-footer">
-      <button class="btn btn-outline" onclick="closeModal('modal-project')">ביטול</button>
-      <button class="btn btn-primary" style="width:auto" onclick="saveProject()">שמור פרויקט</button>
-    </div>
+    <button class="modal-close" onclick="closeLogin()">✕</button>
+    <h2>אזור סהר & גלי</h2>
+    <p>הזינו סיסמה להמשך</p>
+    <input type="password" id="pwInput" placeholder="••••••••" onkeydown="if(event.key==='Enter')tryLogin()">
+    <button class="modal-btn" onclick="tryLogin()">כניסה</button>
+    <p class="modal-err" id="loginErr">סיסמה שגויה, נסו שוב</p>
   </div>
 </div>
 
-<!-- Modal: User -->
-<div class="modal-overlay" id="modal-user">
-  <div class="modal">
-    <div class="modal-header"><div class="modal-title">הוספת לקוח</div><button class="modal-close" onclick="closeModal('modal-user')">✕</button></div>
-    <div class="form-group"><label>שם מלא</label><input type="text" id="new-user-name" placeholder="שם הלקוח"/></div>
-    <div class="form-group"><label>שם משתמש</label><input type="text" id="new-user-username" placeholder="שם כניסה"/></div>
-    <div class="form-group"><label>סיסמה</label><input type="text" id="new-user-pass" placeholder="סיסמה"/></div>
-    <div class="form-group"><label>פרויקט משויך</label><select id="new-user-project"></select></div>
-    <div class="modal-footer">
-      <button class="btn btn-outline" onclick="closeModal('modal-user')">ביטול</button>
-      <button class="btn btn-primary" style="width:auto" onclick="saveUser()">הוסף לקוח</button>
+<!-- ===== ADMIN DASHBOARD ===== -->
+<div id="admin">
+  <div class="adm-header">
+    <h1>מאחורי הקלעים · <em>סהר & גלי</em></h1>
+    <button class="adm-logout" onclick="adminLogout()">יציאה</button>
+  </div>
+  <div class="adm-tabs">
+    <button class="adm-tab active" onclick="switchTab('guests')">אורחים</button>
+    <button class="adm-tab" onclick="switchTab('rooms')">חילוק חדרים</button>
+    <button class="adm-tab" onclick="switchTab('transfers')">הסעות</button>
+    <button class="adm-tab" onclick="switchTab('suppliers')">ספקים</button>
+    <button class="adm-tab" onclick="switchTab('budget')">תקציב</button>
+    <button class="adm-tab" onclick="switchTab('tasks')">משימות</button>
+    <button class="adm-tab" onclick="switchTab('files')">קבצים</button>
+    <button class="adm-tab" onclick="switchTab('content')">עריכת תוכן</button>
+  </div>
+  <div class="adm-body">
+
+    <!-- GUESTS -->
+    <div class="adm-panel active" id="panel-guests">
+      <div class="adm-section-title">ניהול אורחים</div>
+      <div class="stats-row" id="guestStats"></div>
+      <div class="adm-card">
+        <h3>הוספת אורח ידנית</h3>
+        <div class="adm-row">
+          <input class="adm-input" id="g-name" placeholder="שם מלא">
+          <input class="adm-input" id="g-phone" placeholder="טלפון" style="max-width:140px;direction:ltr;">
+          <input class="adm-input" id="g-count" type="number" placeholder="מספר" min="1" max="10" style="max-width:100px;">
+          <select class="adm-input" id="g-status" style="max-width:140px;">
+            <option value="מגיע">מגיע ✓</option>
+            <option value="לא מגיע">לא מגיע ✗</option>
+            <option value="ממתין">ממתין…</option>
+          </select>
+          <input class="adm-input" id="g-days" placeholder="ימי השתתפות">
+          <input class="adm-input" id="g-notes" placeholder="בקשות מיוחדות">
+          <button class="adm-btn" onclick="addGuest()">הוסף</button>
+        </div>
+      </div>
+      <div class="adm-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+          <h3 style="margin:0;">רשימת אורחים</h3>
+          <button class="adm-btn adm-btn-sm" onclick="exportCSV()">ייצוא CSV</button>
+        </div>
+        <div style="overflow-x:auto;">
+          <table class="adm-table">
+            <thead><tr><th>שם</th><th>טלפון</th><th>מגיעים</th><th>ימים</th><th>סטטוס</th><th>הסעה</th><th>בקשות</th><th></th></tr></thead>
+            <tbody id="guestTable"></tbody>
+          </table>
+        </div>
+      </div>
     </div>
+
+    <!-- ROOMS -->
+    <div class="adm-panel" id="panel-rooms">
+      <div class="adm-section-title">חילוק חדרים בוילה</div>
+      <div class="stats-row" id="roomStats"></div>
+      <div class="adm-card">
+        <h3>הוספת חדר</h3>
+        <div class="adm-row">
+          <input class="adm-input" id="r-name" placeholder="מספר / שם חדר (למשל 12, סוויטה ארנו)">
+          <select class="adm-input" id="r-building" style="max-width:160px;">
+            <option>וילה עיקרית</option><option>בית חווה</option><option>סוויטה</option><option>אחר</option>
+          </select>
+          <input class="adm-input" id="r-capacity" type="number" placeholder="קיבולת" min="1" max="10" style="max-width:100px;">
+          <input class="adm-input" id="r-notes" placeholder="הערות (קומה, נוף...)">
+          <button class="adm-btn" onclick="addRoom()">הוסף חדר</button>
+        </div>
+      </div>
+      <div class="adm-card">
+        <h3>רשימת חדרים</h3>
+        <div style="overflow-x:auto;">
+          <table class="adm-table">
+            <thead><tr><th>חדר</th><th>מבנה</th><th>קיבולת</th><th>משויכים</th><th>הערות</th><th></th></tr></thead>
+            <tbody id="roomTable"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="adm-card">
+        <h3>שיוך אורחים לחדרים</h3>
+        <div style="overflow-x:auto;">
+          <table class="adm-table">
+            <thead><tr><th>שם</th><th>טלפון</th><th>מגיעים</th><th>חדר</th><th>ימים</th></tr></thead>
+            <tbody id="roomAssignTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TRANSFERS -->
+    <div class="adm-panel" id="panel-transfers">
+      <div class="adm-section-title">ניהול הסעות</div>
+      <p style="font-size:13px;color:var(--stone);margin-bottom:20px;">רשימה אוטומטית של אורחים שסימנו בטופס RSVP שצריכים הסעה</p>
+      <div class="stats-row" id="transferStats"></div>
+      <div class="adm-card">
+        <h3>אורחים שצריכים הסעה</h3>
+        <div style="overflow-x:auto;">
+          <table class="adm-table">
+            <thead><tr><th>שם</th><th>טלפון</th><th>מגיעים</th><th>מאיפה</th><th>ימים</th><th>בקשות</th></tr></thead>
+            <tbody id="transferTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUPPLIERS -->
+    <div class="adm-panel" id="panel-suppliers">
+      <div class="adm-section-title">ניהול ספקים</div>
+      <div class="stats-row" id="supplierStats"></div>
+      <div class="adm-card">
+        <h3>הוספת ספק</h3>
+        <div class="adm-row">
+          <input class="adm-input" id="s-name" placeholder="שם איש קשר">
+          <input class="adm-input" id="s-company" placeholder="שם העסק / חברה">
+          <select class="adm-input" id="s-cat" style="max-width:170px;">
+            <option>צלם / וידאו</option><option>קייטרינג / שף</option><option>פרחים</option>
+            <option>מוזיקה / DJ</option><option>עיצוב / דקור</option><option>איפור / שיער</option>
+            <option>שמלה / חליפה</option><option>הסעות</option><option>וילה / אירוח</option>
+            <option>רב / טקס</option><option>אחר</option>
+          </select>
+          <input class="adm-input" id="s-phone" placeholder="טלפון" style="max-width:140px;direction:ltr;">
+          <input class="adm-input" id="s-email" placeholder="אימייל" style="direction:ltr;">
+        </div>
+        <div class="adm-row" style="margin-top:10px;">
+          <input class="adm-input" id="s-from" placeholder="מאיפה (עיר / מדינה)">
+          <select class="adm-input" id="s-lodging" style="max-width:130px;">
+            <option value="לא">לינה — לא</option><option value="כן">לינה — כן</option>
+          </select>
+          <select class="adm-input" id="s-transfer" style="max-width:130px;">
+            <option value="לא">הסעה — לא</option><option value="כן">הסעה — כן</option>
+          </select>
+          <select class="adm-input" id="s-status" style="max-width:140px;">
+            <option>בשיחות</option><option>נחתם</option><option>שולם</option><option>בוטל</option>
+          </select>
+          <input class="adm-input" id="s-arrival" type="date" style="max-width:160px;" title="תאריך הגעה צפוי">
+          <input class="adm-input" id="s-notes" placeholder="הערות (מחיר, שעות, בקשות...)">
+          <button class="adm-btn" onclick="addSupplier()">הוסף ספק</button>
+        </div>
+      </div>
+      <div class="adm-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+          <h3 style="margin:0;">רשימת ספקים</h3>
+          <button class="adm-btn adm-btn-sm" onclick="exportSuppliersCSV()">ייצוא CSV</button>
+        </div>
+        <div style="overflow-x:auto;">
+          <table class="adm-table">
+            <thead><tr>
+              <th>שם</th><th>סוג</th><th>עסק</th><th>טלפון</th><th>אימייל</th>
+              <th>מאיפה</th><th>לינה</th><th>הסעה</th><th>סטטוס</th><th>הגעה</th><th>הערות</th><th></th>
+            </tr></thead>
+            <tbody id="supplierTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- BUDGET -->
+    <div class="adm-panel" id="panel-budget">
+      <div class="adm-section-title">ניהול תקציב</div>
+      <div class="adm-card">
+        <h3>סיכום</h3>
+        <div class="stats-row">
+          <div class="stat-box"><div class="stat-num" id="b-total-budget">€0</div><div class="stat-label">תקציב כולל</div></div>
+          <div class="stat-box"><div class="stat-num" id="b-spent">€0</div><div class="stat-label">הוצאות</div></div>
+          <div class="stat-box"><div class="stat-num" id="b-left">€0</div><div class="stat-label">יתרה</div></div>
+          <div class="stat-box"><div class="stat-num" id="b-paid">€0</div><div class="stat-label">שולם</div></div>
+        </div>
+        <div class="budget-bar-wrap"><div class="budget-bar" id="b-bar" style="width:0%"></div></div>
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--stone);">
+          <span id="b-pct">0% הוצאה מהתקציב</span>
+          <div style="display:flex;gap:10px;align-items:center;">
+            <label style="font-size:11px;color:var(--stone);">תקציב כולל €</label>
+            <input class="adm-input" id="b-budget-input" type="number" placeholder="200000" style="max-width:130px;" onchange="saveBudget()">
+          </div>
+        </div>
+      </div>
+      <div class="adm-card">
+        <h3>הוספת הוצאה</h3>
+        <div class="adm-row">
+          <input class="adm-input" id="exp-name" placeholder="תיאור ההוצאה">
+          <select class="adm-input" id="exp-cat" style="max-width:160px;">
+            <option>מקום האירוע</option><option>קייטרינג</option><option>צלם/וידאו</option>
+            <option>פרחים</option><option>מוזיקה</option><option>לבוש</option>
+            <option>נסיעות</option><option>מגורים</option><option>שונות</option>
+          </select>
+          <input class="adm-input" id="exp-total" type="number" placeholder="סכום כולל €">
+          <input class="adm-input" id="exp-paid" type="number" placeholder="שולם עד כה €">
+          <select class="adm-input" id="exp-status" style="max-width:130px;">
+            <option>שולם</option><option>מקדמה</option><option>לא שולם</option>
+          </select>
+          <button class="adm-btn" onclick="addExpense()">הוסף</button>
+        </div>
+      </div>
+      <div class="adm-card">
+        <h3>פירוט הוצאות</h3>
+        <div style="overflow-x:auto;">
+          <table class="adm-table">
+            <thead><tr><th>תיאור</th><th>קטגוריה</th><th>סכום כולל</th><th>שולם</th><th>יתרה</th><th>סטטוס</th><th></th></tr></thead>
+            <tbody id="expTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TASKS -->
+    <div class="adm-panel" id="panel-tasks">
+      <div class="adm-section-title">משימות & צ׳ק-ליסט</div>
+      <div class="adm-card">
+        <h3>משימה חדשה</h3>
+        <div class="adm-row">
+          <input class="adm-input" id="t-name" placeholder="תיאור המשימה">
+          <input class="adm-input" id="t-due" type="date" style="max-width:160px;">
+          <select class="adm-input" id="t-cat" style="max-width:150px;">
+            <option>כללי</option><option>ספקים</option><option>לוגיסטיקה</option>
+            <option>ביגוד</option><option>מסמכים</option><option>אורחים</option>
+          </select>
+          <button class="adm-btn" onclick="addTask()">הוסף</button>
+        </div>
+      </div>
+      <div class="adm-card">
+        <h3>כל המשימות</h3>
+        <div id="taskList"></div>
+      </div>
+    </div>
+
+    <!-- FILES -->
+    <div class="adm-panel" id="panel-files">
+      <div class="adm-section-title">ניהול קבצים וחוזים</div>
+      <div class="adm-card">
+        <h3>העלאת קובץ</h3>
+        <div class="file-drop">
+          <input type="file" id="fileInput" multiple onchange="handleFiles(this.files)">
+          <div class="icon">העלאה</div>
+          <p>גררו קבצים לכאן, או לחצו להעלאה<br><span style="font-size:11px;color:rgba(138,121,104,.5);">חוזים, סקיצות, קבלות, תמונות</span></p>
+        </div>
+      </div>
+      <div class="adm-card">
+        <h3>קבצים שמורים</h3>
+        <div class="file-list" id="fileList"></div>
+      </div>
+    </div>
+
+    <!-- CONTENT EDITOR -->
+    <div class="adm-panel" id="panel-content">
+      <div class="adm-section-title">עריכת תוכן האתר</div>
+      <div class="adm-card">
+        <h3>עמוד הבית</h3>
+        <div class="content-field"><label>כותרת (שמות)</label><input type="text" id="c-title" placeholder="סהר & גלי"></div>
+        <div class="content-field"><label>תאריך</label><input type="text" id="c-date" placeholder="21 – 23 במאי 2027"></div>
+        <div class="content-field"><label>הודעה לאורחים (אופציונלי)</label><textarea id="c-msg" placeholder="עדכון חם לאורחים..."></textarea></div>
+        <button class="adm-btn" onclick="saveContent()">שמור שינויים</button>
+        <div class="save-toast" id="c-toast">✓ נשמר בהצלחה!</div>
+      </div>
+    </div>
+
   </div>
 </div>
 
-<!-- Modal: Payment -->
-<div class="modal-overlay" id="modal-payment">
-  <div class="modal">
-    <div class="modal-header"><div class="modal-title">תשלום חדש</div><button class="modal-close" onclick="closeModal('modal-payment')">✕</button></div>
-    <div class="form-group"><label>תיאור התשלום</label><input type="text" id="pay-desc" placeholder="לדוגמה: תשלום לקבלן שלד"/></div>
-    <div class="form-group"><label>סכום (₪)</label><input type="number" id="pay-amount" placeholder="0"/></div>
-    <div class="form-group"><label>תאריך</label><input type="date" id="pay-date"/></div>
-    <div class="form-group"><label>נמען</label><input type="text" id="pay-to" placeholder="שם הקבלן / ספק"/></div>
-    <div class="form-group"><label>קטגוריה</label><select id="pay-category"><option>שלד</option><option>טיח</option><option>חשמל</option><option>אינסטלציה</option><option>ריצוף</option><option>גמר</option><option>אחר</option></select></div>
-    <div class="modal-footer">
-      <button class="btn btn-outline" onclick="closeModal('modal-payment')">ביטול</button>
-      <button class="btn btn-primary" style="width:auto" onclick="savePayment()">שמור תשלום</button>
-    </div>
-  </div>
-</div>
-
-<!-- Modal: Phase -->
-<div class="modal-overlay" id="modal-phase">
-  <div class="modal">
-    <div class="modal-header"><div class="modal-title" id="modal-phase-title">שלב חדש</div><button class="modal-close" onclick="closeModal('modal-phase')">✕</button></div>
-    <div class="form-group"><label>שם השלב</label><input type="text" id="phase-name"/></div>
-    <div class="grid-2">
-      <div class="form-group"><label>תאריך התחלה</label><input type="date" id="phase-start"/></div>
-      <div class="form-group"><label>תאריך סיום</label><input type="date" id="phase-end"/></div>
-    </div>
-    <div class="form-group"><label>אחוז השלמה: <span id="phase-pv">0%</span></label><input type="range" id="phase-prog" min="0" max="100" value="0" oninput="document.getElementById('phase-pv').textContent=this.value+'%'" style="width:100%;margin-top:8px"/></div>
-    <div class="form-group"><label>סטטוס</label><select id="phase-status"><option value="pending">טרם התחיל</option><option value="active">בביצוע</option><option value="done">הושלם</option></select></div>
-    <div class="form-group"><label>הערות</label><textarea id="phase-notes" placeholder="הערות לשלב זה"></textarea></div>
-    <div class="modal-footer">
-      <button class="btn btn-outline" onclick="closeModal('modal-phase')">ביטול</button>
-      <button class="btn btn-primary" style="width:auto" onclick="savePhase()">שמור</button>
-    </div>
-  </div>
-</div>
-
-<!-- Modal: Update -->
-<div class="modal-overlay" id="modal-update">
-  <div class="modal">
-    <div class="modal-header"><div class="modal-title">עדכון חדש ללקוח</div><button class="modal-close" onclick="closeModal('modal-update')">✕</button></div>
-    <div class="form-group"><label>כותרת</label><input type="text" id="upd-title" placeholder="לדוגמה: סיום שלב השלד"/></div>
-    <div class="form-group"><label>תוכן</label><textarea id="upd-body" placeholder="פרטי העדכון..."></textarea></div>
-    <div class="modal-footer">
-      <button class="btn btn-outline" onclick="closeModal('modal-update')">ביטול</button>
-      <button class="btn btn-primary" style="width:auto" onclick="saveUpdate()">שלח עדכון</button>
-    </div>
-  </div>
-</div>
-
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.1/dist/umd/supabase.min.js"></script>
 <script>
-var currentUser=null,currentView='dashboard',currentProjectId=null,currentTab='overview',editingProjectId=null,editingPhaseId=null;
-
-function getData(){
-  var d=localStorage.getItem('aronstein_v2');
-  if(d)return JSON.parse(d);
-  var def={
-    users:[{id:'admin',username:'admin',password:'admin123',name:'ארונשטיין',role:'admin',projectId:null}],
-    projects:[{
-      id:'proj1',name:'בית פרטי - רמת השרון',address:'רחוב הורדים 12, רמת השרון',
-      desc:'בניית בית פרטי דו-קומתי, 280 מ"ר',start:'2025-01-01',end:'2025-12-01',
-      budget:2500000,status:'active',progress:35,
-      phases:[
-        {id:'ph1',name:'שלד',status:'done',start:'2025-01-01',end:'2025-03-01',progress:100,notes:'הושלם בהצלחה'},
-        {id:'ph2',name:'טיח וגבס',status:'active',start:'2025-03-15',end:'2025-05-30',progress:60,notes:'בתהליך'},
-        {id:'ph3',name:'חשמל ואינסטלציה',status:'active',start:'2025-04-01',end:'2025-06-01',progress:40,notes:''},
-        {id:'ph4',name:'ריצוף',status:'pending',start:'2025-06-01',end:'2025-08-01',progress:0,notes:''},
-        {id:'ph5',name:'גמר',status:'pending',start:'2025-08-01',end:'2025-11-01',progress:0,notes:''}
-      ],
-      payments:[
-        {id:'p1',desc:'תשלום ראשון - שלד',amount:400000,date:'2025-01-15',to:'קבלן שלד בע"מ',category:'שלד'},
-        {id:'p2',desc:'תשלום שני - שלד',amount:350000,date:'2025-02-20',to:'קבלן שלד בע"מ',category:'שלד'},
-        {id:'p3',desc:'טיח חיצוני',amount:120000,date:'2025-04-01',to:'צבעון עבודות',category:'טיח'}
-      ],
-      documents:[
-        {id:'d1',name:'תוכניות אדריכלות',category:'תוכניות',date:'2025-01-01'},
-        {id:'d2',name:'היתר בנייה',category:'היתרים',date:'2025-01-05'},
-        {id:'d3',name:'חוזה עם קבלן שלד',category:'הסכמים',date:'2025-01-10'}
-      ],
-      photos:[],
-      updates:[
-        {id:'u1',title:'סיום שלב השלד',body:'שלב השלד הושלם בהצלחה וניתן לעבור לשלב הטיח.',date:'05/03/2025'},
-        {id:'u2',title:'עדכון שבועי',body:'עבודות הטיח בשלב טוב, צפי לסיום בסוף מאי.',date:'20/04/2025'}
-      ],
-      messages:[
-        {id:'m1',sender:'admin',text:'ברוך הבא למערכת! כאן תוכל לפנות אלינו בכל שאלה.',date:'01/01/2025'}
-      ]
-    }]
-  };
-  localStorage.setItem('aronstein_v2',JSON.stringify(def));
-  return def;
+// ===== SUPABASE =====
+const SUPABASE_URL='https://pwtakxpnntfopxfygvcu.supabase.co';
+const SUPABASE_ANON_KEY='sb_publishable_sgQjGA4_NdxTsHm0JhSgUw_z1ZM9mBs';
+const sb=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+const DB={guests:[],rooms:[],expenses:[],tasks:[],files:[],suppliers:[],content:{id:1,title:'',wedding_date:'',msg:'',budget_total:0}};
+const LS={guests:'wg_guests',budget:'wg_budget',expenses:'wg_expenses',tasks:'wg_tasks',files:'wg_files',content:'wg_content',rooms:'wg_rooms',suppliers:'wg_suppliers'};
+function sbReady(){return!!sb&&!!SUPABASE_URL&&!!SUPABASE_ANON_KEY;}
+function dbError(where,err){console.error('Supabase',where,err);return err?.message||'שגיאת שמירה';}
+function mapGuest(g){return{id:g.id,name:g.name,phone:g.phone,count:g.count,days:g.days,status:g.status,transfer:g.transfer,notes:g.notes,roomId:g.room_id,ts:g.created_at};}
+function mapRoom(r){return{id:r.id,name:r.name,building:r.building,capacity:r.capacity,notes:r.notes};}
+function mapFile(f){return{id:f.id,name:f.name,size:f.size,date:f.file_date,type:f.mime_type,data:f.data};}
+function mapSupplier(s){return{id:s.id,name:s.name,company:s.company,cat:s.cat,phone:s.phone,email:s.email,from:s.origin,lodging:s.lodging,transfer:s.transfer,status:s.status,arrival:s.arrival,notes:s.notes,ts:s.created_at};}
+async function dbLoadAll(){
+  if(!sbReady())return false;
+  const [g,r,e,t,f,c,s]=await Promise.all([
+    sb.from('guests').select('*').order('created_at'),
+    sb.from('rooms').select('*'),
+    sb.from('expenses').select('*'),
+    sb.from('tasks').select('*'),
+    sb.from('files').select('*'),
+    sb.from('content').select('*').eq('id',1).maybeSingle(),
+    sb.from('suppliers').select('*')
+  ]);
+  if(g.error){dbError('load guests',g.error);return false;}
+  DB.guests=(g.data||[]).map(mapGuest);
+  if(r.error)dbError('load rooms',r.error);else DB.rooms=(r.data||[]).map(mapRoom);
+  if(e.error)dbError('load expenses',e.error);else DB.expenses=e.data||[];
+  if(t.error)dbError('load tasks',t.error);else DB.tasks=t.data||[];
+  if(f.error)dbError('load files',f.error);else DB.files=(f.data||[]).map(mapFile);
+  DB.suppliers=s.error?[]:(s.data||[]).map(mapSupplier);
+  DB.content=c.error||!c.data?{id:1,title:'',wedding_date:'',msg:'',budget_total:0}:c.data;
+  return true;
 }
-
-function saveData(d){localStorage.setItem('aronstein_v2',JSON.stringify(d));}
-
-function doLogin(){
-  var u=document.getElementById('login-user').value.trim();
-  var p=document.getElementById('login-pass').value.trim();
-  var data=getData();
-  var user=data.users.find(function(x){return x.username===u&&x.password===p;});
-  if(!user){document.getElementById('login-error').classList.add('show');return;}
-  currentUser=user;
-  document.getElementById('login-screen').style.display='none';
-  document.getElementById('app').style.display='block';
-  renderSidebar();
-  if(user.role==='admin'){showView('dashboard');}
-  else{currentProjectId=user.projectId;currentTab='overview';showView('project');}
-}
-
-function doLogout(){
-  currentUser=null;
-  document.getElementById('login-screen').style.display='flex';
-  document.getElementById('app').style.display='none';
-  document.getElementById('login-user').value='';
-  document.getElementById('login-pass').value='';
-  document.getElementById('login-error').classList.remove('show');
-}
-
-function renderSidebar(){
-  document.getElementById('user-avatar-sb').textContent=currentUser.name.charAt(0);
-  document.getElementById('user-name-sb').textContent=currentUser.name;
-  document.getElementById('user-role-sb').textContent=currentUser.role==='admin'?'מנהל מערכת':'לקוח';
-  var nav=document.getElementById('sidebar-nav');
-  if(currentUser.role==='admin'){
-    nav.innerHTML='<div class="nav-section-title">ניהול</div>'+
-      '<div class="nav-item '+(currentView==='dashboard'?'active':'')+'" onclick="showView(\'dashboard\')"><span class="nav-icon">📊</span> לוח בקרה</div>'+
-      '<div class="nav-item '+(currentView==='projects'?'active':'')+'" onclick="showView(\'projects\')"><span class="nav-icon">🏗️</span> פרויקטים</div>'+
-      '<div class="nav-section-title">מערכת</div>'+
-      '<div class="nav-item '+(currentView==='clients'?'active':'')+'" onclick="showView(\'clients\')"><span class="nav-icon">👥</span> לקוחות</div>'+
-      '<div class="nav-item '+(currentView==='settings'?'active':'')+'" onclick="showView(\'settings\')"><span class="nav-icon">⚙️</span> הגדרות</div>';
-  } else {
-    nav.innerHTML='<div class="nav-section-title">הפרויקט שלי</div><div class="nav-item active"><span class="nav-icon">🏠</span> הפרויקט שלי</div>';
+async function ensureContentRow(){
+  if(!DB.content?.id){
+    await sb.from('content').upsert({id:1,title:'',wedding_date:'',msg:'',budget_total:0},{onConflict:'id'});
+    const {data}=await sb.from('content').select('*').eq('id',1).maybeSingle();
+    DB.content=data||{id:1,title:'',wedding_date:'',msg:'',budget_total:0};
   }
 }
-
-function showView(view,pid){
-  currentView=view;
-  if(pid)currentProjectId=pid;
-  renderSidebar();
-  var el=document.getElementById('main-content');
-  if(view==='dashboard')renderDashboard(el);
-  else if(view==='projects')renderProjectsList(el);
-  else if(view==='project'){currentTab='overview';renderProjectDetail(el);}
-  else if(view==='clients')renderClients(el);
-  else if(view==='settings')renderSettings(el);
+async function migrateFromLocalStorage(){
+  if(!sbReady()||localStorage.getItem('wg_supabase_migrated'))return;
+  const {count}=await sb.from('guests').select('*',{count:'exact',head:true});
+  if((count||0)>0){localStorage.setItem('wg_supabase_migrated','1');return;}
+  const roomMap={};
+  try{
+    const oldRooms=JSON.parse(localStorage.getItem(LS.rooms)||'[]');
+    for(const r of oldRooms){
+      const {data}=await sb.from('rooms').insert({name:r.name,building:r.building,capacity:r.capacity||2,notes:r.notes||''}).select().single();
+      if(data)roomMap[String(r.id)]=data.id;
+    }
+    const oldGuests=JSON.parse(localStorage.getItem(LS.guests)||'[]');
+    for(const g of oldGuests){
+      await sb.from('guests').insert({name:g.name,phone:g.phone||'',count:parseInt(g.count)||1,days:g.days||'',status:g.status||'מגיע',transfer:g.transfer||'',notes:g.notes||'',room_id:g.roomId?roomMap[String(g.roomId)]||null:null});
+    }
+    for(const x of JSON.parse(localStorage.getItem(LS.expenses)||'[]')){
+      await sb.from('expenses').insert({name:x.name,cat:x.cat,total:x.total||0,paid:x.paid||0,status:x.status||''});
+    }
+    const oldTasks=JSON.parse(localStorage.getItem(LS.tasks)||'[]');
+    if(oldTasks.length)for(const t of oldTasks){await sb.from('tasks').insert({name:t.name,due:t.due||null,cat:t.cat||'',done:!!t.done});}
+    for(const f of JSON.parse(localStorage.getItem(LS.files)||'[]')){
+      await sb.from('files').insert({name:f.name,size:f.size||'',file_date:f.date||'',mime_type:f.type||'',data:f.data||''});
+    }
+    for(const sp of JSON.parse(localStorage.getItem(LS.suppliers)||'[]')){
+      await sb.from('suppliers').insert({name:sp.name,company:sp.company||'',cat:sp.cat||'',phone:sp.phone||'',email:sp.email||'',origin:sp.from||'',lodging:sp.lodging||'לא',transfer:sp.transfer||'לא',status:sp.status||'',arrival:sp.arrival||null,notes:sp.notes||''});
+    }
+    const oldContent=JSON.parse(localStorage.getItem(LS.content)||'{}');
+    const oldBudget=JSON.parse(localStorage.getItem(LS.budget)||'{}');
+    await sb.from('content').upsert({id:1,title:oldContent.title||'',wedding_date:oldContent.date||'',msg:oldContent.msg||'',budget_total:parseInt(oldBudget.total)||0},{onConflict:'id'});
+    localStorage.setItem('wg_supabase_migrated','1');
+  }catch(err){console.error('Migration failed',err);}
+}
+async function dbInit(){
+  if(!sbReady()){console.error('Supabase client not ready');return;}
+  await migrateFromLocalStorage();
+  if(!await dbLoadAll())return;
+  await ensureContentRow();
+  loadContent();
 }
 
-function fmtMoney(n){return '₪'+Number(n).toLocaleString('he-IL');}
+// ===== COUNTDOWN =====
+function tick(){
+  const t=new Date('2027-05-21T17:00:00');
+  const now=new Date();
+  const diff=t-now;
+  if(diff<=0){document.getElementById('cd-d').textContent='000';return;}
+  const d=Math.floor(diff/86400000);
+  const h=Math.floor((diff%86400000)/3600000);
+  const m=Math.floor((diff%3600000)/60000);
+  const s=Math.floor((diff%60000)/1000);
+  document.getElementById('cd-d').textContent=String(d).padStart(3,'0');
+  document.getElementById('cd-h').textContent=String(h).padStart(2,'0');
+  document.getElementById('cd-m').textContent=String(m).padStart(2,'0');
+  document.getElementById('cd-s').textContent=String(s).padStart(2,'0');
+}
+tick();setInterval(tick,1000);
 
-function projectCardHTML(p){
-  var paid=p.payments.reduce(function(s,x){return s+Number(x.amount||0);},0);
-  var sm={'active':['status-active','בביצוע'],'paused':['status-paused','מושהה'],'done':['status-done','הושלם']};
-  var sc=sm[p.status]||sm.active;
-  return '<div class="project-card" onclick="showView(\'project\',\''+p.id+'\')">'+
-    '<div class="project-card-header"><div><div class="project-name">'+p.name+'</div><div class="project-address">📍 '+p.address+'</div></div>'+
-    '<span class="status-badge '+sc[0]+'">'+sc[1]+'</span></div>'+
-    '<div class="progress-bar-wrap"><div class="progress-bar" style="width:'+(p.progress||0)+'%"></div></div>'+
-    '<div class="progress-label"><span>התקדמות</span><span>'+(p.progress||0)+'%</span></div>'+
-    '<div class="project-meta"><span>💰 '+(p.budget/1000000).toFixed(1)+'M</span><span>📄 '+p.documents.length+' מסמכים</span><span>🔔 '+p.updates.length+' עדכונים</span></div>'+
-    '</div>';
+// ===== NAV =====
+window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('scrolled',scrollY>60));
+
+// ===== REVEAL =====
+const ro=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');}),{threshold:.1});
+document.querySelectorAll('.reveal').forEach(r=>ro.observe(r));
+
+// ===== DAY TABS =====
+function showDay(i){
+  document.querySelectorAll('.day-tab').forEach((t,j)=>t.classList.toggle('active',i===j));
+  document.querySelectorAll('.day-panel').forEach((p,j)=>p.classList.toggle('active',i===j));
 }
 
-function renderDashboard(el){
-  var data=getData();
-  var active=data.projects.filter(function(p){return p.status==='active';}).length;
-  var clients=data.users.filter(function(u){return u.role!=='admin';}).length;
-  var totalPaid=data.projects.reduce(function(s,p){return s+p.payments.reduce(function(ss,pay){return ss+Number(pay.amount||0);},0);},0);
-  el.innerHTML='<div class="page-header"><h1>👋 שלום, '+currentUser.name+'</h1><p>סקירה כללית של כל הפרויקטים</p></div>'+
-    '<div class="stats-grid">'+
-    '<div class="stat-card"><div class="stat-icon">🏗️</div><div class="stat-value">'+data.projects.length+'</div><div class="stat-label">פרויקטים</div></div>'+
-    '<div class="stat-card"><div class="stat-icon">⚡</div><div class="stat-value">'+active+'</div><div class="stat-label">פעילים</div></div>'+
-    '<div class="stat-card"><div class="stat-icon">👥</div><div class="stat-value">'+clients+'</div><div class="stat-label">לקוחות</div></div>'+
-    '<div class="stat-card"><div class="stat-icon">💰</div><div class="stat-value">'+fmtMoney(totalPaid)+'</div><div class="stat-label">שולם סה"כ</div></div>'+
-    '</div>'+
-    '<div class="card"><div class="section-actions"><div class="section-title">🏗️ פרויקטים</div><button class="btn btn-primary btn-sm" onclick="openNewProjectModal()">➕ פרויקט חדש</button></div>'+
-    '<div class="projects-grid">'+data.projects.map(projectCardHTML).join('')+'</div></div>';
-}
-
-function renderProjectsList(el){
-  var data=getData();
-  el.innerHTML='<div class="page-header flex-between"><div><h1>🏗️ פרויקטים</h1><p>ניהול כל הפרויקטים</p></div><button class="btn btn-primary" onclick="openNewProjectModal()">➕ פרויקט חדש</button></div>'+
-    '<div class="projects-grid">'+data.projects.map(projectCardHTML).join('')+'</div>';
-}
-
-function renderProjectDetail(el){
-  var data=getData();
-  var p=data.projects.find(function(x){return x.id===currentProjectId;});
-  if(!p){el.innerHTML='<p>פרויקט לא נמצא</p>';return;}
-  var isAdmin=currentUser.role==='admin';
-  var paid=p.payments.reduce(function(s,x){return s+Number(x.amount||0);},0);
-  var remaining=Number(p.budget||0)-paid;
-
-  var html=(isAdmin?'<button class="back-btn" onclick="showView(\'projects\')">← חזרה לפרויקטים</button>':'');
-  html+='<div class="flex-between mb-24"><div><h1 style="font-size:24px;font-weight:800;color:var(--primary)">'+p.name+'</h1><p style="color:var(--text-muted);margin-top:4px">📍 '+p.address+'</p></div>';
-  if(isAdmin)html+='<div class="flex-gap"><button class="btn btn-outline btn-sm" onclick="openEditProjectModal(\''+p.id+'\')">✏️ עריכה</button><button class="btn btn-accent btn-sm" onclick="openModal(\'modal-update\')">🔔 עדכון חדש</button></div>';
-  html+='</div>';
-
-  html+='<div class="tabs">'+
-    '<button class="tab '+(currentTab==='overview'?'active':'')+'" onclick="switchTab(\'overview\')">📊 סקירה</button>'+
-    '<button class="tab '+(currentTab==='timeline'?'active':'')+'" onclick="switchTab(\'timeline\')">📅 לוח זמנים</button>'+
-    '<button class="tab '+(currentTab==='budget'?'active':'')+'" onclick="switchTab(\'budget\')">💰 תקציב</button>'+
-    '<button class="tab '+(currentTab==='docs'?'active':'')+'" onclick="switchTab(\'docs\')">📁 מסמכים</button>'+
-    '<button class="tab '+(currentTab==='gallery'?'active':'')+'" onclick="switchTab(\'gallery\')">📷 גלריה</button>'+
-    '<button class="tab '+(currentTab==='updates'?'active':'')+'" onclick="switchTab(\'updates\')">🔔 עדכונים</button>'+
-    '<button class="tab '+(currentTab==='messages'?'active':'')+'" onclick="switchTab(\'messages\')">💬 שאלות</button>'+
-    '</div>';
-
-  // OVERVIEW TAB
-  html+='<div id="tab-overview" class="tab-content '+(currentTab==='overview'?'active':'')+'">'+
-    '<div class="stats-grid">'+
-    '<div class="stat-card"><div class="stat-icon">📈</div><div class="stat-value">'+(p.progress||0)+'%</div><div class="stat-label">התקדמות כללית</div></div>'+
-    '<div class="stat-card"><div class="stat-icon">💰</div><div class="stat-value">'+fmtMoney(paid)+'</div><div class="stat-label">שולם עד כה</div></div>'+
-    '<div class="stat-card"><div class="stat-icon">📅</div><div class="stat-value">'+p.phases.filter(function(x){return x.status==='done';}).length+'/'+p.phases.length+'</div><div class="stat-label">שלבים הושלמו</div></div>'+
-    '<div class="stat-card"><div class="stat-icon">📄</div><div class="stat-value">'+p.documents.length+'</div><div class="stat-label">מסמכים</div></div>'+
-    '</div>'+
-    '<div class="grid-2" style="gap:20px">'+
-    '<div class="card"><div class="card-title">📝 פרטי הפרויקט</div>'+
-    '<p style="font-size:14px;color:var(--text-muted);margin-bottom:12px">'+(p.desc||'אין תיאור')+'</p>'+
-    '<div style="display:flex;flex-direction:column;gap:8px;font-size:13px">'+
-    '<div class="flex-between"><span style="color:var(--text-muted)">תחילת עבודה:</span><span style="font-weight:600">'+p.start+'</span></div>'+
-    '<div class="flex-between"><span style="color:var(--text-muted)">צפי סיום:</span><span style="font-weight:600">'+p.end+'</span></div>'+
-    '<div class="flex-between"><span style="color:var(--text-muted)">תקציב:</span><span style="font-weight:600">'+fmtMoney(p.budget)+'</span></div>'+
-    '</div></div>'+
-    '<div class="card"><div class="card-title">📊 תקציב</div>'+
-    '<div style="margin-bottom:14px"><div class="flex-between" style="margin-bottom:6px;font-size:13px"><span style="color:var(--text-muted)">שולם</span><span style="font-weight:600;color:var(--success)">'+fmtMoney(paid)+'</span></div>'+
-    '<div class="progress-bar-wrap"><div class="progress-bar" style="width:'+(p.budget?Math.min(100,Math.round(paid/p.budget*100)):0)+'%;background:var(--success)"></div></div></div>'+
-    '<div class="flex-between" style="font-size:13px"><span style="color:var(--text-muted)">נותר:</span><span style="font-weight:700;color:var(--warning)">'+fmtMoney(remaining)+'</span></div>'+
-    '</div></div></div>';
-
-  // TIMELINE TAB
-  html+='<div id="tab-timeline" class="tab-content '+(currentTab==='timeline'?'active':'')+'">'+
-    '<div class="section-actions"><div class="section-title">📅 שלבי הפרויקט</div>'+
-    (isAdmin?'<button class="btn btn-primary btn-sm" onclick="openAddPhaseModal()">➕ שלב חדש</button>':'')+
-    '</div><div class="timeline-phases">'+
-    p.phases.map(function(ph){
-      return '<div class="phase-card '+ph.status+'">'+
-        '<div class="phase-header"><div class="phase-name">'+ph.name+'</div>'+
-        '<span class="phase-status '+ph.status+'">'+(ph.status==='done'?'✅ הושלם':ph.status==='active'?'🔨 בביצוע':'⏳ ממתין')+'</span></div>'+
-        '<div class="progress-bar-wrap"><div class="progress-bar" style="width:'+ph.progress+'%"></div></div>'+
-        '<div class="flex-between" style="font-size:12px;color:var(--text-muted);margin-top:6px"><span>'+ph.progress+'%</span><span>'+ph.end+'</span></div>'+
-        (ph.notes?'<p style="font-size:12px;color:var(--text-muted);margin-top:8px">'+ph.notes+'</p>':'')+
-        (isAdmin?'<button class="btn btn-outline btn-sm" style="margin-top:10px;width:100%" onclick="openEditPhaseModal(\''+ph.id+'\')">✏️ עריכה</button>':'')+
-        '</div>';
-    }).join('')+
-    '</div>'+
-    (isAdmin?'<div class="card" style="margin-top:20px"><div class="card-title">📈 התקדמות כללית</div>'+
-    '<div style="display:flex;align-items:center;gap:12px">'+
-    '<input type="range" min="0" max="100" value="'+(p.progress||0)+'" id="overall-prog" style="flex:1" oninput="document.getElementById(\'overall-prog-val\').textContent=this.value+\'%\'"/>'+
-    '<span id="overall-prog-val" style="font-weight:700;color:var(--primary);min-width:40px">'+(p.progress||0)+'%</span>'+
-    '<button class="btn btn-primary btn-sm" onclick="saveOverallProgress()">שמור</button></div></div>':'')+
-    '</div>';
-
-  // BUDGET TAB
-  html+='<div id="tab-budget" class="tab-content '+(currentTab==='budget'?'active':'')+'">'+
-    '<div class="budget-summary">'+
-    '<div class="budget-item"><div class="label">תקציב כולל</div><div class="amount total">'+fmtMoney(p.budget)+'</div></div>'+
-    '<div class="budget-item"><div class="label">שולם</div><div class="amount paid">'+fmtMoney(paid)+'</div></div>'+
-    '<div class="budget-item"><div class="label">נותר</div><div class="amount remaining">'+fmtMoney(remaining)+'</div></div>'+
-    '<div class="budget-item"><div class="label">אחוז ניצול</div><div class="amount total">'+(p.budget?Math.round(paid/p.budget*100):0)+'%</div></div>'+
-    '</div><div class="card"><div class="section-actions"><div class="section-title">💳 תשלומים</div>'+
-    (isAdmin?'<button class="btn btn-primary btn-sm" onclick="openAddPaymentModal()">➕ תשלום חדש</button>':'')+
-    '</div>'+
-    (p.payments.length===0?'<div class="empty-state"><div class="empty-icon">💰</div><p>אין תשלומים עדיין</p></div>':
-    '<table class="payments-table"><thead><tr><th>תיאור</th><th>נמען</th><th>קטגוריה</th><th>תאריך</th><th>סכום</th></tr></thead><tbody>'+
-    p.payments.map(function(pay){
-      return '<tr><td style="font-weight:600">'+pay.desc+'</td><td style="color:var(--text-muted)">'+pay.to+'</td>'+
-        '<td><span class="badge badge-blue">'+pay.category+'</span></td>'+
-        '<td style="color:var(--text-muted)">'+pay.date+'</td>'+
-        '<td style="font-weight:700;color:var(--primary)">'+fmtMoney(pay.amount)+'</td></tr>';
-    }).join('')+'</tbody></table>')+
-    '</div></div>';
-
-  // DOCS TAB
-  html+='<div id="tab-docs" class="tab-content '+(currentTab==='docs'?'active':'')+'">'+
-    '<div class="section-actions"><div class="section-title">📁 מסמכים ותוכניות</div>'+
-    (isAdmin?'<button class="btn btn-primary btn-sm" onclick="addDocument()">➕ הוסף מסמך</button>':'')+
-    '</div><div class="doc-categories">'+
-    ['תוכניות','היתרים','הסכמים','אחר'].map(function(cat){
-      var catIcon={'תוכניות':'📐','היתרים':'📋','הסכמים':'📝','אחר':'📄'};
-      var docs=p.documents.filter(function(d){return d.category===cat;});
-      return '<div class="doc-category"><div class="doc-category-title">'+catIcon[cat]+' '+cat+'</div>'+
-        (docs.length===0?'<p style="font-size:13px;color:var(--text-muted)">אין מסמכים</p>':'')+
-        docs.map(function(d){
-          return '<div class="doc-item"><span>📄 '+d.name+'</span><div style="display:flex;gap:6px">'+
-            (isAdmin?'<button class="btn btn-danger btn-sm" onclick="deleteDoc(\''+d.id+'\')">🗑️</button>':'')+
-            '</div></div>';
-        }).join('')+
-        (isAdmin?'<button class="btn btn-outline btn-sm" style="margin-top:12px;width:100%" onclick="uploadDoc(\''+cat+'\')">📤 הוסף ל'+cat+'</button>':'')+
-        '</div>';
-    }).join('')+'</div></div>';
-
-  // GALLERY TAB
-  html+='<div id="tab-gallery" class="tab-content '+(currentTab==='gallery'?'active':'')+'">'+
-    '<div class="section-actions"><div class="section-title">📷 גלריית תמונות מהשטח</div>'+
-    (isAdmin?'<label class="upload-label">📷 העלה תמונה<input type="file" accept="image/*" onchange="uploadPhoto(event)"/></label>':'')+
-    '</div>'+
-    (p.photos.length===0?'<div class="empty-state card"><div class="empty-icon">📷</div><p>אין תמונות עדיין'+(isAdmin?' — העלה את הראשונה':'')+' </p></div>':
-    '<div class="gallery-grid">'+p.photos.map(function(photo){
-      return '<div class="gallery-item"><img src="'+photo.url+'" alt="'+photo.name+'"/></div>';
-    }).join('')+'</div>')+
-    '</div>';
-
-  // UPDATES TAB
-  html+='<div id="tab-updates" class="tab-content '+(currentTab==='updates'?'active':'')+'">'+
-    '<div class="section-actions"><div class="section-title">🔔 עדכונים</div>'+
-    (isAdmin?'<button class="btn btn-primary btn-sm" onclick="openModal(\'modal-update\')">➕ עדכון חדש</button>':'')+
-    '</div>'+
-    (p.updates.length===0?'<div class="empty-state card"><div class="empty-icon">🔔</div><p>אין עדכונים עדיין</p></div>':
-    '<div style="display:flex;flex-direction:column;gap:14px">'+
-    p.updates.slice().reverse().map(function(u){
-      return '<div class="card"><div class="flex-between" style="margin-bottom:8px">'+
-        '<div style="font-size:16px;font-weight:700;color:var(--primary)">'+u.title+'</div>'+
-        '<div style="font-size:12px;color:var(--text-muted)">'+u.date+'</div></div>'+
-        '<p style="font-size:14px;line-height:1.6">'+u.body+'</p>'+
-        (isAdmin?'<button class="btn btn-danger btn-sm" style="margin-top:10px" onclick="deleteUpdate(\''+u.id+'\')">🗑️ מחק</button>':'')+
-        '</div>';
-    }).join('')+'</div>')+
-    '</div>';
-
-  // MESSAGES TAB
-  html+='<div id="tab-messages" class="tab-content '+(currentTab==='messages'?'active':'')+'">'+
-    '<div class="section-title mb-16">💬 ערוץ שאלות ובקשות</div>'+
-    '<div class="card">'+
-    '<div class="messages-list" id="messages-list">'+
-    p.messages.map(function(m){
-      return '<div><div class="message-bubble '+m.sender+'">'+m.text+
-        '<div class="message-meta">'+(m.sender==='admin'?'ארונשטיין פיקוח וניהול':'לקוח')+' · '+m.date+'</div></div></div>';
-    }).join('')+
-    '</div><hr class="divider"/>'+
-    '<div class="message-input-wrap">'+
-    '<input type="text" id="msg-input" placeholder="כתוב הודעה..." onkeydown="if(event.key===\'Enter\')sendMessage()"/>'+
-    '<button class="btn btn-primary btn-sm" onclick="sendMessage()">שלח</button></div></div></div>';
-
-  el.innerHTML=html;
-  setTimeout(function(){var ml=document.getElementById('messages-list');if(ml)ml.scrollTop=ml.scrollHeight;},50);
-}
-
-function switchTab(t){currentTab=t;renderProjectDetail(document.getElementById('main-content'));}
-
-function renderClients(el){
-  var data=getData();
-  var clients=data.users.filter(function(u){return u.role!=='admin';});
-  el.innerHTML='<div class="page-header flex-between"><div><h1>👥 לקוחות</h1><p>ניהול משתמשי הלקוחות</p></div>'+
-    '<button class="btn btn-primary" onclick="openAddUserModal()">➕ לקוח חדש</button></div>'+
-    '<div class="users-list">'+
-    (clients.length===0?'<div class="empty-state card"><div class="empty-icon">👥</div><p>אין לקוחות עדיין</p></div>':'')+
-    clients.map(function(u){
-      var proj=data.projects.find(function(p){return p.id===u.projectId;});
-      return '<div class="user-row"><div class="user-row-info">'+
-        '<div class="user-row-avatar">'+u.name.charAt(0)+'</div>'+
-        '<div><div class="user-row-name">'+u.name+'</div>'+
-        '<div class="user-row-meta">משתמש: '+u.username+' · סיסמה: '+u.password+' · פרויקט: '+(proj?proj.name:'לא משויך')+'</div></div></div>'+
-        '<div class="flex-gap">'+
-        (proj?'<button class="btn btn-outline btn-sm" onclick="showView(\'project\',\''+proj.id+'\')">צפה בפרויקט</button>':'')+
-        '<button class="btn btn-danger btn-sm" onclick="deleteUser(\''+u.id+'\')">🗑️</button></div></div>';
-    }).join('')+'</div>';
-}
-
-function renderSettings(el){
-  el.innerHTML='<div class="page-header"><h1>⚙️ הגדרות</h1></div>'+
-    '<div class="card" style="max-width:480px">'+
-    '<div class="card-title">🔐 שינוי סיסמת אדמין</div>'+
-    '<div class="form-group"><label>סיסמה חדשה</label><input type="password" id="new-admin-pass" placeholder="סיסמה חדשה"/></div>'+
-    '<div class="form-group"><label>אימות סיסמה</label><input type="password" id="confirm-admin-pass" placeholder="הכנס שוב"/></div>'+
-    '<button class="btn btn-primary" onclick="changeAdminPass()">שמור סיסמה</button>'+
-    '<div id="pass-msg" style="margin-top:10px;font-size:13px;display:none"></div></div>'+
-    '<div class="card" style="max-width:480px;margin-top:20px">'+
-    '<div class="card-title">🗑️ איפוס נתונים</div>'+
-    '<p style="font-size:13px;color:var(--text-muted);margin-bottom:16px">מחיקת כל הנתונים — פעולה בלתי הפיכה!</p>'+
-    '<button class="btn btn-danger" onclick="if(confirm(\'בטוח? כל הנתונים יימחקו!\'))resetData()">איפוס מלא</button></div>';
-}
-
-function openModal(id){document.getElementById(id).classList.add('open');}
-function closeModal(id){document.getElementById(id).classList.remove('open');}
-
-function openNewProjectModal(){
-  editingProjectId=null;
-  document.getElementById('modal-proj-title').textContent='פרויקט חדש';
-  ['proj-name','proj-addr','proj-desc','proj-start','proj-end','proj-budget'].forEach(function(id){document.getElementById(id).value='';});
-  document.getElementById('proj-status').value='active';
-  openModal('modal-project');
-}
-function openEditProjectModal(id){
-  var data=getData();
-  var p=data.projects.find(function(x){return x.id===id;});
-  if(!p)return;
-  editingProjectId=id;
-  document.getElementById('modal-proj-title').textContent='עריכת פרויקט';
-  document.getElementById('proj-name').value=p.name;
-  document.getElementById('proj-addr').value=p.address;
-  document.getElementById('proj-desc').value=p.desc||'';
-  document.getElementById('proj-start').value=p.start;
-  document.getElementById('proj-end').value=p.end;
-  document.getElementById('proj-budget').value=p.budget;
-  document.getElementById('proj-status').value=p.status;
-  openModal('modal-project');
-}
-function saveProject(){
-  var data=getData();
-  var proj={name:document.getElementById('proj-name').value,address:document.getElementById('proj-addr').value,desc:document.getElementById('proj-desc').value,start:document.getElementById('proj-start').value,end:document.getElementById('proj-end').value,budget:document.getElementById('proj-budget').value,status:document.getElementById('proj-status').value};
-  if(!proj.name)return alert('יש להזין שם פרויקט');
-  if(editingProjectId){var idx=data.projects.findIndex(function(p){return p.id===editingProjectId;});data.projects[idx]=Object.assign({},data.projects[idx],proj);}
-  else{data.projects.push(Object.assign({},proj,{id:'proj'+Date.now(),progress:0,phases:[],payments:[],documents:[],photos:[],updates:[],messages:[]}));}
-  saveData(data);closeModal('modal-project');showView(currentView);
-}
-
-function openAddUserModal(){
-  var data=getData();
-  var sel=document.getElementById('new-user-project');
-  sel.innerHTML=data.projects.map(function(p){return '<option value="'+p.id+'">'+p.name+'</option>';}).join('');
-  ['new-user-name','new-user-username','new-user-pass'].forEach(function(id){document.getElementById(id).value='';});
-  openModal('modal-user');
-}
-function saveUser(){
-  var data=getData();
-  var name=document.getElementById('new-user-name').value;
-  var username=document.getElementById('new-user-username').value;
-  var pass=document.getElementById('new-user-pass').value;
-  var projectId=document.getElementById('new-user-project').value;
-  if(!name||!username||!pass)return alert('יש למלא את כל השדות');
-  if(data.users.find(function(u){return u.username===username;}))return alert('שם משתמש כבר קיים');
-  data.users.push({id:'u'+Date.now(),username:username,password:pass,name:name,role:'client',projectId:projectId});
-  saveData(data);closeModal('modal-user');showView('clients');
-}
-function deleteUser(id){
-  if(!confirm('למחוק משתמש זה?'))return;
-  var data=getData();data.users=data.users.filter(function(u){return u.id!==id;});
-  saveData(data);renderClients(document.getElementById('main-content'));
-}
-
-function openAddPaymentModal(){
-  document.getElementById('pay-desc').value='';document.getElementById('pay-amount').value='';
-  document.getElementById('pay-date').value=new Date().toISOString().split('T')[0];
-  document.getElementById('pay-to').value='';
-  openModal('modal-payment');
-}
-function savePayment(){
-  var data=getData();var proj=data.projects.find(function(p){return p.id===currentProjectId;});
-  var pay={id:'p'+Date.now(),desc:document.getElementById('pay-desc').value,amount:document.getElementById('pay-amount').value,date:document.getElementById('pay-date').value,to:document.getElementById('pay-to').value,category:document.getElementById('pay-category').value};
-  if(!pay.desc||!pay.amount)return alert('יש למלא תיאור וסכום');
-  proj.payments.push(pay);saveData(data);closeModal('modal-payment');renderProjectDetail(document.getElementById('main-content'));
-}
-
-function openAddPhaseModal(){
-  editingPhaseId=null;
-  document.getElementById('modal-phase-title').textContent='שלב חדש';
-  ['phase-name','phase-start','phase-end','phase-notes'].forEach(function(id){document.getElementById(id).value='';});
-  document.getElementById('phase-prog').value=0;document.getElementById('phase-pv').textContent='0%';
-  document.getElementById('phase-status').value='pending';
-  openModal('modal-phase');
-}
-function openEditPhaseModal(phId){
-  var data=getData();var proj=data.projects.find(function(p){return p.id===currentProjectId;});
-  var ph=proj.phases.find(function(x){return x.id===phId;});if(!ph)return;
-  editingPhaseId=phId;
-  document.getElementById('modal-phase-title').textContent='עריכת שלב';
-  document.getElementById('phase-name').value=ph.name;document.getElementById('phase-start').value=ph.start;
-  document.getElementById('phase-end').value=ph.end;document.getElementById('phase-prog').value=ph.progress;
-  document.getElementById('phase-pv').textContent=ph.progress+'%';
-  document.getElementById('phase-status').value=ph.status;document.getElementById('phase-notes').value=ph.notes||'';
-  openModal('modal-phase');
-}
-function savePhase(){
-  var data=getData();var proj=data.projects.find(function(p){return p.id===currentProjectId;});
-  var ph={name:document.getElementById('phase-name').value,start:document.getElementById('phase-start').value,end:document.getElementById('phase-end').value,progress:Number(document.getElementById('phase-prog').value),status:document.getElementById('phase-status').value,notes:document.getElementById('phase-notes').value};
-  if(!ph.name)return alert('יש להזין שם שלב');
-  if(editingPhaseId){var idx=proj.phases.findIndex(function(x){return x.id===editingPhaseId;});proj.phases[idx]=Object.assign({},proj.phases[idx],ph);}
-  else{proj.phases.push(Object.assign({},ph,{id:'ph'+Date.now()}));}
-  saveData(data);closeModal('modal-phase');renderProjectDetail(document.getElementById('main-content'));
-}
-function saveOverallProgress(){
-  var val=document.getElementById('overall-prog').value;
-  var data=getData();var proj=data.projects.find(function(p){return p.id===currentProjectId;});
-  proj.progress=Number(val);saveData(data);alert('ההתקדמות עודכנה!');
-}
-
-function saveUpdate(){
-  var data=getData();var proj=data.projects.find(function(p){return p.id===currentProjectId;});
-  var upd={id:'u'+Date.now(),title:document.getElementById('upd-title').value,body:document.getElementById('upd-body').value,date:new Date().toLocaleDateString('he-IL'),sender:'admin'};
-  if(!upd.title||!upd.body)return alert('יש למלא כותרת ותוכן');
-  proj.updates.push(upd);saveData(data);closeModal('modal-update');
-  document.getElementById('upd-title').value='';document.getElementById('upd-body').value='';
-  renderProjectDetail(document.getElementById('main-content'));
-}
-function deleteUpdate(id){
-  if(!confirm('למחוק עדכון זה?'))return;
-  var data=getData();var proj=data.projects.find(function(p){return p.id===currentProjectId;});
-  proj.updates=proj.updates.filter(function(u){return u.id!==id;});
-  saveData(data);renderProjectDetail(document.getElementById('main-content'));
-}
-
-function sendMessage(){
-  var input=document.getElementById('msg-input');var text=input.value.trim();if(!text)return;
-  var data=getData();var proj=data.projects.find(function(p){return p.id===currentProjectId;});
-  proj.messages.push({id:'m'+Date.now(),sender:currentUser.role,text:text,date:new Date().toLocaleDateString('he-IL')});
-  saveData(data);input.value='';renderProjectDetail(document.getElementById('main-content'));
-  setTimeout(function(){var ml=document.getElementById('messages-list');if(ml)ml.scrollTop=ml.scrollHeight;},50);
-}
-
-function addDocument(){
-  var name=prompt('שם המסמך:');if(!name)return;
-  var cat=prompt('קטגוריה:\n1. תוכניות\n2. היתרים\n3. הסכמים\n4. אחר\n\nהכנס את שם הקטגוריה:')||'אחר';
-  var cats=['תוכניות','היתרים','הסכמים','אחר'];
-  var data=getData();var proj=data.projects.find(function(p){return p.id===currentProjectId;});
-  proj.documents.push({id:'d'+Date.now(),name:name,category:cats.includes(cat)?cat:'אחר',date:new Date().toLocaleDateString('he-IL')});
-  saveData(data);renderProjectDetail(document.getElementById('main-content'));
-}
-function uploadDoc(cat){
-  var name=prompt('שם המסמך (קטגוריה: '+cat+'):');if(!name)return;
-  var data=getData();var proj=data.projects.find(function(p){return p.id===currentProjectId;});
-  proj.documents.push({id:'d'+Date.now(),name:name,category:cat,date:new Date().toLocaleDateString('he-IL')});
-  saveData(data);renderProjectDetail(document.getElementById('main-content'));
-}
-function deleteDoc(id){
-  if(!confirm('למחוק מסמך זה?'))return;
-  var data=getData();var proj=data.projects.find(function(p){return p.id===currentProjectId;});
-  proj.documents=proj.documents.filter(function(d){return d.id!==id;});
-  saveData(data);renderProjectDetail(document.getElementById('main-content'));
-}
-function uploadPhoto(event){
-  var file=event.target.files[0];if(!file)return;
-  var reader=new FileReader();
-  reader.onload=function(e){
-    var data=getData();var proj=data.projects.find(function(p){return p.id===currentProjectId;});
-    proj.photos.push({id:'img'+Date.now(),name:file.name,url:e.target.result,date:new Date().toLocaleDateString('he-IL')});
-    saveData(data);renderProjectDetail(document.getElementById('main-content'));
+// ===== RSVP =====
+document.getElementById('rsvpForm').addEventListener('submit',async function(e){
+  e.preventDefault();
+  if(!sbReady()){console.error('RSVP: Supabase not ready');alert('החיבור לענן לא מוגדר. פנו לסהר וגלי.');return;}
+  const btn=this.querySelector('.rsvp-btn');
+  const prev=btn.textContent;
+  btn.disabled=true;btn.textContent='שולח...';
+  const row={
+    name:document.getElementById('rf-name').value.trim(),
+    phone:document.getElementById('rf-phone').value.trim(),
+    count:parseInt(document.getElementById('rf-count').value,10)||1,
+    transfer:document.getElementById('rf-transfer').value,
+    notes:document.getElementById('rf-notes').value.trim(),
+    status:'מגיע'
   };
-  reader.readAsDataURL(file);
-}
-
-function changeAdminPass(){
-  var p1=document.getElementById('new-admin-pass').value;var p2=document.getElementById('confirm-admin-pass').value;
-  var msg=document.getElementById('pass-msg');
-  if(!p1){msg.style.display='block';msg.style.color='red';msg.textContent='הכנס סיסמה';return;}
-  if(p1!==p2){msg.style.display='block';msg.style.color='red';msg.textContent='הסיסמאות אינן תואמות';return;}
-  var data=getData();data.users.find(function(u){return u.role==='admin';}).password=p1;
-  saveData(data);msg.style.display='block';msg.style.color='green';msg.textContent='✅ הסיסמה שונתה';
-}
-function resetData(){localStorage.removeItem('aronstein_v2');location.reload();}
-
-document.querySelectorAll('.modal-overlay').forEach(function(overlay){
-  overlay.addEventListener('click',function(e){if(e.target===overlay)overlay.classList.remove('open');});
+  try{
+    const {data,error}=await sb.from('guests').insert(row).select('id').single();
+    if(error){console.error('RSVP insert failed',error,row);alert(dbError('rsvp',error));return;}
+    console.log('RSVP saved to Supabase',data?.id||data);
+    await dbLoadAll();
+    this.style.display='none';
+    document.getElementById('rsvpOk').style.display='block';
+  }catch(err){
+    console.error('RSVP unexpected error',err);
+    alert('שגיאה בשמירה. נסו שוב או פנו לסהר וגלי.');
+  }finally{
+    btn.disabled=false;btn.textContent=prev;
+  }
 });
-document.getElementById('login-pass').addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});
+
+// ===== ADMIN LOGIN =====
+const PASS='123456789';
+const ADMIN_SESSION_KEY='wg_admin_until';
+const ADMIN_SESSION_MS=30*60*1000;
+function setAdminSession(){sessionStorage.setItem(ADMIN_SESSION_KEY,String(Date.now()+ADMIN_SESSION_MS));}
+function isAdminSessionValid(){return Date.now()<parseInt(sessionStorage.getItem(ADMIN_SESSION_KEY)||'0',10);}
+function clearAdminSession(){sessionStorage.removeItem(ADMIN_SESSION_KEY);}
+document.getElementById('adminToggle').addEventListener('click',()=>{
+  if(isAdminSessionValid()){openAdmin();return;}
+  document.getElementById('loginOverlay').classList.add('show');
+  setTimeout(()=>document.getElementById('pwInput').focus(),100);
+});
+function closeLogin(){document.getElementById('loginOverlay').classList.remove('show');document.getElementById('pwInput').value='';document.getElementById('loginErr').style.display='none';}
+function tryLogin(){
+  const v=document.getElementById('pwInput').value;
+  if(v===PASS){closeLogin();setAdminSession();openAdmin();}
+  else{document.getElementById('loginErr').style.display='block';}
+}
+document.getElementById('pwInput').addEventListener('keydown',e=>{if(e.key==='Enter')tryLogin();});
+document.getElementById('loginOverlay').addEventListener('click',e=>{if(e.target===e.currentTarget)closeLogin();});
+
+async function openAdmin(){document.getElementById('admin').classList.add('show');await refreshAll();}
+function adminLogout(){document.getElementById('admin').classList.remove('show');clearAdminSession();}
+
+// ===== ADMIN TABS =====
+function switchTab(name){
+  document.querySelectorAll('.adm-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.adm-panel').forEach(p=>p.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('panel-'+name).classList.add('active');
+  if(name==='rooms')refreshRooms();
+  if(name==='transfers')refreshTransfers();
+  if(name==='suppliers')refreshSuppliers();
+}
+
+function getGuests(){return DB.guests;}
+function getRooms(){return DB.rooms;}
+function getSuppliers(){return DB.suppliers;}
+
+// ===== GUESTS =====
+function refreshGuests(){
+  const guests=getGuests();
+  const yes=guests.filter(g=>g.status==='מגיע');
+  const no=guests.filter(g=>g.status==='לא מגיע');
+  const total=yes.reduce((s,g)=>s+parseInt(g.count||1),0);
+  document.getElementById('guestStats').innerHTML=`
+    <div class="stat-box"><div class="stat-num">${guests.length}</div><div class="stat-label">סה"כ משפחות</div></div>
+    <div class="stat-box"><div class="stat-num">${total}</div><div class="stat-label">אורחים מגיעים</div></div>
+    <div class="stat-box"><div class="stat-num">${yes.length}</div><div class="stat-label">אישרו הגעה</div></div>
+    <div class="stat-box"><div class="stat-num">${no.length}</div><div class="stat-label">לא מגיעים</div></div>
+  `;
+  const tbody=document.getElementById('guestTable');
+  tbody.innerHTML=guests.length===0?`<tr><td colspan="8" style="text-align:center;padding:20px;color:var(--stone);">אין אורחים עדיין</td></tr>`:
+    guests.map((g,i)=>`<tr>
+      <td style="color:var(--cream);">${g.name||'—'}</td>
+      <td style="direction:ltr;font-size:12px;">${g.phone||'—'}</td>
+      <td>${g.count||1}</td>
+      <td style="font-size:12px;">${g.days||'—'}</td>
+      <td><span class="badge ${g.status==='מגיע'?'badge-yes':g.status==='לא מגיע'?'badge-no':'badge-maybe'}">${g.status}</span></td>
+      <td style="font-size:12px;">${g.transfer||'—'}</td>
+      <td style="font-size:12px;max-width:150px;">${g.notes||'—'}</td>
+      <td><button class="adm-btn adm-btn-sm adm-btn-red" onclick="removeGuest('${g.id}')">✕</button></td>
+    </tr>`).join('');
+  refreshRooms();
+  refreshTransfers();
+}
+async function addGuest(){
+  const name=document.getElementById('g-name').value;
+  if(!name||!sbReady())return;
+  const {error}=await sb.from('guests').insert({
+    name,phone:document.getElementById('g-phone').value,
+    count:parseInt(document.getElementById('g-count').value)||1,
+    status:document.getElementById('g-status').value,
+    days:document.getElementById('g-days').value,
+    notes:document.getElementById('g-notes').value,transfer:'—'
+  });
+  if(error){alert('שגיאה בשמירה');return;}
+  await dbLoadAll();
+  ['g-name','g-phone','g-count','g-days','g-notes'].forEach(id=>document.getElementById(id).value='');
+  refreshGuests();
+}
+async function removeGuest(id){
+  if(!sbReady())return;
+  await sb.from('guests').delete().eq('id',id);
+  await dbLoadAll();
+  refreshGuests();
+}
+function exportCSV(){
+  const g=getGuests();
+  const h='שם,טלפון,מגיעים,ימים,סטטוס,הסעה,בקשות\n';
+  const rows=g.map(r=>`"${r.name}","${r.phone||''}","${r.count}","${r.days}","${r.status}","${r.transfer}","${r.notes}"`).join('\n');
+  const blob=new Blob(['\uFEFF'+h+rows],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download='אורחים_חתונה.csv';a.click();
+}
+
+// ===== ROOMS =====
+function normRoomId(id){return id==null||id===''?null:String(id);}
+function roomOccupancy(rooms,guests){
+  const occ={};
+  rooms.forEach(r=>{occ[String(r.id)]=0;});
+  guests.forEach(g=>{
+    const rid=normRoomId(g.roomId);
+    if(rid&&occ[rid]!==undefined)occ[rid]+=parseInt(g.count||1,10);
+  });
+  return occ;
+}
+async function addRoom(){
+  const name=document.getElementById('r-name').value.trim();
+  if(!name||!sbReady())return;
+  const {error}=await sb.from('rooms').insert({
+    name,building:document.getElementById('r-building').value,
+    capacity:parseInt(document.getElementById('r-capacity').value)||2,
+    notes:document.getElementById('r-notes').value.trim()
+  });
+  if(error){alert('שגיאה בשמירה');return;}
+  await dbLoadAll();
+  ['r-name','r-capacity','r-notes'].forEach(id=>document.getElementById(id).value='');
+  refreshRooms();
+}
+async function removeRoom(id){
+  if(!sbReady())return;
+  await sb.from('guests').update({room_id:null}).eq('room_id',id);
+  await sb.from('rooms').delete().eq('id',id);
+  await dbLoadAll();
+  refreshRooms();
+}
+async function assignRoom(guestId,roomId){
+  if(!sbReady())return;
+  await sb.from('guests').update({room_id:roomId||null}).eq('id',guestId);
+  await dbLoadAll();
+  updateRoomSummary();
+  refreshRooms();
+}
+function updateRoomSummary(){
+  const rooms=getRooms();
+  const allGuests=getGuests();
+  const arriving=allGuests.filter(g=>g.status==='מגיע');
+  const occ=roomOccupancy(rooms,allGuests);
+  const assigned=arriving.filter(g=>normRoomId(g.roomId)).length;
+  document.getElementById('roomStats').innerHTML=`
+    <div class="stat-box"><div class="stat-num">${rooms.length}</div><div class="stat-label">חדרים מוגדרים</div></div>
+    <div class="stat-box"><div class="stat-num">${assigned}</div><div class="stat-label">משפחות משויכות</div></div>
+    <div class="stat-box"><div class="stat-num">${arriving.length-assigned}</div><div class="stat-label">ממתינות לשיוך</div></div>
+  `;
+  document.getElementById('roomTable').innerHTML=rooms.length===0?`<tr><td colspan="6" style="text-align:center;padding:20px;color:var(--stone);">אין חדרים עדיין — הוסיפו חדר למעלה</td></tr>`:
+    rooms.map((r,i)=>{
+      const used=occ[String(r.id)]||0;
+      const full=used>=r.capacity;
+      return `<tr>
+        <td style="color:var(--cream);">${r.name}</td>
+        <td>${r.building}</td>
+        <td>${used} / ${r.capacity}</td>
+        <td><span class="badge ${full?'badge-maybe':'badge-yes'}">${used} אורחים</span></td>
+        <td style="font-size:12px;">${r.notes||'—'}</td>
+        <td><button class="adm-btn adm-btn-sm adm-btn-red" onclick="removeRoom('${r.id}')">✕</button></td>
+      </tr>`;
+    }).join('');
+}
+function refreshRooms(){
+  const rooms=getRooms();
+  const allGuests=getGuests();
+  const arriving=allGuests.filter(g=>g.status==='מגיע');
+  const guests=arriving;
+  updateRoomSummary();
+  const roomOpts=rooms.map(r=>`<option value="${r.id}">${r.name} (${r.building})</option>`).join('');
+  document.getElementById('roomAssignTable').innerHTML=guests.length===0?`<tr><td colspan="5" style="text-align:center;padding:20px;color:var(--stone);">אין אורחים מגיעים לשיוך</td></tr>`:
+    arriving.map(g=>`<tr>
+        <td style="color:var(--cream);">${g.name||'—'}</td>
+        <td style="direction:ltr;font-size:12px;">${g.phone||'—'}</td>
+        <td>${g.count||1}</td>
+        <td><select class="adm-input" style="min-width:160px;padding:6px 8px;" onchange="assignRoom('${g.id}',this.value||null)">
+          <option value="">— לא משויך —</option>
+          ${roomOpts}
+        </select></td>
+        <td style="font-size:12px;">${g.days||'—'}</td>
+      </tr>`).join('');
+  document.querySelectorAll('#roomAssignTable select').forEach((sel,idx)=>{
+    const rid=normRoomId(arriving[idx]?.roomId);
+    sel.value=rid||'';
+  });
+}
+
+// ===== TRANSFERS =====
+function needsTransfer(g){return g.transfer&&g.transfer.startsWith('כן');}
+function transferLabel(t){
+  if(!t||t.startsWith('לא'))return '—';
+  if(t.includes('FCO'))return 'רומא (FCO)';
+  if(t.includes('MXP'))return 'מילאנו (MXP)';
+  if(t.includes('FLR'))return 'פירנצה (FLR)';
+  if(t.includes('PSA'))return 'פיזה (PSA)';
+  return t.replace(/^כן\s*-\s*/,'');
+}
+function refreshTransfers(){
+  const guests=getGuests().filter(g=>needsTransfer(g));
+  const byAirport={};
+  guests.forEach(g=>{
+    const lbl=transferLabel(g.transfer);
+    byAirport[lbl]=(byAirport[lbl]||0)+parseInt(g.count||1);
+  });
+  const totalPeople=guests.reduce((s,g)=>s+parseInt(g.count||1),0);
+  const airportStats=Object.entries(byAirport).map(([k,v])=>`<div class="stat-box"><div class="stat-num">${v}</div><div class="stat-label">${k}</div></div>`).join('');
+  document.getElementById('transferStats').innerHTML=`
+    <div class="stat-box"><div class="stat-num">${guests.length}</div><div class="stat-label">משפחות</div></div>
+    <div class="stat-box"><div class="stat-num">${totalPeople}</div><div class="stat-label">אורחים בסך הכל</div></div>
+    ${airportStats}
+  `;
+  document.getElementById('transferTable').innerHTML=guests.length===0?`<tr><td colspan="6" style="text-align:center;padding:20px;color:var(--stone);">אין אורחים שביקשו הסעה עדיין</td></tr>`:
+    guests.map(g=>`<tr>
+      <td style="color:var(--cream);">${g.name||'—'}</td>
+      <td style="direction:ltr;font-size:12px;">${g.phone||'—'}</td>
+      <td>${g.count||1}</td>
+      <td><span class="badge badge-yes">${transferLabel(g.transfer)}</span></td>
+      <td style="font-size:12px;">${g.days||'—'}</td>
+      <td style="font-size:12px;max-width:150px;">${g.notes||'—'}</td>
+    </tr>`).join('');
+}
+
+// ===== SUPPLIERS =====
+function yesNoBadge(v){return`<span class="badge ${v==='כן'?'badge-maybe':'badge-no'}">${v||'לא'}</span>`;}
+function supplierStatusBadge(s){
+  if(s==='נחתם'||s==='שולם')return'badge-yes';
+  if(s==='בוטל')return'badge-no';
+  return'badge-maybe';
+}
+async function addSupplier(){
+  const name=document.getElementById('s-name').value.trim();
+  if(!name||!sbReady())return;
+  const {error}=await sb.from('suppliers').insert({
+    name,company:document.getElementById('s-company').value.trim(),
+    cat:document.getElementById('s-cat').value,
+    phone:document.getElementById('s-phone').value.trim(),
+    email:document.getElementById('s-email').value.trim(),
+    origin:document.getElementById('s-from').value.trim(),
+    lodging:document.getElementById('s-lodging').value,
+    transfer:document.getElementById('s-transfer').value,
+    status:document.getElementById('s-status').value,
+    arrival:document.getElementById('s-arrival').value||null,
+    notes:document.getElementById('s-notes').value.trim()
+  });
+  if(error){alert('שגיאה בשמירה');return;}
+  await dbLoadAll();
+  ['s-name','s-company','s-phone','s-email','s-from','s-arrival','s-notes'].forEach(id=>document.getElementById(id).value='');
+  refreshSuppliers();
+}
+async function removeSupplier(id){
+  if(!sbReady())return;
+  await sb.from('suppliers').delete().eq('id',id);
+  await dbLoadAll();
+  refreshSuppliers();
+}
+function refreshSuppliers(){
+  const suppliers=getSuppliers();
+  const lodging=suppliers.filter(s=>s.lodging==='כן').length;
+  const transfer=suppliers.filter(s=>s.transfer==='כן').length;
+  const signed=suppliers.filter(s=>s.status==='נחתם'||s.status==='שולם').length;
+  document.getElementById('supplierStats').innerHTML=`
+    <div class="stat-box"><div class="stat-num">${suppliers.length}</div><div class="stat-label">סה"כ ספקים</div></div>
+    <div class="stat-box"><div class="stat-num">${lodging}</div><div class="stat-label">דורשים לינה</div></div>
+    <div class="stat-box"><div class="stat-num">${transfer}</div><div class="stat-label">דורשים הסעה</div></div>
+    <div class="stat-box"><div class="stat-num">${signed}</div><div class="stat-label">נחתמו / שולמו</div></div>
+  `;
+  document.getElementById('supplierTable').innerHTML=suppliers.length===0?`<tr><td colspan="12" style="text-align:center;padding:20px;color:var(--stone);">אין ספקים עדיין</td></tr>`:
+    suppliers.map((s,i)=>`<tr>
+      <td style="color:var(--cream);">${s.name}</td>
+      <td><span class="expense-cat">${s.cat}</span></td>
+      <td style="font-size:12px;">${s.company||'—'}</td>
+      <td style="direction:ltr;font-size:12px;">${s.phone||'—'}</td>
+      <td style="direction:ltr;font-size:12px;">${s.email||'—'}</td>
+      <td style="font-size:12px;">${s.from||'—'}</td>
+      <td>${yesNoBadge(s.lodging)}</td>
+      <td>${yesNoBadge(s.transfer)}</td>
+      <td><span class="badge ${supplierStatusBadge(s.status)}">${s.status}</span></td>
+      <td style="font-size:12px;">${s.arrival||'—'}</td>
+      <td style="font-size:12px;max-width:140px;">${s.notes||'—'}</td>
+      <td><button class="adm-btn adm-btn-sm adm-btn-red" onclick="removeSupplier('${s.id}')">✕</button></td>
+    </tr>`).join('');
+}
+function exportSuppliersCSV(){
+  const s=getSuppliers();
+  const h='שם,סוג,עסק,טלפון,אימייל,מאיפה,לינה,הסעה,סטטוס,הגעה,הערות\n';
+  const rows=s.map(r=>`"${r.name}","${r.cat}","${r.company||''}","${r.phone||''}","${r.email||''}","${r.from||''}","${r.lodging}","${r.transfer}","${r.status}","${r.arrival||''}","${r.notes||''}"`).join('\n');
+  const blob=new Blob(['\uFEFF'+h+rows],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download='ספקים_חתונה.csv';a.click();
+}
+
+// ===== BUDGET =====
+function refreshBudget(){
+  const exps=DB.expenses;
+  const totalBudget=parseInt(DB.content.budget_total||0);
+  const spent=exps.reduce((s,e)=>s+parseInt(e.total||0),0);
+  const paid=exps.reduce((s,e)=>s+parseInt(e.paid||0),0);
+  const left=totalBudget-spent;
+  const pct=totalBudget?Math.min(100,Math.round(spent/totalBudget*100)):0;
+  const fmt=n=>new Intl.NumberFormat('he-IL',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(n);
+  document.getElementById('b-total-budget').textContent=fmt(totalBudget);
+  document.getElementById('b-spent').textContent=fmt(spent);
+  document.getElementById('b-left').textContent=fmt(left);
+  document.getElementById('b-paid').textContent=fmt(paid);
+  document.getElementById('b-bar').style.width=pct+'%';
+  document.getElementById('b-pct').textContent=pct+'% הוצאה מהתקציב';
+  document.getElementById('b-budget-input').value=totalBudget||'';
+  const tbody=document.getElementById('expTable');
+  tbody.innerHTML=exps.length===0?`<tr><td colspan="7" style="text-align:center;padding:20px;color:var(--stone);">אין הוצאות</td></tr>`:
+    exps.map((e,i)=>`<tr>
+      <td style="color:var(--cream);">${e.name}</td>
+      <td><span class="expense-cat">${e.cat}</span></td>
+      <td>${fmt(e.total)}</td>
+      <td>${fmt(e.paid)}</td>
+      <td style="color:${parseInt(e.total)-parseInt(e.paid)>0?'#E08888':'#8FC890'}">${fmt(parseInt(e.total)-parseInt(e.paid))}</td>
+      <td><span class="badge ${e.status==='שולם'?'badge-yes':e.status==='מקדמה'?'badge-maybe':'badge-no'}">${e.status}</span></td>
+      <td><button class="adm-btn adm-btn-sm adm-btn-red" onclick="removeExp('${e.id}')">✕</button></td>
+    </tr>`).join('');
+}
+async function saveBudget(){
+  if(!sbReady())return;
+  await sb.from('content').upsert({id:1,budget_total:parseInt(document.getElementById('b-budget-input').value)||0,title:DB.content.title||'',wedding_date:DB.content.wedding_date||'',msg:DB.content.msg||''},{onConflict:'id'});
+  await dbLoadAll();
+  refreshBudget();
+}
+async function addExpense(){
+  const name=document.getElementById('exp-name').value;
+  if(!name||!sbReady())return;
+  const {error}=await sb.from('expenses').insert({
+    name,cat:document.getElementById('exp-cat').value,
+    total:document.getElementById('exp-total').value||0,
+    paid:document.getElementById('exp-paid').value||0,
+    status:document.getElementById('exp-status').value
+  });
+  if(error){alert('שגיאה בשמירה');return;}
+  await dbLoadAll();
+  ['exp-name','exp-total','exp-paid'].forEach(id=>document.getElementById(id).value='');
+  refreshBudget();
+}
+async function removeExp(id){
+  if(!sbReady())return;
+  await sb.from('expenses').delete().eq('id',id);
+  await dbLoadAll();
+  refreshBudget();
+}
+
+// ===== TASKS =====
+const defaultTasks=[
+  {name:'הזמנת וילה פיטיאנה',due:'2025-12-01',cat:'מקום האירוע',done:false},
+  {name:'בחירת שמלת כלה',due:'2026-06-01',cat:'ביגוד',done:false},
+  {name:'הזמנת צלם וצלמת וידאו',due:'2026-03-01',cat:'ספקים',done:false},
+  {name:'שליחת הזמנות לאורחים',due:'2026-11-01',cat:'אורחים',done:false},
+  {name:'תיאום הסעות',due:'2027-03-01',cat:'לוגיסטיקה',done:false},
+  {name:'הזמנת פרחים',due:'2026-09-01',cat:'ספקים',done:false},
+  {name:'תפריט ואלרגיות',due:'2027-04-01',cat:'קייטרינג',done:false},
+];
+async function initTasks(){
+  if(!sbReady())return;
+  const {count}=await sb.from('tasks').select('*',{count:'exact',head:true});
+  if(!count)await sb.from('tasks').insert(defaultTasks.map(t=>({name:t.name,due:t.due,cat:t.cat,done:t.done})));
+}
+function refreshTasks(){
+  const tasks=DB.tasks;
+  const now=new Date();
+  document.getElementById('taskList').innerHTML=tasks.length===0?`<p style="color:var(--stone);font-size:13px;">אין משימות</p>`:
+    tasks.map((t,i)=>{
+      const due=t.due?new Date(t.due):null;
+      const overdue=due&&due<now&&!t.done;
+      return `<div class="task-item">
+        <div class="task-cb ${t.done?'done':''}" onclick="toggleTask('${t.id}')">${t.done?'✓':''}</div>
+        <div class="task-info">
+          <div class="task-name ${t.done?'done':''}">${t.name} <span style="font-size:11px;color:var(--stone);">(${t.cat})</span></div>
+          ${t.due?`<div class="task-due ${overdue?'overdue':''}">יעד: ${t.due}${overdue?' — באיחור ⚠':''}  </div>`:''}
+        </div>
+        <button class="adm-btn adm-btn-sm adm-btn-red" onclick="removeTask('${t.id}')">✕</button>
+      </div>`;
+    }).join('');
+}
+async function addTask(){
+  const name=document.getElementById('t-name').value;
+  if(!name||!sbReady())return;
+  const {error}=await sb.from('tasks').insert({
+    name,due:document.getElementById('t-due').value||null,
+    cat:document.getElementById('t-cat').value,done:false
+  });
+  if(error){alert('שגיאה בשמירה');return;}
+  await dbLoadAll();
+  ['t-name','t-due'].forEach(id=>document.getElementById(id).value='');
+  refreshTasks();
+}
+async function toggleTask(id){
+  if(!sbReady())return;
+  const t=DB.tasks.find(x=>x.id===id);
+  if(!t)return;
+  await sb.from('tasks').update({done:!t.done}).eq('id',id);
+  await dbLoadAll();
+  refreshTasks();
+}
+async function removeTask(id){
+  if(!sbReady())return;
+  await sb.from('tasks').delete().eq('id',id);
+  await dbLoadAll();
+  refreshTasks();
+}
+
+// ===== FILES =====
+function refreshFiles(){
+  const files=DB.files;
+  document.getElementById('fileList').innerHTML=files.length===0?`<p style="color:var(--stone);font-size:13px;">אין קבצים עדיין</p>`:
+    files.map(f=>`<div class="file-row">
+      <div class="file-icon-box">${getFileIcon(f.name)}</div>
+      <div class="file-name">${f.data?`<a href="#" onclick="openFile('${f.id}');return false;">${f.name}</a>`:f.name}</div>
+      <div class="file-meta">${f.size} · ${f.date}${f.data?'':' · <span style="color:#E07070">יש להעלות מחדש</span>'}</div>
+      ${f.data?`<button class="adm-btn adm-btn-sm" onclick="openFile('${f.id}')">פתיחה</button><button class="adm-btn adm-btn-sm" onclick="downloadFile('${f.id}')">הורדה</button>`:''}
+      <button class="adm-btn adm-btn-sm adm-btn-red" onclick="removeFile('${f.id}')">✕</button>
+    </div>`).join('');
+}
+function getFileIcon(n){
+  const ext=n.split('.').pop().toLowerCase();
+  if(['pdf'].includes(ext))return 'PDF';
+  if(['jpg','jpeg','png','gif','webp'].includes(ext))return 'IMG';
+  if(['doc','docx'].includes(ext))return 'DOC';
+  if(['xls','xlsx'].includes(ext))return 'XLS';
+  return 'FILE';
+}
+function handleFiles(fileList){
+  if(!sbReady()){alert('החיבור לענן לא מוגדר');return;}
+  const pending=Array.from(fileList);
+  if(!pending.length)return;
+  let done=0,failed=false;
+  pending.forEach(f=>{
+    const reader=new FileReader();
+    reader.onload=async e=>{
+      const {error}=await sb.from('files').insert({
+        name:f.name,size:formatSize(f.size),file_date:new Date().toLocaleDateString('he-IL'),
+        mime_type:f.type||'',data:e.target.result
+      });
+      if(error)failed=true;
+      if(++done===pending.length){
+        await dbLoadAll();
+        refreshFiles();
+        if(failed)alert('חלק מהקבצים לא נשמרו');
+      }
+    };
+    reader.onerror=()=>{if(++done===pending.length)refreshFiles();};
+    reader.readAsDataURL(f);
+  });
+}
+function openFile(id){
+  const f=DB.files.find(x=>x.id===id);
+  if(!f?.data){alert('הקובץ נשמר רק כשם. מחק והעלה אותו מחדש כדי לפתוח.');return;}
+  window.open(f.data,'_blank');
+}
+function downloadFile(id){
+  const f=DB.files.find(x=>x.id===id);
+  if(!f?.data)return;
+  const a=document.createElement('a');
+  a.href=f.data;a.download=f.name;a.click();
+}
+function formatSize(b){if(b<1024)return b+'B';if(b<1048576)return Math.round(b/1024)+'KB';return (b/1048576).toFixed(1)+'MB';}
+async function removeFile(id){
+  if(!sbReady())return;
+  await sb.from('files').delete().eq('id',id);
+  await dbLoadAll();
+  refreshFiles();
+}
+
+// ===== CONTENT =====
+function loadContent(){
+  const c=DB.content;
+  if(c.title){document.getElementById('c-title').value=c.title;document.getElementById('heroTitle').innerHTML=c.title.replace('&','<span class="amp">&</span>');}
+  if(c.wedding_date){document.getElementById('c-date').value=c.wedding_date;document.getElementById('heroDate').textContent=c.wedding_date;}
+  if(c.msg)document.getElementById('c-msg').value=c.msg;
+}
+async function saveContent(){
+  if(!sbReady())return;
+  const row={
+    id:1,
+    title:document.getElementById('c-title').value,
+    wedding_date:document.getElementById('c-date').value,
+    msg:document.getElementById('c-msg').value,
+    budget_total:parseInt(DB.content.budget_total)||0
+  };
+  const {error}=await sb.from('content').upsert(row,{onConflict:'id'});
+  if(error){alert('שגיאה בשמירה');return;}
+  await dbLoadAll();
+  if(row.title)document.getElementById('heroTitle').innerHTML=row.title.replace('&','<span class="amp">&</span>');
+  if(row.wedding_date)document.getElementById('heroDate').textContent=row.wedding_date;
+  const toast=document.getElementById('c-toast');
+  toast.style.display='block';setTimeout(()=>toast.style.display='none',3000);
+}
+
+// ===== INIT =====
+async function refreshAll(){
+  if(sbReady()){await initTasks();await dbLoadAll();}
+  refreshGuests();refreshRooms();refreshTransfers();refreshSuppliers();refreshBudget();refreshTasks();refreshFiles();loadContent();
+}
+(async function init(){await dbInit();})();
 </script>
 </body>
 </html>
