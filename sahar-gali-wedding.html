@@ -875,11 +875,13 @@ function exportCSV(){
 // ===== ROOMS =====
 function getRooms(){return get(LS.rooms);}
 function saveRooms(r){set(LS.rooms,r);}
+function normRoomId(id){return id==null||id===''?null:String(id);}
 function roomOccupancy(rooms,guests){
   const occ={};
-  rooms.forEach(r=>{occ[r.id]=0;});
+  rooms.forEach(r=>{occ[String(r.id)]=0;});
   guests.forEach(g=>{
-    if(g.roomId&&occ[g.roomId]!==undefined)occ[g.roomId]+=parseInt(g.count||1);
+    const rid=normRoomId(g.roomId);
+    if(rid&&occ[rid]!==undefined)occ[rid]+=parseInt(g.count||1,10);
   });
   return occ;
 }
@@ -904,33 +906,32 @@ function removeRoom(i){
   rooms.splice(i,1);
   saveRooms(rooms);
   const guests=getGuests();
-  guests.forEach(g=>{if(g.roomId===removed.id)delete g.roomId;});
+  guests.forEach(g=>{if(normRoomId(g.roomId)===String(removed.id))delete g.roomId;});
   saveGuests(guests);
   refreshRooms();
 }
 function assignRoom(guestIndex,roomId){
   const guests=getGuests();
   if(!guests[guestIndex])return;
-  if(roomId)guests[guestIndex].roomId=roomId;
+  if(roomId!=null&&roomId!=='')guests[guestIndex].roomId=String(roomId);
   else delete guests[guestIndex].roomId;
   saveGuests(guests);
-  refreshRooms();
+  updateRoomSummary();
 }
-function refreshRooms(){
+function updateRoomSummary(){
   const rooms=getRooms();
   const allGuests=getGuests();
-  const arriving=allGuests.map((g,i)=>({g,i})).filter(x=>x.g.status==='מגיע');
-  const guests=arriving.map(x=>x.g);
-  const occ=roomOccupancy(rooms,guests);
-  const assigned=guests.filter(g=>g.roomId).length;
+  const arriving=allGuests.filter(g=>g.status==='מגיע');
+  const occ=roomOccupancy(rooms,allGuests);
+  const assigned=arriving.filter(g=>normRoomId(g.roomId)).length;
   document.getElementById('roomStats').innerHTML=`
     <div class="stat-box"><div class="stat-num">${rooms.length}</div><div class="stat-label">חדרים מוגדרים</div></div>
     <div class="stat-box"><div class="stat-num">${assigned}</div><div class="stat-label">משפחות משויכות</div></div>
-    <div class="stat-box"><div class="stat-num">${guests.length-assigned}</div><div class="stat-label">ממתינות לשיוך</div></div>
+    <div class="stat-box"><div class="stat-num">${arriving.length-assigned}</div><div class="stat-label">ממתינות לשיוך</div></div>
   `;
   document.getElementById('roomTable').innerHTML=rooms.length===0?`<tr><td colspan="6" style="text-align:center;padding:20px;color:var(--stone);">אין חדרים עדיין — הוסיפו חדר למעלה</td></tr>`:
     rooms.map((r,i)=>{
-      const used=occ[r.id]||0;
+      const used=occ[String(r.id)]||0;
       const full=used>=r.capacity;
       return `<tr>
         <td style="color:var(--cream);">${r.name}</td>
@@ -941,21 +942,28 @@ function refreshRooms(){
         <td><button class="adm-btn adm-btn-sm adm-btn-red" onclick="removeRoom(${i})">✕</button></td>
       </tr>`;
     }).join('');
+}
+function refreshRooms(){
+  const rooms=getRooms();
+  const allGuests=getGuests();
+  const arriving=allGuests.map((g,i)=>({g,i})).filter(x=>x.g.status==='מגיע');
+  const guests=arriving.map(x=>x.g);
+  updateRoomSummary();
   const roomOpts=rooms.map(r=>`<option value="${r.id}">${r.name} (${r.building})</option>`).join('');
   document.getElementById('roomAssignTable').innerHTML=guests.length===0?`<tr><td colspan="5" style="text-align:center;padding:20px;color:var(--stone);">אין אורחים מגיעים לשיוך</td></tr>`:
     arriving.map(({g,gi})=>`<tr>
         <td style="color:var(--cream);">${g.name||'—'}</td>
         <td style="direction:ltr;font-size:12px;">${g.phone||'—'}</td>
         <td>${g.count||1}</td>
-        <td><select class="adm-input" style="min-width:160px;padding:6px 8px;" onchange="assignRoom(${gi},this.value?parseInt(this.value):null)">
+        <td><select class="adm-input" style="min-width:160px;padding:6px 8px;" onchange="assignRoom(${gi},this.value||null)">
           <option value="">— לא משויך —</option>
           ${roomOpts}
         </select></td>
         <td style="font-size:12px;">${g.days||'—'}</td>
       </tr>`).join('');
   document.querySelectorAll('#roomAssignTable select').forEach((sel,idx)=>{
-    const g=arriving[idx]?.g;
-    if(g&&g.roomId)sel.value=String(g.roomId);
+    const rid=normRoomId(arriving[idx]?.g?.roomId);
+    sel.value=rid||'';
   });
 }
 
