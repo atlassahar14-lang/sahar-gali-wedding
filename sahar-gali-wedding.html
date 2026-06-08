@@ -498,6 +498,8 @@ footer{background:#080402;text-align:center;padding:56px 20px;}
   </div>
   <div class="adm-tabs">
     <button class="adm-tab active" onclick="switchTab('guests')">👥 אורחים</button>
+    <button class="adm-tab" onclick="switchTab('rooms')">🏠 חילוק חדרים</button>
+    <button class="adm-tab" onclick="switchTab('transfers')">🚐 הסעות</button>
     <button class="adm-tab" onclick="switchTab('budget')">💰 תקציב</button>
     <button class="adm-tab" onclick="switchTab('tasks')">✅ משימות</button>
     <button class="adm-tab" onclick="switchTab('files')">📁 קבצים</button>
@@ -534,6 +536,58 @@ footer{background:#080402;text-align:center;padding:56px 20px;}
           <table class="adm-table">
             <thead><tr><th>שם</th><th>טלפון</th><th>מגיעים</th><th>ימים</th><th>סטטוס</th><th>הסעה</th><th>בקשות</th><th></th></tr></thead>
             <tbody id="guestTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ROOMS -->
+    <div class="adm-panel" id="panel-rooms">
+      <div class="adm-section-title">חילוק חדרים בוילה</div>
+      <div class="stats-row" id="roomStats"></div>
+      <div class="adm-card">
+        <h3>הוספת חדר</h3>
+        <div class="adm-row">
+          <input class="adm-input" id="r-name" placeholder="מספר / שם חדר (למשל 12, סוויטה ארנו)">
+          <select class="adm-input" id="r-building" style="max-width:160px;">
+            <option>וילה עיקרית</option><option>בית חווה</option><option>סוויטה</option><option>אחר</option>
+          </select>
+          <input class="adm-input" id="r-capacity" type="number" placeholder="קיבולת" min="1" max="10" style="max-width:100px;">
+          <input class="adm-input" id="r-notes" placeholder="הערות (קומה, נוף...)">
+          <button class="adm-btn" onclick="addRoom()">הוסף חדר</button>
+        </div>
+      </div>
+      <div class="adm-card">
+        <h3>רשימת חדרים</h3>
+        <div style="overflow-x:auto;">
+          <table class="adm-table">
+            <thead><tr><th>חדר</th><th>מבנה</th><th>קיבולת</th><th>משויכים</th><th>הערות</th><th></th></tr></thead>
+            <tbody id="roomTable"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="adm-card">
+        <h3>שיוך אורחים לחדרים</h3>
+        <div style="overflow-x:auto;">
+          <table class="adm-table">
+            <thead><tr><th>שם</th><th>טלפון</th><th>מגיעים</th><th>חדר</th><th>ימים</th></tr></thead>
+            <tbody id="roomAssignTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TRANSFERS -->
+    <div class="adm-panel" id="panel-transfers">
+      <div class="adm-section-title">ניהול הסעות</div>
+      <p style="font-size:13px;color:var(--stone);margin-bottom:20px;">רשימה אוטומטית של אורחים שסימנו בטופס RSVP שצריכים הסעה</p>
+      <div class="stats-row" id="transferStats"></div>
+      <div class="adm-card">
+        <h3>אורחים שצריכים הסעה</h3>
+        <div style="overflow-x:auto;">
+          <table class="adm-table">
+            <thead><tr><th>שם</th><th>טלפון</th><th>מגיעים</th><th>מאיפה</th><th>ימים</th><th>בקשות</th></tr></thead>
+            <tbody id="transferTable"></tbody>
           </table>
         </div>
       </div>
@@ -759,12 +813,14 @@ function switchTab(name){
   document.querySelectorAll('.adm-panel').forEach(p=>p.classList.remove('active'));
   event.target.classList.add('active');
   document.getElementById('panel-'+name).classList.add('active');
+  if(name==='rooms')refreshRooms();
+  if(name==='transfers')refreshTransfers();
 }
 
 // ===== DATA (localStorage) =====
 const LS={
   guests:'wg_guests',budget:'wg_budget',expenses:'wg_expenses',
-  tasks:'wg_tasks',files:'wg_files',content:'wg_content'
+  tasks:'wg_tasks',files:'wg_files',content:'wg_content',rooms:'wg_rooms'
 };
 function get(k){try{return JSON.parse(localStorage.getItem(k))||[];}catch{return[];}}
 function getObj(k){try{return JSON.parse(localStorage.getItem(k))||{};}catch{return{};}}
@@ -796,6 +852,8 @@ function refreshGuests(){
       <td style="font-size:12px;max-width:150px;">${g.notes||'—'}</td>
       <td><button class="adm-btn adm-btn-sm adm-btn-red" onclick="removeGuest(${i})">✕</button></td>
     </tr>`).join('');
+  refreshRooms();
+  refreshTransfers();
 }
 function addGuest(){
   const g={name:document.getElementById('g-name').value,phone:document.getElementById('g-phone').value,count:document.getElementById('g-count').value||1,status:document.getElementById('g-status').value,days:document.getElementById('g-days').value,notes:document.getElementById('g-notes').value,transfer:'—',ts:Date.now()};
@@ -812,6 +870,128 @@ function exportCSV(){
   const blob=new Blob(['\uFEFF'+h+rows],{type:'text/csv;charset=utf-8;'});
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a');a.href=url;a.download='אורחים_חתונה.csv';a.click();
+}
+
+// ===== ROOMS =====
+function getRooms(){return get(LS.rooms);}
+function saveRooms(r){set(LS.rooms,r);}
+function roomOccupancy(rooms,guests){
+  const occ={};
+  rooms.forEach(r=>{occ[r.id]=0;});
+  guests.forEach(g=>{
+    if(g.roomId&&occ[g.roomId]!==undefined)occ[g.roomId]+=parseInt(g.count||1);
+  });
+  return occ;
+}
+function addRoom(){
+  const name=document.getElementById('r-name').value.trim();
+  if(!name)return;
+  const rooms=getRooms();
+  rooms.push({
+    id:Date.now(),
+    name,
+    building:document.getElementById('r-building').value,
+    capacity:parseInt(document.getElementById('r-capacity').value)||2,
+    notes:document.getElementById('r-notes').value.trim()
+  });
+  saveRooms(rooms);
+  ['r-name','r-capacity','r-notes'].forEach(id=>document.getElementById(id).value='');
+  refreshRooms();
+}
+function removeRoom(i){
+  const rooms=getRooms();
+  const removed=rooms[i];
+  rooms.splice(i,1);
+  saveRooms(rooms);
+  const guests=getGuests();
+  guests.forEach(g=>{if(g.roomId===removed.id)delete g.roomId;});
+  saveGuests(guests);
+  refreshRooms();
+}
+function assignRoom(guestIndex,roomId){
+  const guests=getGuests();
+  if(!guests[guestIndex])return;
+  if(roomId)guests[guestIndex].roomId=roomId;
+  else delete guests[guestIndex].roomId;
+  saveGuests(guests);
+  refreshRooms();
+}
+function refreshRooms(){
+  const rooms=getRooms();
+  const allGuests=getGuests();
+  const arriving=allGuests.map((g,i)=>({g,i})).filter(x=>x.g.status==='מגיע');
+  const guests=arriving.map(x=>x.g);
+  const occ=roomOccupancy(rooms,guests);
+  const assigned=guests.filter(g=>g.roomId).length;
+  document.getElementById('roomStats').innerHTML=`
+    <div class="stat-box"><div class="stat-num">${rooms.length}</div><div class="stat-label">חדרים מוגדרים</div></div>
+    <div class="stat-box"><div class="stat-num">${assigned}</div><div class="stat-label">משפחות משויכות</div></div>
+    <div class="stat-box"><div class="stat-num">${guests.length-assigned}</div><div class="stat-label">ממתינות לשיוך</div></div>
+  `;
+  document.getElementById('roomTable').innerHTML=rooms.length===0?`<tr><td colspan="6" style="text-align:center;padding:20px;color:var(--stone);">אין חדרים עדיין — הוסיפו חדר למעלה</td></tr>`:
+    rooms.map((r,i)=>{
+      const used=occ[r.id]||0;
+      const full=used>=r.capacity;
+      return `<tr>
+        <td style="color:var(--cream);">${r.name}</td>
+        <td>${r.building}</td>
+        <td>${used} / ${r.capacity}</td>
+        <td><span class="badge ${full?'badge-maybe':'badge-yes'}">${used} אורחים</span></td>
+        <td style="font-size:12px;">${r.notes||'—'}</td>
+        <td><button class="adm-btn adm-btn-sm adm-btn-red" onclick="removeRoom(${i})">✕</button></td>
+      </tr>`;
+    }).join('');
+  const roomOpts=rooms.map(r=>`<option value="${r.id}">${r.name} (${r.building})</option>`).join('');
+  document.getElementById('roomAssignTable').innerHTML=guests.length===0?`<tr><td colspan="5" style="text-align:center;padding:20px;color:var(--stone);">אין אורחים מגיעים לשיוך</td></tr>`:
+    arriving.map(({g,gi})=>`<tr>
+        <td style="color:var(--cream);">${g.name||'—'}</td>
+        <td style="direction:ltr;font-size:12px;">${g.phone||'—'}</td>
+        <td>${g.count||1}</td>
+        <td><select class="adm-input" style="min-width:160px;padding:6px 8px;" onchange="assignRoom(${gi},this.value?parseInt(this.value):null)">
+          <option value="">— לא משויך —</option>
+          ${roomOpts}
+        </select></td>
+        <td style="font-size:12px;">${g.days||'—'}</td>
+      </tr>`).join('');
+  document.querySelectorAll('#roomAssignTable select').forEach((sel,idx)=>{
+    const g=arriving[idx]?.g;
+    if(g&&g.roomId)sel.value=String(g.roomId);
+  });
+}
+
+// ===== TRANSFERS =====
+function needsTransfer(g){return g.transfer&&g.transfer.startsWith('כן');}
+function transferLabel(t){
+  if(!t||t.startsWith('לא'))return '—';
+  if(t.includes('FCO'))return 'רומא (FCO)';
+  if(t.includes('MXP'))return 'מילאנו (MXP)';
+  if(t.includes('FLR'))return 'פירנצה (FLR)';
+  if(t.includes('PSA'))return 'פיזה (PSA)';
+  return t.replace(/^כן\s*-\s*/,'');
+}
+function refreshTransfers(){
+  const guests=getGuests().filter(g=>needsTransfer(g));
+  const byAirport={};
+  guests.forEach(g=>{
+    const lbl=transferLabel(g.transfer);
+    byAirport[lbl]=(byAirport[lbl]||0)+parseInt(g.count||1);
+  });
+  const totalPeople=guests.reduce((s,g)=>s+parseInt(g.count||1),0);
+  const airportStats=Object.entries(byAirport).map(([k,v])=>`<div class="stat-box"><div class="stat-num">${v}</div><div class="stat-label">${k}</div></div>`).join('');
+  document.getElementById('transferStats').innerHTML=`
+    <div class="stat-box"><div class="stat-num">${guests.length}</div><div class="stat-label">משפחות</div></div>
+    <div class="stat-box"><div class="stat-num">${totalPeople}</div><div class="stat-label">אורחים בסך הכל</div></div>
+    ${airportStats}
+  `;
+  document.getElementById('transferTable').innerHTML=guests.length===0?`<tr><td colspan="6" style="text-align:center;padding:20px;color:var(--stone);">אין אורחים שביקשו הסעה עדיין</td></tr>`:
+    guests.map(g=>`<tr>
+      <td style="color:var(--cream);">${g.name||'—'}</td>
+      <td style="direction:ltr;font-size:12px;">${g.phone||'—'}</td>
+      <td>${g.count||1}</td>
+      <td><span class="badge badge-yes">${transferLabel(g.transfer)}</span></td>
+      <td style="font-size:12px;">${g.days||'—'}</td>
+      <td style="font-size:12px;max-width:150px;">${g.notes||'—'}</td>
+    </tr>`).join('');
 }
 
 // ===== BUDGET =====
@@ -937,7 +1117,7 @@ function saveContent(){
 }
 
 // ===== INIT =====
-function refreshAll(){initTasks();refreshGuests();refreshBudget();refreshTasks();refreshFiles();loadContent();}
+function refreshAll(){initTasks();refreshGuests();refreshRooms();refreshTransfers();refreshBudget();refreshTasks();refreshFiles();loadContent();}
 loadContent();
 </script>
 </body>
