@@ -714,23 +714,21 @@ async function dbLoadAll(){
   if(!sbReady())return false;
   const [g,r,e,t,f,c,s]=await Promise.all([
     sb.from('guests').select('*').order('created_at'),
-    sb.from('rooms').select('*').order('created_at'),
-    sb.from('expenses').select('*').order('created_at'),
-    sb.from('tasks').select('*').order('created_at'),
-    sb.from('files').select('*').order('created_at'),
+    sb.from('rooms').select('*'),
+    sb.from('expenses').select('*'),
+    sb.from('tasks').select('*'),
+    sb.from('files').select('*'),
     sb.from('content').select('*').eq('id',1).maybeSingle(),
-    sb.from('suppliers').select('*').order('created_at')
+    sb.from('suppliers').select('*')
   ]);
-  for(const [name,res] of [['guests',g],['rooms',r],['expenses',e],['tasks',t],['files',f],['content',c]]){
-    if(res.error){dbError('load '+name,res.error);return false;}
-  }
+  if(g.error){dbError('load guests',g.error);return false;}
   DB.guests=(g.data||[]).map(mapGuest);
-  DB.rooms=(r.data||[]).map(mapRoom);
-  DB.expenses=e.data||[];
-  DB.tasks=t.data||[];
-  DB.files=(f.data||[]).map(mapFile);
+  if(r.error)dbError('load rooms',r.error);else DB.rooms=(r.data||[]).map(mapRoom);
+  if(e.error)dbError('load expenses',e.error);else DB.expenses=e.data||[];
+  if(t.error)dbError('load tasks',t.error);else DB.tasks=t.data||[];
+  if(f.error)dbError('load files',f.error);else DB.files=(f.data||[]).map(mapFile);
   DB.suppliers=s.error?[]:(s.data||[]).map(mapSupplier);
-  DB.content=c.data||{id:1,title:'',wedding_date:'',msg:'',budget_total:0};
+  DB.content=c.error||!c.data?{id:1,title:'',wedding_date:'',msg:'',budget_total:0}:c.data;
   return true;
 }
 async function ensureContentRow(){
