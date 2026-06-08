@@ -102,3 +102,5 @@ create policy "public_all_tasks" on tasks for all using (true) with check (true)
 create policy "public_all_files" on files for all using (true) with check (true);
 create policy "public_all_content" on content for all using (true) with check (true);
 create policy "public_all_suppliers" on suppliers for all using (true) with check (true);
+
+-- אם הטבלאות נוצרו בלי כל העמודות, הריצו גם את supabase-fix-columns.sql
