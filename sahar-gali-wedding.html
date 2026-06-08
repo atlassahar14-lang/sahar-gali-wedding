@@ -745,21 +745,27 @@ document.getElementById('rsvpForm').addEventListener('submit',function(e){
 
 // ===== ADMIN LOGIN =====
 const PASS='123456789';
+const ADMIN_SESSION_KEY='wg_admin_until';
+const ADMIN_SESSION_MS=30*60*1000;
+function setAdminSession(){sessionStorage.setItem(ADMIN_SESSION_KEY,String(Date.now()+ADMIN_SESSION_MS));}
+function isAdminSessionValid(){return Date.now()<parseInt(sessionStorage.getItem(ADMIN_SESSION_KEY)||'0',10);}
+function clearAdminSession(){sessionStorage.removeItem(ADMIN_SESSION_KEY);}
 document.getElementById('adminToggle').addEventListener('click',()=>{
+  if(isAdminSessionValid()){openAdmin();return;}
   document.getElementById('loginOverlay').classList.add('show');
   setTimeout(()=>document.getElementById('pwInput').focus(),100);
 });
 function closeLogin(){document.getElementById('loginOverlay').classList.remove('show');document.getElementById('pwInput').value='';document.getElementById('loginErr').style.display='none';}
 function tryLogin(){
   const v=document.getElementById('pwInput').value;
-  if(v===PASS){closeLogin();openAdmin();}
+  if(v===PASS){closeLogin();setAdminSession();openAdmin();}
   else{document.getElementById('loginErr').style.display='block';}
 }
 document.getElementById('pwInput').addEventListener('keydown',e=>{if(e.key==='Enter')tryLogin();});
 document.getElementById('loginOverlay').addEventListener('click',e=>{if(e.target===e.currentTarget)closeLogin();});
 
 function openAdmin(){document.getElementById('admin').classList.add('show');refreshAll();}
-function adminLogout(){document.getElementById('admin').classList.remove('show');}
+function adminLogout(){document.getElementById('admin').classList.remove('show');clearAdminSession();}
 
 // ===== ADMIN TABS =====
 function switchTab(name){
