@@ -112,7 +112,7 @@ section{padding:80px 20px;position:relative;overflow:hidden;}
 .t-card-icon{font-size:24px;margin-bottom:12px;}
 .t-card h3{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:400;color:var(--ivory);margin-bottom:8px;}
 .t-card p,.t-card ul{font-size:13px;color:var(--stone);line-height:1.8;}
-.t-card ul{padding-right:16px;}
+.t-card ul{direction:rtl;text-align:right;padding-right:0;padding-left:0;list-style-position:inside;}
 .t-card li{margin-bottom:4px;}
 .t-card a{color:var(--gold);text-decoration:none;}
 
@@ -405,10 +405,10 @@ footer{background:#080402;text-align:center;padding:56px 20px;}
         <div class="t-card-icon">✈️</div>
         <h3>שדות תעופה</h3>
         <ul>
-          <li><strong style="color:var(--cream)">Florence (FLR)</strong> — 35 דק' מהוילה</li>
-          <li><strong style="color:var(--cream)">Pisa (PSA)</strong> — 90 דק'</li>
-          <li><strong style="color:var(--cream)">Bologna (BLQ)</strong> — 90 דק'</li>
-          <li><strong style="color:var(--cream)">Rome FCO</strong> — 2.5 שעות</li>
+          <li>35 דק' מהוילה — <strong style="color:var(--cream)">Florence (FLR)</strong></li>
+          <li>90 דק' — <strong style="color:var(--cream)">Pisa (PSA)</strong></li>
+          <li>90 דק' — <strong style="color:var(--cream)">Bologna (BLQ)</strong></li>
+          <li>2.5 שעות — <strong style="color:var(--cream)">Rome FCO</strong></li>
         </ul>
       </div>
       <div class="t-card">
@@ -826,7 +826,6 @@ document.getElementById('rsvpForm').addEventListener('submit',function(e){
     name:document.getElementById('rf-name').value,
     phone:document.getElementById('rf-phone').value,
     count:document.getElementById('rf-count').value,
-    days:document.getElementById('rf-days').value,
     transfer:document.getElementById('rf-transfer').value,
     notes:document.getElementById('rf-notes').value,
     status:'מגיע',ts:Date.now()
