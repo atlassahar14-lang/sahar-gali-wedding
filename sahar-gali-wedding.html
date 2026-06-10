@@ -876,7 +876,18 @@ function switchTab(name){
 }
 
 function getGuests(){return DB.guests;}
-function getRooms(){return DB.rooms;}
+function roomSortNum(name){
+  const m=String(name||'').trim().match(/\d+/);
+  return m?parseInt(m[0],10):Infinity;
+}
+function sortRooms(rooms){
+  return [...rooms].sort((a,b)=>{
+    const na=roomSortNum(a.name),nb=roomSortNum(b.name);
+    if(na!==nb)return na-nb;
+    return String(a.name||'').localeCompare(String(b.name||''),'he');
+  });
+}
+function getRooms(){return sortRooms(DB.rooms);}
 function getSuppliers(){return DB.suppliers;}
 
 // ===== GUESTS =====
