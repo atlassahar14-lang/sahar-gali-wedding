@@ -707,7 +707,8 @@ const SUPABASE_URL='https://pwtakxpnntfopxfygvcu.supabase.co';
 const SUPABASE_ANON_KEY='sb_publishable_sgQjGA4_NdxTsHm0JhSgUw_z1ZM9mBs';
 const FILE_BUCKET='wedding-files';
 const sb=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
-const DB={guests:[],rooms:[],expenses:[],tasks:[],files:[],suppliers:[],content:{id:1,title:'',wedding_date:'',msg:'',budget_total:0}};
+const DB={guests:[],rooms:[],expenses:[],tasks:[],files:[],suppliers:[],content:{id:null,title:'',wedding_date:'',msg:'',budget_total:0}};
+function defaultContent(){return{id:null,title:'',wedding_date:'',msg:'',budget_total:0};}
 const LS={guests:'wg_guests',budget:'wg_budget',expenses:'wg_expenses',tasks:'wg_tasks',files:'wg_files',content:'wg_content',rooms:'wg_rooms',suppliers:'wg_suppliers'};
 function sbReady(){return!!sb&&!!SUPABASE_URL&&!!SUPABASE_ANON_KEY;}
 function dbError(where,err){console.error('Supabase',where,err);return err?.message||'שגיאת שמירה';}
@@ -733,7 +734,7 @@ async function dbLoadAll(){
     sb.from('expenses').select('*'),
     sb.from('tasks').select('*'),
     sb.from('files').select('*'),
-    sb.from('content').select('*').eq('id',1).maybeSingle(),
+    sb.from('content').select('*').limit(1).maybeSingle(),
     sb.from('suppliers').select('*')
   ]);
   if(g.error){dbError('load guests',g.error);return false;}
@@ -743,14 +744,30 @@ async function dbLoadAll(){
   if(t.error)dbError('load tasks',t.error);else DB.tasks=t.data||[];
   if(f.error)dbError('load files',f.error);else DB.files=(f.data||[]).map(mapFile);
   DB.suppliers=s.error?[]:(s.data||[]).map(mapSupplier);
-  DB.content=c.error||!c.data?{id:1,title:'',wedding_date:'',msg:'',budget_total:0}:c.data;
+  if(c.error)dbError('load content',c.error);
+  DB.content=c.data||defaultContent();
   return true;
 }
+async function persistContent(patch){
+  const row={
+    title:patch.title!==undefined?patch.title:(DB.content.title||''),
+    wedding_date:patch.wedding_date!==undefined?patch.wedding_date:(DB.content.wedding_date||''),
+    msg:patch.msg!==undefined?patch.msg:(DB.content.msg||''),
+    budget_total:patch.budget_total!==undefined?patch.budget_total:(parseInt(DB.content.budget_total,10)||0)
+  };
+  if(DB.content?.id){
+    return await sb.from('content').update(row).eq('id',DB.content.id);
+  }
+  return await sb.from('content').insert(row).select().single();
+}
 async function ensureContentRow(){
-  if(!DB.content?.id){
-    await sb.from('content').upsert({id:1,title:'',wedding_date:'',msg:'',budget_total:0},{onConflict:'id'});
-    const {data}=await sb.from('content').select('*').eq('id',1).maybeSingle();
-    DB.content=data||{id:1,title:'',wedding_date:'',msg:'',budget_total:0};
+  if(DB.content?.id)return;
+  const {data,error}=await persistContent({});
+  if(error){dbError('ensureContentRow',error);return;}
+  if(data)DB.content=data;
+  else{
+    const {data:row}=await sb.from('content').select('*').limit(1).maybeSingle();
+    DB.content=row||defaultContent();
   }
 }
 async function migrateFromLocalStorage(){
@@ -781,7 +798,7 @@ async function migrateFromLocalStorage(){
     }
     const oldContent=JSON.parse(localStorage.getItem(LS.content)||'{}');
     const oldBudget=JSON.parse(localStorage.getItem(LS.budget)||'{}');
-    await sb.from('content').upsert({id:1,title:oldContent.title||'',wedding_date:oldContent.date||'',msg:oldContent.msg||'',budget_total:parseInt(oldBudget.total)||0},{onConflict:'id'});
+    await sb.from('content').insert({title:oldContent.title||'',wedding_date:oldContent.date||'',msg:oldContent.msg||'',budget_total:parseInt(oldBudget.total)||0});
     localStorage.setItem('wg_supabase_migrated','1');
   }catch(err){console.error('Migration failed',err);}
 }
@@ -1216,8 +1233,9 @@ function refreshBudget(){
 async function saveBudget(){
   if(!sbReady()){alert('החיבור לענן לא מוגדר');return;}
   const val=parseInt(document.getElementById('b-budget-input').value,10)||0;
-  const {error}=await sb.from('content').upsert({id:1,budget_total:val,title:DB.content.title||'',wedding_date:DB.content.wedding_date||'',msg:DB.content.msg||''},{onConflict:'id'});
-  if(error){alert('שגיאה בשמירת התקציב');return;}
+  const {data,error}=await persistContent({budget_total:val});
+  if(error){alert(dbError('save budget',error));return;}
+  if(data)DB.content=data;
   await dbLoadAll();
   refreshBudget();
 }
@@ -1379,18 +1397,17 @@ function loadContent(){
 }
 async function saveContent(){
   if(!sbReady())return;
-  const row={
-    id:1,
+  const patch={
     title:document.getElementById('c-title').value,
     wedding_date:document.getElementById('c-date').value,
-    msg:document.getElementById('c-msg').value,
-    budget_total:parseInt(DB.content.budget_total)||0
+    msg:document.getElementById('c-msg').value
   };
-  const {error}=await sb.from('content').upsert(row,{onConflict:'id'});
-  if(error){alert('שגיאה בשמירה');return;}
+  const {data,error}=await persistContent(patch);
+  if(error){alert(dbError('save content',error));return;}
+  if(data)DB.content=data;
   await dbLoadAll();
-  if(row.title)document.getElementById('heroTitle').innerHTML=row.title.replace('&','<span class="amp">&</span>');
-  if(row.wedding_date)document.getElementById('heroDate').textContent=row.wedding_date;
+  if(patch.title)document.getElementById('heroTitle').innerHTML=patch.title.replace('&','<span class="amp">&</span>');
+  if(patch.wedding_date)document.getElementById('heroDate').textContent=patch.wedding_date;
   const toast=document.getElementById('c-toast');
   toast.style.display='block';setTimeout(()=>toast.style.display='none',3000);
 }
