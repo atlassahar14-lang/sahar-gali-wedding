@@ -1011,6 +1011,25 @@ function roomOccupancy(rooms,guests){
 function guestNamesInRoom(roomId,guests){
   return guests.filter(g=>normRoomId(g.roomId)===String(roomId)).map(g=>g.name).filter(Boolean);
 }
+function escAttr(v){return String(v??'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');}
+const ROOM_BUILDINGS=['וילה עיקרית','בית חווה','סוויטה','אחר'];
+function roomBuildingOpts(selected){return ROOM_BUILDINGS.map(b=>`<option${b===selected?' selected':''}>${b}</option>`).join('');}
+let editingRoomId=null;
+function startEditRoom(id){editingRoomId=id;updateRoomSummary();}
+function cancelEditRoom(){editingRoomId=null;updateRoomSummary();}
+async function saveEditRoom(id){
+  const name=document.getElementById('re-name-'+id)?.value.trim();
+  if(!name||!sbReady())return;
+  const {error}=await sb.from('rooms').update({
+    name,building:document.getElementById('re-building-'+id).value,
+    capacity:parseInt(document.getElementById('re-capacity-'+id).value,10)||2,
+    notes:document.getElementById('re-notes-'+id).value.trim()
+  }).eq('id',id);
+  if(error){alert('שגיאה בשמירה');return;}
+  editingRoomId=null;
+  await dbLoadAll();
+  refreshRooms();
+}
 function escExcel(v){return String(v??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function exportRoomsExcel(){
   const rooms=getRooms();
@@ -1054,6 +1073,7 @@ async function addRoom(){
 }
 async function removeRoom(id){
   if(!sbReady())return;
+  if(editingRoomId===id)editingRoomId=null;
   await sb.from('guests').update({room_id:null}).eq('room_id',id);
   await sb.from('rooms').delete().eq('id',id);
   await dbLoadAll();
@@ -1082,6 +1102,20 @@ function updateRoomSummary(){
       const used=occ[String(r.id)]||0;
       const full=used>=r.capacity;
       const names=guestNamesInRoom(r.id,allGuests);
+      if(editingRoomId===r.id){
+        return `<tr>
+          <td><input class="adm-input" id="re-name-${r.id}" value="${escAttr(r.name)}" style="min-width:80px;padding:6px 8px;"></td>
+          <td><select class="adm-input" id="re-building-${r.id}" style="min-width:120px;padding:6px 8px;">${roomBuildingOpts(r.building)}</select></td>
+          <td><input class="adm-input" id="re-capacity-${r.id}" type="number" min="1" max="20" value="${r.capacity||2}" style="width:70px;padding:6px 8px;direction:ltr;"></td>
+          <td><span class="badge ${full?'badge-maybe':'badge-yes'}">${used} אורחים</span></td>
+          <td style="font-size:12px;color:var(--cream);">${names.length?names.join(', '):'—'}</td>
+          <td><input class="adm-input" id="re-notes-${r.id}" value="${escAttr(r.notes||'')}" placeholder="הערות" style="min-width:120px;padding:6px 8px;"></td>
+          <td style="white-space:nowrap;">
+            <button class="adm-btn adm-btn-sm" onclick="saveEditRoom('${r.id}')">שמור</button>
+            <button class="adm-btn adm-btn-sm" onclick="cancelEditRoom()">ביטול</button>
+          </td>
+        </tr>`;
+      }
       return `<tr>
         <td style="color:var(--cream);">${r.name}</td>
         <td>${r.building}</td>
@@ -1089,7 +1123,10 @@ function updateRoomSummary(){
         <td><span class="badge ${full?'badge-maybe':'badge-yes'}">${used} אורחים</span></td>
         <td style="font-size:12px;color:var(--cream);">${names.length?names.join(', '):'—'}</td>
         <td style="font-size:12px;">${r.notes||'—'}</td>
-        <td><button class="adm-btn adm-btn-sm adm-btn-red" onclick="removeRoom('${r.id}')">✕</button></td>
+        <td style="white-space:nowrap;">
+          <button class="adm-btn adm-btn-sm" onclick="startEditRoom('${r.id}')">עריכה</button>
+          <button class="adm-btn adm-btn-sm adm-btn-red" onclick="removeRoom('${r.id}')">✕</button>
+        </td>
       </tr>`;
     }).join('');
 }
