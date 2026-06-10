@@ -707,8 +707,10 @@ const SUPABASE_URL='https://pwtakxpnntfopxfygvcu.supabase.co';
 const SUPABASE_ANON_KEY='sb_publishable_sgQjGA4_NdxTsHm0JhSgUw_z1ZM9mBs';
 const FILE_BUCKET='wedding-files';
 const sb=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
-const DB={guests:[],rooms:[],expenses:[],tasks:[],files:[],suppliers:[],content:{id:null,title:'',wedding_date:'',msg:'',budget_total:0}};
-function defaultContent(){return{id:null,title:'',wedding_date:'',msg:'',budget_total:0};}
+const BUDGET_ID=1;
+const DB={guests:[],rooms:[],expenses:[],tasks:[],files:[],suppliers:[],content:{id:null,title:'',wedding_date:'',msg:''},budget:{id:BUDGET_ID,total_budget:0}};
+function defaultContent(){return{id:null,title:'',wedding_date:'',msg:''};}
+function defaultBudget(){return{id:BUDGET_ID,total_budget:0};}
 const LS={guests:'wg_guests',budget:'wg_budget',expenses:'wg_expenses',tasks:'wg_tasks',files:'wg_files',content:'wg_content',rooms:'wg_rooms',suppliers:'wg_suppliers'};
 function sbReady(){return!!sb&&!!SUPABASE_URL&&!!SUPABASE_ANON_KEY;}
 function dbError(where,err){console.error('Supabase',where,err);return err?.message||'שגיאת שמירה';}
@@ -728,14 +730,15 @@ async function getFileUrl(f){
 function mapSupplier(s){return{id:s.id,name:s.name,company:s.company,cat:s.cat,phone:s.phone,email:s.email,from:s.origin,lodging:s.lodging,transfer:s.transfer,status:s.status,arrival:s.arrival,notes:s.notes};}
 async function dbLoadAll(){
   if(!sbReady())return false;
-  const [g,r,e,t,f,c,s]=await Promise.all([
+  const [g,r,e,t,f,c,s,b]=await Promise.all([
     sb.from('guests').select(GUEST_COLS).order('name'),
     sb.from('rooms').select('*'),
     sb.from('expenses').select('*'),
     sb.from('tasks').select('*'),
     sb.from('files').select('*'),
     sb.from('content').select('*').limit(1).maybeSingle(),
-    sb.from('suppliers').select('*')
+    sb.from('suppliers').select('*'),
+    sb.from('budget_settings').select('id,total_budget').limit(1).maybeSingle()
   ]);
   if(g.error){dbError('load guests',g.error);return false;}
   DB.guests=(g.data||[]).map(mapGuest);
@@ -746,14 +749,29 @@ async function dbLoadAll(){
   DB.suppliers=s.error?[]:(s.data||[]).map(mapSupplier);
   if(c.error)dbError('load content',c.error);
   DB.content=c.data||defaultContent();
+  if(b.error)dbError('load budget',b.error);
+  DB.budget=b.data||defaultBudget();
   return true;
+}
+async function persistBudget(total){
+  const val=parseInt(total,10)||0;
+  const id=DB.budget?.id||BUDGET_ID;
+  const {data:existing}=await sb.from('budget_settings').select('id').eq('id',id).maybeSingle();
+  if(existing)return await sb.from('budget_settings').update({total_budget:val}).eq('id',id).select().single();
+  return await sb.from('budget_settings').insert({id,total_budget:val}).select().single();
+}
+async function ensureBudgetRow(){
+  const {data}=await sb.from('budget_settings').select('id,total_budget').eq('id',BUDGET_ID).maybeSingle();
+  if(data){DB.budget=data;return;}
+  const {data:created,error}=await sb.from('budget_settings').insert({id:BUDGET_ID,total_budget:0}).select().single();
+  if(error)dbError('ensureBudgetRow',error);
+  else if(created)DB.budget=created;
 }
 async function persistContent(patch){
   const row={
     title:patch.title!==undefined?patch.title:(DB.content.title||''),
     wedding_date:patch.wedding_date!==undefined?patch.wedding_date:(DB.content.wedding_date||''),
-    msg:patch.msg!==undefined?patch.msg:(DB.content.msg||''),
-    budget_total:patch.budget_total!==undefined?patch.budget_total:(parseInt(DB.content.budget_total,10)||0)
+    msg:patch.msg!==undefined?patch.msg:(DB.content.msg||'')
   };
   if(DB.content?.id){
     return await sb.from('content').update(row).eq('id',DB.content.id);
@@ -798,7 +816,8 @@ async function migrateFromLocalStorage(){
     }
     const oldContent=JSON.parse(localStorage.getItem(LS.content)||'{}');
     const oldBudget=JSON.parse(localStorage.getItem(LS.budget)||'{}');
-    await sb.from('content').insert({title:oldContent.title||'',wedding_date:oldContent.date||'',msg:oldContent.msg||'',budget_total:parseInt(oldBudget.total)||0});
+    await sb.from('content').insert({title:oldContent.title||'',wedding_date:oldContent.date||'',msg:oldContent.msg||''});
+    await sb.from('budget_settings').insert({id:BUDGET_ID,total_budget:parseInt(oldBudget.total)||0});
     localStorage.setItem('wg_supabase_migrated','1');
   }catch(err){console.error('Migration failed',err);}
 }
@@ -807,6 +826,7 @@ async function dbInit(){
   await migrateFromLocalStorage();
   if(!await dbLoadAll())return;
   await ensureContentRow();
+  await ensureBudgetRow();
   loadContent();
 }
 
@@ -1204,7 +1224,7 @@ function exportSuppliersCSV(){
 // ===== BUDGET =====
 function refreshBudget(){
   const exps=DB.expenses;
-  const totalBudget=parseInt(DB.content.budget_total||0);
+  const totalBudget=parseInt(DB.budget?.total_budget||0,10);
   const spent=exps.reduce((s,e)=>s+parseInt(e.total||0),0);
   const paid=exps.reduce((s,e)=>s+parseInt(e.paid||0),0);
   const left=totalBudget-spent;
@@ -1233,9 +1253,9 @@ function refreshBudget(){
 async function saveBudget(){
   if(!sbReady()){alert('החיבור לענן לא מוגדר');return;}
   const val=parseInt(document.getElementById('b-budget-input').value,10)||0;
-  const {data,error}=await persistContent({budget_total:val});
+  const {data,error}=await persistBudget(val);
   if(error){alert(dbError('save budget',error));return;}
-  if(data)DB.content=data;
+  if(data)DB.budget=data;
   await dbLoadAll();
   refreshBudget();
 }
