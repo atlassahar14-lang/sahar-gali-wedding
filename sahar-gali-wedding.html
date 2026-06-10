@@ -708,6 +708,7 @@ footer{background:#080402;text-align:center;padding:56px 20px;}
 // ===== SUPABASE =====
 const SUPABASE_URL='https://pwtakxpnntfopxfygvcu.supabase.co';
 const SUPABASE_ANON_KEY='sb_publishable_sgQjGA4_NdxTsHm0JhSgUw_z1ZM9mBs';
+const FILE_BUCKET='wedding-files';
 const sb=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
 const DB={guests:[],rooms:[],expenses:[],tasks:[],files:[],suppliers:[],content:{id:1,title:'',wedding_date:'',msg:'',budget_total:0}};
 const LS={guests:'wg_guests',budget:'wg_budget',expenses:'wg_expenses',tasks:'wg_tasks',files:'wg_files',content:'wg_content',rooms:'wg_rooms',suppliers:'wg_suppliers'};
@@ -716,7 +717,16 @@ function dbError(where,err){console.error('Supabase',where,err);return err?.mess
 const GUEST_COLS='id,name,count,days,status,transfer,notes,phone,room_id';
 function mapGuest(g){return{id:g.id,name:g.name,phone:g.phone,count:g.count,days:g.days,status:g.status,transfer:g.transfer,notes:g.notes,roomId:g.room_id};}
 function mapRoom(r){return{id:r.id,name:r.name,building:r.building,capacity:r.capacity,notes:r.notes};}
-function mapFile(f){return{id:f.id,name:f.name,size:f.size,date:f.file_date,type:f.mime_type,data:f.data};}
+function mapFile(f){return{id:f.id,name:f.name,size:f.size,date:f.file_date,type:f.mime_type,data:f.data,path:f.data&&!String(f.data).startsWith('data:')?f.data:null};}
+function storagePath(name){return Date.now()+'_'+String(name).replace(/[^a-zA-Z0-9._\u0590-\u05FF-]/g,'_');}
+function isLegacyFileData(d){return!!d&&String(d).startsWith('data:');}
+async function getFileUrl(f){
+  if(!f?.data)return null;
+  if(isLegacyFileData(f.data))return f.data;
+  const {data,error}=await sb.storage.from(FILE_BUCKET).createSignedUrl(f.data,3600);
+  if(error){console.error('Storage URL',error);return null;}
+  return data.signedUrl;
+}
 function mapSupplier(s){return{id:s.id,name:s.name,company:s.company,cat:s.cat,phone:s.phone,email:s.email,from:s.origin,lodging:s.lodging,transfer:s.transfer,status:s.status,arrival:s.arrival,notes:s.notes};}
 async function dbLoadAll(){
   if(!sbReady())return false;
@@ -1313,43 +1323,50 @@ function getFileIcon(n){
   if(['xls','xlsx'].includes(ext))return 'XLS';
   return 'FILE';
 }
-function handleFiles(fileList){
+async function handleFiles(fileList){
   if(!sbReady()){alert('החיבור לענן לא מוגדר');return;}
   const pending=Array.from(fileList);
   if(!pending.length)return;
-  let done=0,failed=false;
-  pending.forEach(f=>{
-    const reader=new FileReader();
-    reader.onload=async e=>{
-      const {error}=await sb.from('files').insert({
-        name:f.name,size:formatSize(f.size),file_date:new Date().toLocaleDateString('he-IL'),
-        mime_type:f.type||'',data:e.target.result
-      });
-      if(error)failed=true;
-      if(++done===pending.length){
-        await dbLoadAll();
-        refreshFiles();
-        if(failed)alert('חלק מהקבצים לא נשמרו');
-      }
-    };
-    reader.onerror=()=>{if(++done===pending.length)refreshFiles();};
-    reader.readAsDataURL(f);
-  });
+  let failed=false;
+  for(const f of pending){
+    const path=storagePath(f.name);
+    const {error:upErr}=await sb.storage.from(FILE_BUCKET).upload(path,f,{contentType:f.type||'application/octet-stream',upsert:false});
+    if(upErr){console.error('Storage upload',upErr);failed=true;continue;}
+    const {error:dbErr}=await sb.from('files').insert({
+      name:f.name,size:formatSize(f.size),file_date:new Date().toLocaleDateString('he-IL'),
+      mime_type:f.type||'',data:path
+    });
+    if(dbErr){
+      console.error('files insert',dbErr);
+      await sb.storage.from(FILE_BUCKET).remove([path]);
+      failed=true;
+    }
+  }
+  document.getElementById('fileInput').value='';
+  await dbLoadAll();
+  refreshFiles();
+  if(failed)alert('חלק מהקבצים לא נשמרו. ודאו שהרצתם את supabase-storage.sql ב-Supabase.');
 }
-function openFile(id){
+async function openFile(id){
   const f=DB.files.find(x=>x.id===id);
-  if(!f?.data){alert('הקובץ נשמר רק כשם. מחק והעלה אותו מחדש כדי לפתוח.');return;}
-  window.open(f.data,'_blank');
+  if(!f?.data){alert('הקובץ לא נמצא. מחק והעלה אותו מחדש.');return;}
+  const url=await getFileUrl(f);
+  if(!url){alert('לא ניתן לפתוח את הקובץ');return;}
+  window.open(url,'_blank');
 }
-function downloadFile(id){
+async function downloadFile(id){
   const f=DB.files.find(x=>x.id===id);
   if(!f?.data)return;
+  const url=await getFileUrl(f);
+  if(!url){alert('לא ניתן להוריד את הקובץ');return;}
   const a=document.createElement('a');
-  a.href=f.data;a.download=f.name;a.click();
+  a.href=url;a.download=f.name;a.click();
 }
 function formatSize(b){if(b<1024)return b+'B';if(b<1048576)return Math.round(b/1024)+'KB';return (b/1048576).toFixed(1)+'MB';}
 async function removeFile(id){
   if(!sbReady())return;
+  const f=DB.files.find(x=>x.id===id);
+  if(f?.data&&!isLegacyFileData(f.data))await sb.storage.from(FILE_BUCKET).remove([f.data]);
   await sb.from('files').delete().eq('id',id);
   await dbLoadAll();
   refreshFiles();
