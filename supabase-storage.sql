@@ -17,3 +17,11 @@ create policy "wedding_files_insert" on storage.objects
 
 create policy "wedding_files_delete" on storage.objects
   for delete using (bucket_id = 'wedding-files');
+
+-- עמודות לטבלת files (נתיב ב-Storage)
+alter table files add column if not exists storage_path text;
+alter table files add column if not exists mime_type text;
+alter table files add column if not exists date text;
+alter table files add column if not exists data text;
+
+notify pgrst, 'reload schema';

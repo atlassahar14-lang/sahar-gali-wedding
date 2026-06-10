@@ -27,7 +27,9 @@ alter table tasks add column if not exists done boolean default false;
 alter table tasks add column if not exists created_at timestamptz default now();
 
 alter table files add column if not exists size text;
+alter table files add column if not exists date text;
 alter table files add column if not exists file_date text;
+alter table files add column if not exists storage_path text;
 alter table files add column if not exists mime_type text;
 alter table files add column if not exists data text;
 alter table files add column if not exists created_at timestamptz default now();

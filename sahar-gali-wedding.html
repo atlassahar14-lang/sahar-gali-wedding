@@ -717,7 +717,10 @@ function dbError(where,err){console.error('Supabase',where,err);return err?.mess
 const GUEST_COLS='id,name,count,days,status,transfer,notes,phone,room_id';
 function mapGuest(g){return{id:g.id,name:g.name,phone:g.phone,count:g.count,days:g.days,status:g.status,transfer:g.transfer,notes:g.notes,roomId:g.room_id};}
 function mapRoom(r){return{id:r.id,name:r.name,building:r.building,capacity:r.capacity,notes:r.notes};}
-function mapFile(f){return{id:f.id,name:f.name,size:f.size,date:f.file_date,type:f.mime_type,data:f.data,path:f.data&&!String(f.data).startsWith('data:')?f.data:null};}
+function mapFile(f){
+  const path=f.storage_path||f.data||'';
+  return{id:f.id,name:f.name,size:f.size,date:f.date||f.file_date,type:f.mime_type||'',data:path,path:path&&!isLegacyFileData(path)?path:null};
+}
 function storagePath(name){return Date.now()+'_'+String(name).replace(/[^a-zA-Z0-9._\u0590-\u05FF-]/g,'_');}
 function isLegacyFileData(d){return!!d&&String(d).startsWith('data:');}
 async function getFileUrl(f){
@@ -735,7 +738,7 @@ async function dbLoadAll(){
     sb.from('rooms').select('*'),
     sb.from('expenses').select('*'),
     sb.from('tasks').select('*'),
-    sb.from('files').select('*'),
+    sb.from('files').select('id,name,size,date,storage_path,mime_type,data'),
     sb.from('content').select('*').limit(1).maybeSingle(),
     sb.from('suppliers').select('*'),
     sb.from('budget_settings').select('id,total_budget').limit(1).maybeSingle()
@@ -745,7 +748,11 @@ async function dbLoadAll(){
   if(r.error)dbError('load rooms',r.error);else DB.rooms=(r.data||[]).map(mapRoom);
   if(e.error)dbError('load expenses',e.error);else DB.expenses=e.data||[];
   if(t.error)dbError('load tasks',t.error);else DB.tasks=t.data||[];
-  if(f.error)dbError('load files',f.error);else DB.files=(f.data||[]).map(mapFile);
+  if(f.error){
+    const f2=await sb.from('files').select('id,name,size,date');
+    if(f2.error)dbError('load files',f.error);
+    else DB.files=(f2.data||[]).map(mapFile);
+  }else DB.files=(f.data||[]).map(mapFile);
   DB.suppliers=s.error?[]:(s.data||[]).map(mapSupplier);
   if(c.error)dbError('load content',c.error);
   DB.content=c.data||defaultContent();
@@ -809,7 +816,7 @@ async function migrateFromLocalStorage(){
     const oldTasks=JSON.parse(localStorage.getItem(LS.tasks)||'[]');
     if(oldTasks.length)for(const t of oldTasks){await sb.from('tasks').insert({name:t.name,due:t.due||null,cat:t.cat||'',done:!!t.done});}
     for(const f of JSON.parse(localStorage.getItem(LS.files)||'[]')){
-      await sb.from('files').insert({name:f.name,size:f.size||'',file_date:f.date||'',mime_type:f.type||'',data:f.data||''});
+      await sb.from('files').insert({name:f.name,size:f.size||'',date:f.date||'',storage_path:'',mime_type:f.type||'',data:f.data||''});
     }
     for(const sp of JSON.parse(localStorage.getItem(LS.suppliers)||'[]')){
       await sb.from('suppliers').insert({name:sp.name,company:sp.company||'',cat:sp.cat||'',phone:sp.phone||'',email:sp.email||'',origin:sp.from||'',lodging:sp.lodging||'לא',transfer:sp.transfer||'לא',status:sp.status||'',arrival:sp.arrival||null,notes:sp.notes||''});
@@ -1396,21 +1403,36 @@ function getFileIcon(n){
   if(['xls','xlsx'].includes(ext))return 'XLS';
   return 'FILE';
 }
+async function insertFileRecord(file,path){
+  const base={name:file.name,size:formatSize(file.size),date:new Date().toLocaleDateString('he-IL')};
+  const tries=[
+    {...base,storage_path:path,mime_type:file.type||''},
+    {...base,storage_path:path},
+    {...base,data:path,mime_type:file.type||''},
+    {...base,data:path},
+    base
+  ];
+  for(const row of tries){
+    const {data,error}=await sb.from('files').insert(row).select().single();
+    if(!error)return{data,error:null};
+    if(!/column|schema cache/i.test(error.message||''))return{data:null,error};
+  }
+  return{data:null,error:{message:'לא ניתן לשמור מטא-דאטה. הריצו supabase-storage.sql ב-Supabase.'}};
+}
 async function handleFiles(fileList){
   if(!sbReady()){alert('החיבור לענן לא מוגדר');return;}
+  if(!sb.storage){alert('מודול Storage לא נטען. רעננו את הדף.');return;}
   const pending=Array.from(fileList);
   if(!pending.length)return;
-  let failed=false;
+  let failed=false,lastErr='';
   for(const f of pending){
     const path=storagePath(f.name);
-    const {error:upErr}=await sb.storage.from(FILE_BUCKET).upload(path,f,{contentType:f.type||'application/octet-stream',upsert:false});
-    if(upErr){console.error('Storage upload',upErr);failed=true;continue;}
-    const {error:dbErr}=await sb.from('files').insert({
-      name:f.name,size:formatSize(f.size),file_date:new Date().toLocaleDateString('he-IL'),
-      mime_type:f.type||'',data:path
-    });
+    const {error:upErr}=await sb.storage.from(FILE_BUCKET).upload(path,f,{contentType:f.type||'application/octet-stream',cacheControl:'3600',upsert:false});
+    if(upErr){console.error('Storage upload',upErr,f.name);lastErr=dbError('storage upload',upErr);failed=true;continue;}
+    const {error:dbErr}=await insertFileRecord(f,path);
     if(dbErr){
-      console.error('files insert',dbErr);
+      console.error('files insert',dbErr,f.name);
+      lastErr=dbError('files insert',dbErr);
       await sb.storage.from(FILE_BUCKET).remove([path]);
       failed=true;
     }
@@ -1418,7 +1440,7 @@ async function handleFiles(fileList){
   document.getElementById('fileInput').value='';
   await dbLoadAll();
   refreshFiles();
-  if(failed)alert('חלק מהקבצים לא נשמרו. ודאו שהרצתם את supabase-storage.sql ב-Supabase.');
+  if(failed)alert(lastErr||'חלק מהקבצים לא נשמרו. ודאו שהרצתם את supabase-storage.sql ב-Supabase.');
 }
 async function openFile(id){
   const f=DB.files.find(x=>x.id===id);
