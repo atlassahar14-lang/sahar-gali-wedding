@@ -26,16 +26,16 @@ nav a:hover{color:var(--gold);}
 
 /* HERO */
 #hero{position:relative;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(180deg,#0E0603 0%,#2E1A0E 40%,#3D2510 70%,#2E1A0E 100%);overflow:hidden;text-align:center;padding:80px 20px 140px;}
-.hero-label,.hero-names,.hero-date,.hero-venue,.hero-divider,.scroll-hint{opacity:0;animation-fill-mode:both;}
-.hero-label{font-size:12px;letter-spacing:5px;text-transform:uppercase;color:var(--gold);margin-bottom:18px;animation-name:fadeUp;animation-duration:1s;animation-delay:.15s;}
-.hero-names{font-family:'Cormorant Garamond',serif;font-size:clamp(64px,13vw,120px);font-weight:300;line-height:1;color:var(--ivory);animation-name:fadeUp;animation-duration:1.2s;animation-delay:.3s;}
+.hero-label,.hero-names,.hero-date,.hero-venue,.hero-divider,.scroll-hint{opacity:0;}
+.hero-label{font-size:12px;letter-spacing:5px;text-transform:uppercase;color:var(--gold);margin-bottom:18px;animation:fadeUp 1s .15s both;}
+.hero-names{font-family:'Cormorant Garamond',serif;font-size:clamp(64px,13vw,120px);font-weight:300;line-height:1;color:var(--ivory);animation:fadeUp 1.2s .3s both;}
 .amp{color:var(--gold);font-style:italic;font-size:.82em;display:block;line-height:.9;}
-.hero-date{font-family:'Cormorant Garamond',serif;font-size:clamp(17px,3vw,24px);font-weight:300;letter-spacing:2px;color:var(--blush);margin-top:16px;animation-name:fadeUp;animation-duration:1s;animation-delay:.45s;}
-.hero-venue{font-size:12px;color:var(--stone);letter-spacing:3px;text-transform:uppercase;margin-top:8px;animation-name:fadeUp;animation-duration:1s;animation-delay:.55s;}
-.hero-divider{width:1px;height:56px;background:linear-gradient(to bottom,transparent,var(--gold),transparent);margin:24px auto;animation-name:fadeIn;animation-duration:1s;animation-delay:.65s;}
+.hero-date{font-family:'Cormorant Garamond',serif;font-size:clamp(17px,3vw,24px);font-weight:300;letter-spacing:2px;color:var(--blush);margin-top:16px;animation:fadeUp 1s .45s both;}
+.hero-venue{font-size:12px;color:var(--stone);letter-spacing:3px;text-transform:uppercase;margin-top:8px;animation:fadeUp 1s .55s both;}
+.hero-divider{width:1px;height:56px;background:linear-gradient(to bottom,transparent,var(--gold),transparent);margin:24px auto;animation:fadeIn 1s .65s both;}
 @keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-.scroll-hint{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);animation-name:fadeIn;animation-duration:1s;animation-delay:.9s;cursor:pointer;}
+.scroll-hint{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);animation:fadeIn 1s .9s both;cursor:pointer;}
 .scroll-hint span{font-size:10px;letter-spacing:4px;color:var(--stone);text-transform:uppercase;}
 .scroll-hint::before{content:'';display:block;width:1px;height:32px;margin:0 auto 10px;background:linear-gradient(to bottom,var(--gold),transparent);}
 
@@ -230,13 +230,12 @@ footer{background:#080402;text-align:center;padding:56px 20px;}
 
 <!-- HERO -->
 <section id="hero">
-  <p class="hero-label" style="opacity:0">מתחתנים!</p>
-  <h1 class="hero-names" id="heroTitle" style="opacity:0">סהר<span class="amp">&</span>גלי</h1>
-  <div class="hero-divider" style="opacity:0"></div>
-  <p class="hero-date" id="heroDate" style="opacity:0">21 – 23 במאי 2027</p>
-  <p class="hero-venue" style="opacity:0">Villa Pitiana · Tuscany · Italy</p>
-
-  <div class="scroll-hint" style="opacity:0" onclick="document.getElementById('countdown').scrollIntoView({behavior:'smooth'})">
+  <p class="hero-label" style="opacity:0;">מתחתנים!</p>
+  <h1 class="hero-names" id="heroTitle" style="opacity:0;">סהר<span class="amp">&</span>גלי</h1>
+  <div class="hero-divider" style="opacity:0;"></div>
+  <p class="hero-date" id="heroDate" style="opacity:0;">21 – 23 במאי 2027</p>
+  <p class="hero-venue" style="opacity:0;">Villa Pitiana · Tuscany · Italy</p>
+  <div class="scroll-hint" style="opacity:0;" onclick="document.getElementById('countdown').scrollIntoView({behavior:'smooth'})">
     <span>גלול מטה</span>
   </div>
 </section>
