@@ -512,7 +512,7 @@ footer{background:#080402;text-align:center;padding:56px 20px;}
         <h3>רשימת חדרים</h3>
         <div style="overflow-x:auto;">
           <table class="adm-table">
-            <thead><tr><th>חדר</th><th>מבנה</th><th>קיבולת</th><th>משויכים</th><th>הערות</th><th></th></tr></thead>
+            <thead><tr><th>חדר</th><th>מבנה</th><th>קיבולת</th><th>משויכים</th><th>שמות אורחים</th><th>הערות</th><th></th></tr></thead>
             <tbody id="roomTable"></tbody>
           </table>
         </div>
@@ -947,6 +947,9 @@ function roomOccupancy(rooms,guests){
   });
   return occ;
 }
+function guestNamesInRoom(roomId,guests){
+  return guests.filter(g=>normRoomId(g.roomId)===String(roomId)).map(g=>g.name).filter(Boolean);
+}
 async function addRoom(){
   const name=document.getElementById('r-name').value.trim();
   if(!name||!sbReady())return;
@@ -985,15 +988,17 @@ function updateRoomSummary(){
     <div class="stat-box"><div class="stat-num">${assigned}</div><div class="stat-label">משפחות משויכות</div></div>
     <div class="stat-box"><div class="stat-num">${arriving.length-assigned}</div><div class="stat-label">ממתינות לשיוך</div></div>
   `;
-  document.getElementById('roomTable').innerHTML=rooms.length===0?`<tr><td colspan="6" style="text-align:center;padding:20px;color:var(--stone);">אין חדרים עדיין — הוסיפו חדר למעלה</td></tr>`:
+  document.getElementById('roomTable').innerHTML=rooms.length===0?`<tr><td colspan="7" style="text-align:center;padding:20px;color:var(--stone);">אין חדרים עדיין — הוסיפו חדר למעלה</td></tr>`:
     rooms.map((r,i)=>{
       const used=occ[String(r.id)]||0;
       const full=used>=r.capacity;
+      const names=guestNamesInRoom(r.id,allGuests);
       return `<tr>
         <td style="color:var(--cream);">${r.name}</td>
         <td>${r.building}</td>
         <td>${used} / ${r.capacity}</td>
         <td><span class="badge ${full?'badge-maybe':'badge-yes'}">${used} אורחים</span></td>
+        <td style="font-size:12px;color:var(--cream);">${names.length?names.join(', '):'—'}</td>
         <td style="font-size:12px;">${r.notes||'—'}</td>
         <td><button class="adm-btn adm-btn-sm adm-btn-red" onclick="removeRoom('${r.id}')">✕</button></td>
       </tr>`;
