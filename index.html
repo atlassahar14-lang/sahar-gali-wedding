@@ -175,10 +175,6 @@ footer{background:#080402;text-align:center;padding:56px 20px;}
 .stat-label{font-size:10px;letter-spacing:2px;color:var(--stone);text-transform:uppercase;margin-top:4px;}
 
 /* budget */
-.budget-total{font-family:'Cormorant Garamond',serif;font-size:42px;font-weight:300;color:var(--ivory);}
-.budget-total-input{width:100%;border:none;background:transparent;text-align:center;font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:300;color:var(--ivory);padding:4px 0;outline:none;direction:ltr;-moz-appearance:textfield;}
-.budget-total-input::-webkit-outer-spin-button,.budget-total-input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
-.budget-total-input:focus{box-shadow:0 1px 0 var(--gold);}
 .budget-bar-wrap{background:rgba(255,255,255,.06);border-radius:2px;height:6px;margin:12px 0;}
 .budget-bar{height:6px;border-radius:2px;background:var(--gold);transition:width .5s;}
 .expense-cat{display:inline-block;font-size:10px;padding:2px 8px;background:rgba(196,154,60,.12);color:var(--gold);border-radius:2px;letter-spacing:1px;}
@@ -607,18 +603,19 @@ footer{background:#080402;text-align:center;padding:56px 20px;}
       <div class="adm-card">
         <h3>סיכום</h3>
         <div class="stats-row">
-          <div class="stat-box">
-            <input class="budget-total-input" id="b-budget-input" type="number" min="0" step="1" placeholder="0" inputmode="numeric" onchange="saveBudget()" onblur="saveBudget()">
-            <div class="stat-label">תקציב כולל €</div>
-            <button class="adm-btn adm-btn-sm" style="margin-top:10px;" onclick="saveBudget()">שמור תקציב</button>
-          </div>
+          <div class="stat-box"><div class="stat-num" id="b-total-display">€0</div><div class="stat-label">תקציב כולל</div></div>
           <div class="stat-box"><div class="stat-num" id="b-spent">€0</div><div class="stat-label">הוצאות</div></div>
           <div class="stat-box"><div class="stat-num" id="b-left">€0</div><div class="stat-label">יתרה</div></div>
           <div class="stat-box"><div class="stat-num" id="b-paid">€0</div><div class="stat-label">שולם</div></div>
         </div>
         <div class="budget-bar-wrap"><div class="budget-bar" id="b-bar" style="width:0%"></div></div>
-        <div style="font-size:11px;color:var(--stone);">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;font-size:11px;color:var(--stone);">
           <span id="b-pct">0% הוצאה מהתקציב</span>
+          <div class="adm-row" style="margin:0;align-items:center;">
+            <label for="b-budget-input" style="font-size:12px;color:var(--stone);white-space:nowrap;">תקציב כולל €</label>
+            <input class="adm-input" id="b-budget-input" type="number" min="0" step="1" placeholder="200000" inputmode="numeric" style="max-width:160px;min-width:120px;direction:ltr;text-align:left;flex:none;">
+            <button class="adm-btn adm-btn-sm" onclick="saveBudget()">שמור תקציב</button>
+          </div>
         </div>
       </div>
       <div class="adm-card">
@@ -1196,6 +1193,7 @@ function refreshBudget(){
   const left=totalBudget-spent;
   const pct=totalBudget?Math.min(100,Math.round(spent/totalBudget*100)):0;
   const fmt=n=>new Intl.NumberFormat('he-IL',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(n);
+  document.getElementById('b-total-display').textContent=fmt(totalBudget);
   const budgetInput=document.getElementById('b-budget-input');
   if(document.activeElement!==budgetInput)budgetInput.value=totalBudget?totalBudget:'';
   document.getElementById('b-spent').textContent=fmt(spent);
