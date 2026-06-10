@@ -718,15 +718,15 @@ const GUEST_COLS='id,name,count,days,status,transfer,notes,phone,room_id';
 function mapGuest(g){return{id:g.id,name:g.name,phone:g.phone,count:g.count,days:g.days,status:g.status,transfer:g.transfer,notes:g.notes,roomId:g.room_id};}
 function mapRoom(r){return{id:r.id,name:r.name,building:r.building,capacity:r.capacity,notes:r.notes};}
 function mapFile(f){
-  const path=f.storage_path||f.data||'';
-  return{id:f.id,name:f.name,size:f.size,date:f.date||f.file_date,type:f.mime_type||'',data:path,path:path&&!isLegacyFileData(path)?path:null};
+  const path=String(f.storage_path||'').trim();
+  return{id:f.id,name:f.name,size:f.size,date:f.date||f.file_date||'',type:f.mime_type||'',storage_path:path};
 }
+function fileHasStorage(f){return!!(f?.storage_path&&String(f.storage_path).trim());}
 function storagePath(name){return Date.now()+'_'+String(name).replace(/[^a-zA-Z0-9._\u0590-\u05FF-]/g,'_');}
-function isLegacyFileData(d){return!!d&&String(d).startsWith('data:');}
 async function getFileUrl(f){
-  if(!f?.data)return null;
-  if(isLegacyFileData(f.data))return f.data;
-  const {data,error}=await sb.storage.from(FILE_BUCKET).createSignedUrl(f.data,3600);
+  const path=String(f?.storage_path||'').trim();
+  if(!path)return null;
+  const {data,error}=await sb.storage.from(FILE_BUCKET).createSignedUrl(path,3600);
   if(error){console.error('Storage URL',error);return null;}
   return data.signedUrl;
 }
@@ -738,7 +738,7 @@ async function dbLoadAll(){
     sb.from('rooms').select('*'),
     sb.from('expenses').select('*'),
     sb.from('tasks').select('*'),
-    sb.from('files').select('id,name,size,date,storage_path,mime_type,data'),
+    sb.from('files').select('id,name,size,date,file_date,storage_path,mime_type'),
     sb.from('content').select('*').limit(1).maybeSingle(),
     sb.from('suppliers').select('*'),
     sb.from('budget_settings').select('id,total_budget').limit(1).maybeSingle()
@@ -749,7 +749,7 @@ async function dbLoadAll(){
   if(e.error)dbError('load expenses',e.error);else DB.expenses=e.data||[];
   if(t.error)dbError('load tasks',t.error);else DB.tasks=t.data||[];
   if(f.error){
-    const f2=await sb.from('files').select('id,name,size,date');
+    const f2=await sb.from('files').select('id,name,size,date,file_date,storage_path,mime_type');
     if(f2.error)dbError('load files',f.error);
     else DB.files=(f2.data||[]).map(mapFile);
   }else DB.files=(f.data||[]).map(mapFile);
@@ -816,7 +816,8 @@ async function migrateFromLocalStorage(){
     const oldTasks=JSON.parse(localStorage.getItem(LS.tasks)||'[]');
     if(oldTasks.length)for(const t of oldTasks){await sb.from('tasks').insert({name:t.name,due:t.due||null,cat:t.cat||'',done:!!t.done});}
     for(const f of JSON.parse(localStorage.getItem(LS.files)||'[]')){
-      await sb.from('files').insert({name:f.name,size:f.size||'',date:f.date||'',storage_path:'',mime_type:f.type||'',data:f.data||''});
+      if(!f.data||String(f.data).startsWith('data:'))continue;
+      await sb.from('files').insert({name:f.name,size:f.size||'',date:f.date||'',storage_path:f.data,mime_type:f.type||''});
     }
     for(const sp of JSON.parse(localStorage.getItem(LS.suppliers)||'[]')){
       await sb.from('suppliers').insert({name:sp.name,company:sp.company||'',cat:sp.cat||'',phone:sp.phone||'',email:sp.email||'',origin:sp.from||'',lodging:sp.lodging||'לא',transfer:sp.transfer||'לא',status:sp.status||'',arrival:sp.arrival||null,notes:sp.notes||''});
@@ -1389,9 +1390,9 @@ function refreshFiles(){
   document.getElementById('fileList').innerHTML=files.length===0?`<p style="color:var(--stone);font-size:13px;">אין קבצים עדיין</p>`:
     files.map(f=>`<div class="file-row">
       <div class="file-icon-box">${getFileIcon(f.name)}</div>
-      <div class="file-name">${f.data?`<a href="#" onclick="openFile('${f.id}');return false;">${f.name}</a>`:f.name}</div>
-      <div class="file-meta">${f.size} · ${f.date}${f.data?'':' · <span style="color:#E07070">יש להעלות מחדש</span>'}</div>
-      ${f.data?`<button class="adm-btn adm-btn-sm" onclick="openFile('${f.id}')">פתיחה</button><button class="adm-btn adm-btn-sm" onclick="downloadFile('${f.id}')">הורדה</button>`:''}
+      <div class="file-name">${fileHasStorage(f)?`<a href="#" onclick="downloadFile('${f.id}');return false;">${f.name}</a>`:f.name}</div>
+      <div class="file-meta">${f.size||'—'} · ${f.date||'—'}</div>
+      ${fileHasStorage(f)?`<button class="adm-btn adm-btn-sm" onclick="downloadFile('${f.id}')">הורדה</button>`:''}
       <button class="adm-btn adm-btn-sm adm-btn-red" onclick="removeFile('${f.id}')">✕</button>
     </div>`).join('');
 }
@@ -1403,21 +1404,37 @@ function getFileIcon(n){
   if(['xls','xlsx'].includes(ext))return 'XLS';
   return 'FILE';
 }
+const FILE_COLS='id,name,size,date,file_date,storage_path,mime_type';
 async function insertFileRecord(file,path){
-  const base={name:file.name,size:formatSize(file.size),date:new Date().toLocaleDateString('he-IL')};
+  const dateStr=new Date().toLocaleDateString('he-IL');
+  const row={
+    name:file.name,
+    size:formatSize(file.size),
+    date:dateStr,
+    storage_path:path,
+    mime_type:file.type||'application/octet-stream'
+  };
   const tries=[
-    {...base,storage_path:path,mime_type:file.type||''},
-    {...base,storage_path:path},
-    {...base,data:path,mime_type:file.type||''},
-    {...base,data:path},
-    base
+    row,
+    {name:row.name,size:row.size,date:row.date,storage_path:path},
+    {name:row.name,size:row.size,file_date:dateStr,storage_path:path,mime_type:row.mime_type}
   ];
-  for(const row of tries){
-    const {data,error}=await sb.from('files').insert(row).select().single();
-    if(!error)return{data,error:null};
-    if(!/column|schema cache/i.test(error.message||''))return{data:null,error};
+  let lastErr=null;
+  for(const attempt of tries){
+    const {data,error}=await sb.from('files').insert(attempt).select(FILE_COLS).single();
+    if(error){
+      lastErr=error;
+      if(!/column|schema cache|PGRST204/i.test(error.message||''))break;
+      continue;
+    }
+    if(data?.storage_path)return{data:mapFile(data),error:null};
+    if(data?.id){
+      const {data:fixed,error:fixErr}=await sb.from('files').update({storage_path:path}).eq('id',data.id).select(FILE_COLS).single();
+      if(!fixErr&&fixed?.storage_path)return{data:mapFile(fixed),error:null};
+      lastErr=fixErr||{message:'storage_path לא נשמר'};
+    }
   }
-  return{data:null,error:{message:'לא ניתן לשמור מטא-דאטה. הריצו supabase-storage.sql ב-Supabase.'}};
+  return{data:null,error:lastErr||{message:'לא ניתן לשמור storage_path. הריצו supabase-storage.sql ב-Supabase.'}};
 }
 async function handleFiles(fileList){
   if(!sbReady()){alert('החיבור לענן לא מוגדר');return;}
@@ -1429,10 +1446,10 @@ async function handleFiles(fileList){
     const path=storagePath(f.name);
     const {error:upErr}=await sb.storage.from(FILE_BUCKET).upload(path,f,{contentType:f.type||'application/octet-stream',cacheControl:'3600',upsert:false});
     if(upErr){console.error('Storage upload',upErr,f.name);lastErr=dbError('storage upload',upErr);failed=true;continue;}
-    const {error:dbErr}=await insertFileRecord(f,path);
-    if(dbErr){
-      console.error('files insert',dbErr,f.name);
-      lastErr=dbError('files insert',dbErr);
+    const {data:saved,error:dbErr}=await insertFileRecord(f,path);
+    if(dbErr||!saved?.storage_path){
+      console.error('files insert',dbErr||'missing storage_path',f.name,path);
+      lastErr=dbError('files insert',dbErr)||'storage_path לא נשמר בטבלה';
       await sb.storage.from(FILE_BUCKET).remove([path]);
       failed=true;
     }
@@ -1442,26 +1459,19 @@ async function handleFiles(fileList){
   refreshFiles();
   if(failed)alert(lastErr||'חלק מהקבצים לא נשמרו. ודאו שהרצתם את supabase-storage.sql ב-Supabase.');
 }
-async function openFile(id){
-  const f=DB.files.find(x=>x.id===id);
-  if(!f?.data){alert('הקובץ לא נמצא. מחק והעלה אותו מחדש.');return;}
-  const url=await getFileUrl(f);
-  if(!url){alert('לא ניתן לפתוח את הקובץ');return;}
-  window.open(url,'_blank');
-}
 async function downloadFile(id){
-  const f=DB.files.find(x=>x.id===id);
-  if(!f?.data)return;
+  const f=DB.files.find(x=>String(x.id)===String(id));
+  if(!fileHasStorage(f)){alert('הקובץ לא נמצא. מחק והעלה אותו מחדש.');return;}
   const url=await getFileUrl(f);
-  if(!url){alert('לא ניתן להוריד את הקובץ');return;}
-  const a=document.createElement('a');
-  a.href=url;a.download=f.name;a.click();
+  if(!url){alert('לא ניתן לפתוח את הקובץ מ-Storage');return;}
+  window.open(url,'_blank');
 }
 function formatSize(b){if(b<1024)return b+'B';if(b<1048576)return Math.round(b/1024)+'KB';return (b/1048576).toFixed(1)+'MB';}
 async function removeFile(id){
   if(!sbReady())return;
   const f=DB.files.find(x=>x.id===id);
-  if(f?.data&&!isLegacyFileData(f.data))await sb.storage.from(FILE_BUCKET).remove([f.data]);
+  const sp=String(f?.storage_path||'').trim();
+  if(sp)await sb.storage.from(FILE_BUCKET).remove([sp]);
   await sb.from('files').delete().eq('id',id);
   await dbLoadAll();
   refreshFiles();
