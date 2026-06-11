@@ -11,7 +11,7 @@
 :root{
   --bg:#FAF7F2;--text:#3D2B1F;--gold:#C9A84C;--white:#FFFFFF;
   --stone:#7A6A5C;--blush:#6B5344;--terra:#A67B5B;
-  --card-shadow:0 12px 40px rgba(61,43,31,.08);h
+  --card-shadow:0 12px 40px rgba(61,43,31,.08);hh
   --section-pad:clamp(100px,12vw,160px);
 }
 html{scroll-behavior:smooth;}
@@ -264,6 +264,7 @@ footer{background:var(--bg);text-align:center;padding:80px 24px 100px;border-top
 
 <!-- NAV -->
 <nav id="nav">
+    <button class="hamburger" id="hamburger" onclick="toggleMobileNav()" aria-label="תפריט"><span></span><span></span><span></span></button>button></span></span>
   <a href="#hero">בית</a>
   <a href="#gallery">גלריה</a>
   <a href="#itinerary">לוז</a>
@@ -1034,6 +1035,7 @@ window.addEventListener('resize',updateHeroParallax);
 updateHeroParallax();
 
 // ===== NAV DROPDOWN =====
+  function toggleMobileNav(){const nav=document.getElementById('nav');const btn=document.getElementById('hamburger');nav.classList.toggle('mob-open');btn.classList.toggle('open');}document.querySelectorAll('#nav a, #nav .nav-dropdown-menu a').forEach(a=>{a.addEventListener('click',()=>{document.getElementById('nav').classList.remove('mob-open');document.getElementById('hamburger').classList.remove('open');});});
 (function(){
   const menu=document.getElementById('navGuestMenu');
   if(!menu)return;
