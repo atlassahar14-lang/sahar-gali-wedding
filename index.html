@@ -26,8 +26,8 @@ nav a:hover{color:var(--gold);}
 .admin-btn:hover{border-color:#C49A3C;color:#C49A3C;background:rgba(30,15,5,0.9);}
 
 /* HERO */
-.hero-fixed-bg{position:fixed;top:0;left:0;right:0;height:100vh;z-index:0;pointer-events:none;background:linear-gradient(rgba(250,247,242,.4),rgba(250,247,242,.4)),url("WhatsApp Image 2026-06-11 at 10.17.19.jpeg") center 20%/cover no-repeat;transform:translateZ(0);-webkit-backface-visibility:hidden;will-change:transform;}
-#hero{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:80px 20px 140px;background:transparent;}
+#hero{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:80px 20px 140px;background-image:url("WhatsApp Image 2026-06-11 at 10.17.19.jpeg");background-position:center 20%;background-size:cover;background-repeat:no-repeat;background-attachment:fixed;}
+#hero::before{content:'';position:absolute;inset:0;background:rgba(250,247,242,.4);pointer-events:none;z-index:0;}
 #hero>*{position:relative;z-index:1;}
 #gallery,#countdown,#itinerary,#travel,#rsvp,footer,.section-rule{position:relative;z-index:2;}
 .hero-label,.hero-names,.hero-divider,.hero-date,.hero-venue,.scroll-hint{opacity:0;}
@@ -248,7 +248,6 @@ footer{background:var(--bg);text-align:center;padding:56px 20px;border-top:1px s
 <button class="admin-btn" id="adminToggle" title="כניסת מנהלים">ניהול</button>
 
 <!-- HERO -->
-<div class="hero-fixed-bg" aria-hidden="true"></div>
 <section id="hero">
   <p class="hero-label" style="opacity:0;">מתחתנים!</p>
   <h1 class="hero-names" id="heroTitle" style="opacity:0;">סהר<span class="amp">&</span>גלי</h1>
