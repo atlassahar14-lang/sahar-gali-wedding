@@ -4,17 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>#hero{background-color:#f0e9dc}#hero .hero-label,#hero .hero-names,#hero .hero-date,#hero .hero-venue,#hero .hero-divider,#hero .scroll-btn{opacity:0}</style>
-<title>סהר & גלי | 21–23 מאי 2027</title>
+<title>סהר & גלי | 6–8 במאי 2027</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Lato:wght@300;400;700&family=Heebo:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;} html{scroll-behavior:smooth;}
 :root{
   --bg:#FAF7F2;--text:#3D2B1F;--gold:#C9A84C;--white:#FFFFFF;
   --stone:#7A6A5C;--blush:#6B5344;--terra:#A67B5B;
   --card-shadow:0 12px 40px rgba(61,43,31,.08);hh
   --section-pad:clamp(100px,12vw,160px);
 }
-html{scroll-behavior:smooth;}
 body{background:var(--bg);font-family:'Lato',sans-serif;color:var(--text);overflow-x:hidden;}
 
 /* NAV */
@@ -264,7 +263,7 @@ footer{background:var(--bg);text-align:center;padding:80px 24px 100px;border-top
 
 <!-- NAV -->
 <nav id="nav">
-    <button class="hamburger" id="hamburger" onclick="toggleMobileNav()" aria-label="תפריט"><span></span><span></span><span></span></button>button></span></span>
+    <button class="hamburger" id="hamburger" onclick="toggleMobileNav()" aria-label="תפריט"><span>&#9776;</span></button>
   <a href="#hero">בית</a>
   <a href="#gallery">גלריה</a>
   <a href="#itinerary">לוז</a>
@@ -291,7 +290,11 @@ footer{background:var(--bg);text-align:center;padding:80px 24px 100px;border-top
     <p class="hero-label" style="opacity:0;">מתחתנים!</p>
     <h1 class="hero-names" id="heroTitle" style="opacity:0;">סהר<span class="amp">&</span>גלי</h1>
     <div class="hero-divider" style="opacity:0;"></div>
-    <p class="hero-date" id="heroDate" style="opacity:0;">21 – 23 במאי 2027</p>
+    <p class="hero-date" id="heroDate" style="opacity:0;">6–8 במאי 2027</p>
+    <button type="button" class="scroll-btn" style="opacity:0;" onclick="document.getElementById('countdown').scrollIntoView({behavior:'smooth'})">
+      <span>גלול למטה</span>
+      <span class="scroll-arrow" aria-hidden="true">↓</span>
+    </button>
     <p class="hero-venue" style="opacity:0;">Villa Pitiana · Tuscany · Italy</p>
   </section>
 
@@ -539,7 +542,7 @@ footer{background:var(--bg);text-align:center;padding:80px 24px 100px;border-top
 <!-- FOOTER -->
 <footer>
   <div class="ft-names">סהר & גלי</div>
-  <p class="ft-txt">22.05.2027 <span class="ft-sep">—</span> Villa Pitiana, Tuscany</p>
+  <p class="ft-txt">07.05.2027 <span class="ft-sep">—</span> Villa Pitiana, Tuscany</p>
   <p style="font-size:10px;color:rgba(122,106,92,.35);margin-top:20px;letter-spacing:2px;">CON AMORE · באהבה</p>
 </footer>
 
@@ -825,7 +828,7 @@ footer{background:var(--bg);text-align:center;padding:80px 24px 100px;border-top
       <div class="adm-card">
         <h3>עמוד הבית</h3>
         <div class="content-field"><label>כותרת (שמות)</label><input type="text" id="c-title" placeholder="סהר & גלי"></div>
-        <div class="content-field"><label>תאריך</label><input type="text" id="c-date" placeholder="21 – 23 במאי 2027"></div>
+        <div class="content-field"><label>תאריך</label><input type="text" id="c-date" placeholder="6–8 במאי 2027"></div>
         <div class="content-field"><label>הודעה לאורחים (אופציונלי)</label><textarea id="c-msg" placeholder="עדכון חם לאורחים..."></textarea></div>
         <button class="adm-btn" onclick="saveContent()">שמור שינויים</button>
         <div class="save-toast" id="c-toast">✓ נשמר בהצלחה!</div>
@@ -997,9 +1000,9 @@ function setCdNum(id,val){
   el.classList.add('pop');
 }
 function tick(){
-  const t=new Date('2027-05-21T17:00:00');
+  const weddingDate = new Date('2027-05-07T15:00:00');
   const now=new Date();
-  const diff=t-now;
+  const diff=weddingDate-now;
   if(diff<=0){setCdNum('cd-d','000');return;}
   setCdNum('cd-d',String(Math.floor(diff/86400000)).padStart(3,'0'));
   setCdNum('cd-h',String(Math.floor((diff%86400000)/3600000)).padStart(2,'0'));
