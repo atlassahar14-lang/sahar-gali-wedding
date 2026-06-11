@@ -26,7 +26,7 @@ nav a:hover{color:var(--gold);}
 .admin-btn:hover{border-color:#C49A3C;color:#C49A3C;background:rgba(30,15,5,0.9);}
 
 /* HERO */
-#hero{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:80px 20px 140px;background-image:url("WhatsApp Image 2026-06-11 at 10.17.19.jpeg");background-position:center 20%;background-size:cover;background-repeat:no-repeat;background-attachment:fixed;}
+#hero{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:80px 20px 140px;background-image:url("WhatsApp Image 2026-06-11 at 10.17.19.jpeg");background-position:center 20%;background-size:cover;background-repeat:no-repeat;}
 #hero::before{content:'';position:absolute;inset:0;background:rgba(250,247,242,.4);pointer-events:none;z-index:0;}
 #hero>*{position:relative;z-index:1;}
 #gallery,#countdown,#itinerary,#travel,#rsvp,footer,.section-rule{position:relative;z-index:2;}
@@ -885,8 +885,26 @@ function tick(){
 }
 tick();setInterval(tick,1000);
 
-// ===== NAV =====
-window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('scrolled',scrollY>60));
+// ===== NAV + HERO PARALLAX =====
+const HERO_BG_BASE=20;
+let heroParallaxTicking=false;
+function updateHeroParallax(){
+  const hero=document.getElementById('hero');
+  if(!hero)return;
+  const y=Math.min(window.scrollY,hero.offsetHeight);
+  hero.style.backgroundPosition=`center calc(${HERO_BG_BASE}% + ${y}px)`;
+  heroParallaxTicking=false;
+}
+function onPageScroll(){
+  document.getElementById('nav').classList.toggle('scrolled',scrollY>60);
+  if(!heroParallaxTicking){
+    heroParallaxTicking=true;
+    requestAnimationFrame(updateHeroParallax);
+  }
+}
+window.addEventListener('scroll',onPageScroll,{passive:true});
+window.addEventListener('resize',updateHeroParallax);
+updateHeroParallax();
 
 // ===== REVEAL =====
 const ro=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');}),{threshold:.1});
