@@ -91,7 +91,8 @@ section{padding:80px 20px;position:relative;overflow:hidden;}
 .tl-name{font-family:'Cormorant Garamond',serif;font-size:21px;font-weight:400;color:var(--text);margin-bottom:5px;}
 .tl-desc{font-size:13px;color:var(--stone);line-height:1.7;margin-bottom:8px;}
 .map-link{display:inline-flex;align-items:center;gap:5px;font-size:11px;letter-spacing:2px;color:#FFFFFF;text-decoration:none;background:var(--gold);border:1px solid var(--gold);padding:6px 14px;border-radius:4px;transition:all .3s;}
-.map-link:hover{background:#B8943F;border-color:#B8943F;}
+.map-link:hover,.map-link:visited{color:#FFFFFF;background:#B8943F;border-color:#B8943F;}
+.t-card .map-link{color:#FFFFFF;}
 
 /* TRAVEL */
 #travel{background:var(--bg);}
@@ -102,7 +103,7 @@ section{padding:80px 20px;position:relative;overflow:hidden;}
 .t-card p,.t-card ul{font-size:13px;color:var(--stone);line-height:1.8;}
 .t-card ul{direction:rtl;text-align:right;padding-right:0;padding-left:0;list-style-position:inside;}
 .t-card li{margin-bottom:4px;}
-.t-card a{color:var(--gold);text-decoration:none;}
+.t-card a:not(.map-link):not(.site-link){color:var(--gold);text-decoration:none;}
 .t-card .site-link{display:inline-block;margin-top:8px;padding:6px 14px;background:var(--gold);color:#FFFFFF;border-radius:4px;font-size:11px;letter-spacing:2px;text-decoration:none;transition:background .3s;}
 .t-card .site-link:hover{background:#B8943F;}
 
