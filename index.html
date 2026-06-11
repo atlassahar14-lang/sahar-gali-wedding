@@ -45,7 +45,7 @@ nav a:hover{color:var(--gold);}
 @keyframes bounceArrow{0%,100%{transform:translateY(0)}50%{transform:translateY(7px)}}
 
 /* GALLERY */
-#gallery{padding:var(--section-pad) 24px;background:var(--bg);}
+#gallery{padding:var(--section-pad) 24px var(--section-pad);background:var(--bg);}
 #gallery .gallery-head{text-align:center;max-width:900px;margin:0 auto 48px;}
 #gallery .gallery-head .gold-line{margin:24px auto;}
 .gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:clamp(14px,2vw,24px);max-width:1100px;margin:0 auto;}
@@ -63,8 +63,10 @@ nav a:hover{color:var(--gold);}
 .gallery-admin-item .gallery-admin-del{position:absolute;top:6px;left:6px;width:28px;height:28px;border:none;border-radius:50%;background:rgba(120,30,30,.85);color:#fff;font-size:14px;cursor:pointer;line-height:1;}
 
 /* COUNTDOWN */
-#countdown{background:var(--bg);padding:0 24px var(--section-pad);text-align:center;}
-.cd-box{max-width:820px;margin:0 auto;background:var(--white);border-radius:16px;box-shadow:var(--card-shadow);padding:clamp(48px,8vw,72px) 32px;}
+#countdown{position:relative;padding:clamp(80px,12vw,140px) 24px;text-align:center;overflow:hidden;}
+.cd-bg{position:absolute;inset:0;background:url("WhatsApp Image 2026-06-11 at 10.17.48.jpeg") center 30%/cover no-repeat;transform:scale(1.05);}
+.cd-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(250,247,242,.72) 0%,rgba(250,247,242,.82) 100%);}
+#countdown .cd-box{position:relative;z-index:1;max-width:820px;margin:0 auto;background:rgba(255,255,255,.9);backdrop-filter:blur(10px);border-radius:16px;box-shadow:var(--card-shadow);padding:clamp(48px,8vw,72px) 32px;border:1px solid rgba(201,168,76,.15);}
 .cd-label{font-family:'Cormorant Garamond',serif;font-size:clamp(18px,3vw,24px);letter-spacing:4px;color:var(--gold);text-transform:uppercase;margin-bottom:40px;font-weight:300;}
 .cd-grid{display:flex;justify-content:center;align-items:flex-end;gap:clamp(14px,4vw,48px);flex-wrap:wrap;direction:ltr;}
 .cd-unit{display:flex;flex-direction:column;align-items:center;gap:10px;}
@@ -266,10 +268,28 @@ footer{background:var(--bg);text-align:center;padding:80px 24px 100px;border-top
   <div class="hero-divider" style="opacity:0;"></div>
   <p class="hero-date" id="heroDate" style="opacity:0;">21 – 23 במאי 2027</p>
   <p class="hero-venue" style="opacity:0;">Villa Pitiana · Tuscany · Italy</p>
-  <button type="button" class="scroll-btn" style="opacity:0;" onclick="document.getElementById('gallery').scrollIntoView({behavior:'smooth'})">
+  <button type="button" class="scroll-btn" style="opacity:0;" onclick="document.getElementById('countdown').scrollIntoView({behavior:'smooth'})">
     <span>גלול למטה</span>
     <span class="scroll-arrow" aria-hidden="true">↓</span>
   </button>
+</section>
+
+<!-- COUNTDOWN -->
+<section id="countdown" class="reveal">
+  <div class="cd-bg" aria-hidden="true"></div>
+  <div class="cd-overlay" aria-hidden="true"></div>
+  <div class="cd-box">
+    <p class="cd-label">עוד כמה זמן עד לחתונה</p>
+    <div class="cd-grid">
+      <div class="cd-unit"><div class="cd-num" id="cd-d">000</div><div class="cd-name">ימים</div></div>
+      <div class="cd-sep">·</div>
+      <div class="cd-unit"><div class="cd-num" id="cd-h">00</div><div class="cd-name">שעות</div></div>
+      <div class="cd-sep">·</div>
+      <div class="cd-unit"><div class="cd-num" id="cd-m">00</div><div class="cd-name">דקות</div></div>
+      <div class="cd-sep">·</div>
+      <div class="cd-unit"><div class="cd-num" id="cd-s">00</div><div class="cd-name">שניות</div></div>
+    </div>
+  </div>
 </section>
 
 <!-- GALLERY -->
@@ -285,22 +305,6 @@ footer{background:var(--bg);text-align:center;padding:80px 24px 100px;border-top
 <div class="gallery-lightbox" id="galleryLightbox" onclick="if(event.target===this)closeGalleryLightbox()">
   <button type="button" class="gallery-lightbox-close" onclick="closeGalleryLightbox()" aria-label="סגור">✕</button>
   <img id="galleryLightboxImg" alt="">
-</div>
-
-<!-- COUNTDOWN -->
-<div id="countdown">
-  <div class="cd-box reveal">
-    <p class="cd-label">עוד כמה זמן עד לחתונה</p>
-    <div class="cd-grid">
-      <div class="cd-unit"><div class="cd-num" id="cd-d">000</div><div class="cd-name">ימים</div></div>
-      <div class="cd-sep">·</div>
-      <div class="cd-unit"><div class="cd-num" id="cd-h">00</div><div class="cd-name">שעות</div></div>
-      <div class="cd-sep">·</div>
-      <div class="cd-unit"><div class="cd-num" id="cd-m">00</div><div class="cd-name">דקות</div></div>
-      <div class="cd-sep">·</div>
-      <div class="cd-unit"><div class="cd-num" id="cd-s">00</div><div class="cd-name">שניות</div></div>
-    </div>
-  </div>
 </div>
 
 <div class="section-rule"></div>
