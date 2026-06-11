@@ -295,21 +295,6 @@ footer{background:var(--bg);text-align:center;padding:80px 24px 100px;border-top
   </section>
 </div>
 
-<!-- GALLERY -->
-<section id="gallery">
-  <div class="gallery-head reveal">
-    <span class="s-tag">זכרונות</span>
-    <h2 class="s-title">גלריית <em>תמונות</em></h2>
-    <div class="gold-line"></div>
-  </div>
-  <div class="gallery-grid reveal" id="galleryGrid"></div>
-  <p class="gallery-empty reveal" id="galleryEmpty" style="display:none;">עדיין אין תמונות בגלריה — בקרוב יעלו תמונות מהחתונה.</p>
-</section>
-<div class="gallery-lightbox" id="galleryLightbox" onclick="if(event.target===this)closeGalleryLightbox()">
-  <button type="button" class="gallery-lightbox-close" onclick="closeGalleryLightbox()" aria-label="סגור">✕</button>
-  <img id="galleryLightboxImg" alt="">
-</div>
-
 <div class="section-rule"></div>
 
 <!-- ITINERARY -->
@@ -480,6 +465,23 @@ footer{background:var(--bg);text-align:center;padding:80px 24px 100px;border-top
     </div>
   </div>
 </section>
+
+<div class="section-rule"></div>
+
+<!-- GALLERY -->
+<section id="gallery">
+  <div class="gallery-head reveal">
+    <span class="s-tag">זכרונות</span>
+    <h2 class="s-title">גלריית <em>תמונות</em></h2>
+    <div class="gold-line"></div>
+  </div>
+  <div class="gallery-grid reveal" id="galleryGrid"></div>
+  <p class="gallery-empty reveal" id="galleryEmpty" style="display:none;">עדיין אין תמונות בגלריה — בקרוב יעלו תמונות מהחתונה.</p>
+</section>
+<div class="gallery-lightbox" id="galleryLightbox" onclick="if(event.target===this)closeGalleryLightbox()">
+  <button type="button" class="gallery-lightbox-close" onclick="closeGalleryLightbox()" aria-label="סגור">✕</button>
+  <img id="galleryLightboxImg" alt="">
+</div>
 
 <!-- FOOTER -->
 <footer>
