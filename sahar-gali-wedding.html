@@ -31,6 +31,8 @@ nav a:hover{color:var(--gold);}
 .nav-dropdown-menu a:hover{background:rgba(201,168,76,.08);}
 .admin-btn{position:fixed;bottom:22px;left:22px;z-index:300;padding:8px 14px;border-radius:2px;background:rgba(30,15,5,0.7);border:0.5px solid rgba(196,154,60,0.2);color:rgba(196,154,60,0.45);cursor:pointer;font-size:10px;letter-spacing:2px;font-family:'Heebo',sans-serif;text-transform:uppercase;transition:all .3s;backdrop-filter:blur(4px);}
 .admin-btn:hover{border-color:#C49A3C;color:#C49A3C;background:rgba(30,15,5,0.9);}
+.music-toggle{position:fixed;bottom:22px;right:22px;z-index:300;width:44px;height:44px;border-radius:50%;background:rgba(30,15,5,.7);border:.5px solid rgba(196,154,60,.35);color:rgba(196,154,60,.7);cursor:pointer;font-size:18px;line-height:1;transition:all .3s;backdrop-filter:blur(4px);}
+.music-toggle:hover,.music-toggle.playing{border-color:#C49A3C;color:#C49A3C;background:rgba(30,15,5,.9);}
 
 /* HERO + COUNTDOWN shared background */
 .hero-countdown-block{position:relative;z-index:1;}
@@ -286,6 +288,7 @@ footer{background:var(--bg);text-align:center;padding:80px 24px 100px;border-top
 
 <!-- Admin Button -->
 <button class="admin-btn" id="adminToggle" title="כניסת מנהלים">ניהול</button>
+<button type="button" class="music-toggle playing" id="musicToggle" aria-label="השתקת מוזיקה" aria-pressed="true" title="השתק מוזיקה">♫</button>
 
 <div class="hero-countdown-block">
   <div class="hcb-bg" aria-hidden="true"></div>
@@ -1043,17 +1046,35 @@ updateHeroParallax();
 (function(){
   const hero=document.getElementById('hero');
   const video=hero?.querySelector('.hero-video-bg');
+  const btn=document.getElementById('musicToggle');
   if(!video)return;
   const useFallback=()=>hero.classList.add('hero-video-fallback');
   video.addEventListener('error',useFallback);
+  function syncMuteBtn(){
+    if(!btn)return;
+    const on=!video.muted;
+    btn.classList.toggle('playing',on);
+    btn.textContent=on?'♫':'♪';
+    btn.title=on?'השתק מוזיקה':'הפעל מוזיקה';
+    btn.setAttribute('aria-label',on?'השתקת מוזיקה':'הפעלת מוזיקה');
+    btn.setAttribute('aria-pressed',on?'true':'false');
+  }
   async function tryPlay(){
     try{video.muted=false;await video.play();}
     catch(e){video.muted=true;try{await video.play();}catch(e2){useFallback();}}
+    syncMuteBtn();
   }
   function unmuteVideo(){
     video.muted=false;
     video.play().catch(()=>{});
+    syncMuteBtn();
   }
+  btn?.addEventListener('click',e=>{
+    e.stopPropagation();
+    video.muted=!video.muted;
+    if(!video.muted)video.play().catch(()=>{});
+    syncMuteBtn();
+  });
   ['pointerdown','touchstart','keydown'].forEach(ev=>{
     window.addEventListener(ev,unmuteVideo,{once:true,capture:true,passive:true});
   });
