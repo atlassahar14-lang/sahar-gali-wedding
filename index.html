@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<style>#hero{background-color:#f0e9dc}#hero .hero-label,#hero .hero-names,#hero .hero-date,#hero .hero-venue,#hero .hero-divider,#hero .scroll-btn{opacity:0}</style>
+<style>#hero{background-color:transparent}#hero .hero-label,#hero .hero-names,#hero .hero-date,#hero .hero-venue,#hero .hero-divider,#hero .scroll-btn{opacity:0}</style>
 <title>סהר & גלי | 6–8 במאי 2027</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Lato:wght@300;400;700&family=Heebo:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -36,8 +36,14 @@ nav a:hover{color:var(--gold);}
 .hero-countdown-block{position:relative;z-index:1;}
 .hcb-bg{position:absolute;inset:0;background:url("WhatsApp Image 2026-06-11 at 10.17.19.jpeg") center 20%/cover no-repeat;z-index:0;}
 .hcb-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(250,247,242,.28) 0%,rgba(250,247,242,.38) 55%,rgba(250,247,242,.48) 100%);pointer-events:none;z-index:0;}
-#hero{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:100px 24px 80px;background:none;}
-#hero>*{position:relative;z-index:1;}
+#hero{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:100px 24px 80px;background:none;overflow:hidden;}
+.hero-video-bg{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:0;}
+.hero-video-overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.35);z-index:1;pointer-events:none;}
+#hero > :not(.hero-video-bg):not(.hero-video-overlay){position:relative;z-index:2;}
+@media(max-width:768px){
+  #hero.hero-video-fallback .hero-video-bg{display:none;}
+  #hero.hero-video-fallback{background:url("hero-poster.jpg") center/cover no-repeat;}
+}
 #gallery,#countdown,#itinerary,#guest-arrival,#guest-villa,#guest-dress,#rsvp,footer,.section-rule{position:relative;z-index:2;}
 .hero-label,.hero-names,.hero-divider,.hero-date,.hero-venue,.scroll-btn{opacity:0;}
 .hero-label{font-size:16.5px;letter-spacing:6px;text-transform:uppercase;color:var(--gold);margin-bottom:20px;animation:heroFade .9s .2s cubic-bezier(.22,1,.36,1) both;}
@@ -287,6 +293,8 @@ footer{background:var(--bg);text-align:center;padding:80px 24px 100px;border-top
 
   <!-- HERO -->
   <section id="hero">
+    <video class="hero-video-bg" autoplay muted loop playsinline src="hero-video.mp4" poster="hero-poster.jpg" aria-hidden="true"></video>
+    <div class="hero-video-overlay" aria-hidden="true"></div>
     <p class="hero-label" style="opacity:0;">מתחתנים!</p>
     <h1 class="hero-names" id="heroTitle" style="opacity:0;">סהר<span class="amp">&</span>גלי</h1>
     <div class="hero-divider" style="opacity:0;"></div>
@@ -1032,6 +1040,18 @@ function onPageScroll(){
 window.addEventListener('scroll',onPageScroll,{passive:true});
 window.addEventListener('resize',updateHeroParallax);
 updateHeroParallax();
+(function(){
+  const hero=document.getElementById('hero');
+  const video=hero?.querySelector('.hero-video-bg');
+  if(!video)return;
+  const useFallback=()=>hero.classList.add('hero-video-fallback');
+  video.addEventListener('error',useFallback);
+  if(window.matchMedia('(max-width:768px)').matches){
+    const t=setTimeout(()=>{if(video.error||video.readyState<2)useFallback();},3000);
+    video.addEventListener('loadeddata',()=>clearTimeout(t),{once:true});
+    video.play().catch(useFallback);
+  }
+})();
 
 // ===== NAV DROPDOWN =====
   function toggleMobileNav(){const nav=document.getElementById('nav');const btn=document.getElementById('hamburger');nav.classList.toggle('mob-open');btn.classList.toggle('open');}document.querySelectorAll('#nav a, #nav .nav-dropdown-menu a').forEach(a=>{a.addEventListener('click',()=>{document.getElementById('nav').classList.remove('mob-open');document.getElementById('hamburger').classList.remove('open');});});
