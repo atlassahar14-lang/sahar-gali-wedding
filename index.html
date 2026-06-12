@@ -31,10 +31,6 @@ nav a:hover{color:var(--gold);}
 .nav-dropdown-menu a:hover{background:rgba(201,168,76,.08);}
 .admin-btn{position:fixed;bottom:22px;left:22px;z-index:300;padding:8px 14px;border-radius:2px;background:rgba(30,15,5,0.7);border:0.5px solid rgba(196,154,60,0.2);color:rgba(196,154,60,0.45);cursor:pointer;font-size:10px;letter-spacing:2px;font-family:'Heebo',sans-serif;text-transform:uppercase;transition:all .3s;backdrop-filter:blur(4px);}
 .admin-btn:hover{border-color:#C49A3C;color:#C49A3C;background:rgba(30,15,5,0.9);}
-.music-toggle{position:fixed;bottom:22px;right:22px;z-index:300;width:44px;height:44px;border-radius:50%;background:rgba(30,15,5,.7);border:.5px solid rgba(196,154,60,.35);color:rgba(196,154,60,.7);cursor:pointer;font-size:18px;line-height:1;transition:all .3s;backdrop-filter:blur(4px);}
-.music-toggle:hover,.music-toggle.playing{border-color:#C49A3C;color:#C49A3C;background:rgba(30,15,5,.9);}
-.music-toggle.needs-tap{animation:musicPulse 1.4s ease-in-out infinite;border-color:#C49A3C;color:#C49A3C;}
-@keyframes musicPulse{0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(201,168,76,.45)}50%{transform:scale(1.08);box-shadow:0 0 0 10px rgba(201,168,76,0)}}
 
 /* HERO + COUNTDOWN shared background */
 .hero-countdown-block{position:relative;z-index:1;}
@@ -271,21 +267,6 @@ footer{background:var(--bg);text-align:center;padding:80px 24px 100px;border-top
 </head>
 <body>
 
-<audio id="siteMusic" autoplay muted preload="auto" playsinline src="feel.mp3#t=48"></audio>
-<script>
-(function(){
-  var a=document.getElementById('siteMusic'),C=48;
-  if(!a)return;
-  a.volume=.65;
-  function boot(){
-    if(a.readyState<1){a.addEventListener('loadedmetadata',boot,{once:true});return;}
-    a.currentTime=C;
-    a.play().catch(function(){});
-  }
-  boot();
-})();
-</script>
-
 <!-- NAV -->
 <nav id="nav">
     <button class="hamburger" id="hamburger" onclick="toggleMobileNav()" aria-label="תפריט">☰</button>
@@ -305,7 +286,6 @@ footer{background:var(--bg);text-align:center;padding:80px 24px 100px;border-top
 
 <!-- Admin Button -->
 <button class="admin-btn" id="adminToggle" title="כניסת מנהלים">ניהול</button>
-<button type="button" class="music-toggle" id="musicToggle" aria-label="מוזיקת רקע" title="מוזיקה">♪</button>
 
 <div class="hero-countdown-block">
   <div class="hcb-bg" aria-hidden="true"></div>
@@ -313,7 +293,7 @@ footer{background:var(--bg);text-align:center;padding:80px 24px 100px;border-top
 
   <!-- HERO -->
   <section id="hero">
-    <video class="hero-video-bg" autoplay muted loop playsinline src="hero-video.mp4" poster="hero-poster.jpg" aria-hidden="true"></video>
+    <video class="hero-video-bg" autoplay loop playsinline src="hero-video-with-song.mp4" poster="hero-poster.jpg" aria-hidden="true"></video>
     <div class="hero-video-overlay" aria-hidden="true"></div>
     <p class="hero-label" style="opacity:0;">מתחתנים!</p>
     <h1 class="hero-names" id="heroTitle" style="opacity:0;">סהר<span class="amp">&</span>גלי</h1>
@@ -1066,76 +1046,22 @@ updateHeroParallax();
   if(!video)return;
   const useFallback=()=>hero.classList.add('hero-video-fallback');
   video.addEventListener('error',useFallback);
+  async function tryPlay(){
+    try{video.muted=false;await video.play();}
+    catch(e){video.muted=true;try{await video.play();}catch(e2){useFallback();}}
+  }
+  function unmuteVideo(){
+    video.muted=false;
+    video.play().catch(()=>{});
+  }
+  ['pointerdown','touchstart','keydown'].forEach(ev=>{
+    window.addEventListener(ev,unmuteVideo,{once:true,capture:true,passive:true});
+  });
   if(window.matchMedia('(max-width:768px)').matches){
     const t=setTimeout(()=>{if(video.error||video.readyState<2)useFallback();},3000);
     video.addEventListener('loadeddata',()=>clearTimeout(t),{once:true});
-    video.play().catch(useFallback);
   }
-})();
-
-// ===== SITE MUSIC =====
-(function(){
-  const CHORUS_START=48;
-  const audio=document.getElementById('siteMusic');
-  const btn=document.getElementById('musicToggle');
-  if(!audio||!btn)return;
-  audio.volume=.65;
-  let withSound=false;
-  function setPlaying(on){
-    withSound=on;
-    btn.classList.toggle('playing',on);
-    btn.classList.toggle('needs-tap',!on);
-    btn.textContent=on?'♫':'♪';
-    btn.title=on?'השתק מוזיקה':'הפעל מוזיקה';
-  }
-  function whenReady(){
-    if(audio.readyState>=1)return Promise.resolve();
-    return new Promise(r=>audio.addEventListener('loadedmetadata',r,{once:true}));
-  }
-  function seekToChorus(){
-    if(Number.isFinite(audio.duration)&&audio.duration>CHORUS_START)audio.currentTime=CHORUS_START;
-  }
-  async function tryPlay(unmuted){
-    await whenReady();
-    seekToChorus();
-    audio.muted=!unmuted;
-    try{
-      await audio.play();
-      if(audio.currentTime<CHORUS_START-1)seekToChorus();
-      if(unmuted){audio.muted=false;setPlaying(true);return true;}
-      audio.muted=false;
-      await audio.play();
-      setPlaying(true);
-      return true;
-    }catch(e){
-      if(!unmuted){audio.muted=true;try{await audio.play();}catch(e2){}}
-      return false;
-    }
-  }
-  async function boot(){
-    if(await tryPlay(true))return;
-    if(await tryPlay(false))btn.classList.add('needs-tap');
-  }
-  function unlockSound(){
-    btn.classList.remove('needs-tap');
-    seekToChorus();
-    audio.muted=false;
-    audio.play().then(()=>setPlaying(true)).catch(()=>{});
-  }
-  ['pointerdown','touchstart','keydown'].forEach(ev=>{
-    window.addEventListener(ev,unlockSound,{once:true,capture:true,passive:true});
-  });
-  audio.addEventListener('playing',()=>{if(audio.currentTime<CHORUS_START-1)seekToChorus();});
-  audio.addEventListener('ended',()=>{seekToChorus();audio.play().catch(()=>{});});
-  btn.addEventListener('click',e=>{
-    e.stopPropagation();
-    if(audio.paused||audio.muted||!withSound)unlockSound();
-    else{audio.pause();setPlaying(false);}
-  });
-  boot();
-  let n=0;
-  const t=setInterval(()=>{if(withSound||++n>10)return clearInterval(t);boot();},500);
-  window.addEventListener('pageshow',boot);
+  tryPlay();
 })();
 
 // ===== NAV DROPDOWN =====
