@@ -288,7 +288,7 @@ footer{background:var(--bg);text-align:center;padding:80px 24px 100px;border-top
 
 <!-- Admin Button -->
 <button class="admin-btn" id="adminToggle" title="כניסת מנהלים">ניהול</button>
-<audio id="siteMusic" loop preload="auto" src="feel.mp3"></audio>
+<audio id="siteMusic" preload="auto" src="feel.mp3"></audio>
 <button type="button" class="music-toggle" id="musicToggle" aria-label="מוזיקת רקע" title="מוזיקה">♪</button>
 
 <div class="hero-countdown-block">
@@ -1059,6 +1059,7 @@ updateHeroParallax();
 
 // ===== SITE MUSIC =====
 (function(){
+  const CHORUS_START=58;
   const audio=document.getElementById('siteMusic');
   const btn=document.getElementById('musicToggle');
   if(!audio||!btn)return;
@@ -1069,19 +1070,36 @@ updateHeroParallax();
     btn.textContent=on?'♫':'♪';
     btn.title=on?'השתק מוזיקה':'הפעל מוזיקה';
   }
-  function startMusic(){
-    if(unlocked&& !audio.paused)return;
+  function seekToChorus(){
+    if(audio.duration&&!Number.isNaN(audio.duration)&&audio.duration>CHORUS_START)
+      audio.currentTime=CHORUS_START;
+  }
+  function startMusic(fromChorus){
+    if(unlocked&&!audio.paused)return Promise.resolve();
+    if(fromChorus!==false)seekToChorus();
+    audio.muted=false;
     return audio.play().then(()=>{unlocked=true;setPlaying(true);}).catch(()=>{});
   }
+  function autoStart(){
+    seekToChorus();
+    audio.muted=true;
+    audio.play().then(()=>{
+      audio.muted=false;
+      unlocked=true;
+      setPlaying(true);
+    }).catch(()=>{audio.muted=false;});
+  }
+  audio.addEventListener('loadedmetadata',seekToChorus);
+  audio.addEventListener('ended',()=>{seekToChorus();audio.play().catch(()=>{});});
   btn.addEventListener('click',e=>{
     e.stopPropagation();
-    if(audio.paused)startMusic();
+    if(audio.paused)startMusic(true);
     else{audio.pause();setPlaying(false);}
   });
   ['click','touchstart','keydown'].forEach(ev=>{
-    document.addEventListener(ev,()=>{startMusic();},{once:true,passive:true});
+    document.addEventListener(ev,()=>{if(!unlocked)startMusic(true);},{once:true,passive:true});
   });
-  startMusic();
+  autoStart();
 })();
 
 // ===== NAV DROPDOWN =====
