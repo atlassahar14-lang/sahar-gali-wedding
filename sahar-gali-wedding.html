@@ -288,7 +288,7 @@ footer{background:var(--bg);text-align:center;padding:80px 24px 100px;border-top
 
 <!-- Admin Button -->
 <button class="admin-btn" id="adminToggle" title="כניסת מנהלים">ניהול</button>
-<audio id="siteMusic" autoplay muted preload="auto" playsinline src="feel.mp3#t=51"></audio>
+<audio id="siteMusic" autoplay muted preload="auto" playsinline src="feel.mp3#t=48"></audio>
 <button type="button" class="music-toggle" id="musicToggle" aria-label="מוזיקת רקע" title="מוזיקה">♪</button>
 
 <div class="hero-countdown-block">
@@ -1059,12 +1059,13 @@ updateHeroParallax();
 
 // ===== SITE MUSIC =====
 (function(){
-  const CHORUS_START=54;
+  const CHORUS_START=48;
   const audio=document.getElementById('siteMusic');
   const btn=document.getElementById('musicToggle');
   if(!audio||!btn)return;
   audio.volume=.65;
   let unlocked=false;
+  let starting=false;
   function setPlaying(on){
     btn.classList.toggle('playing',on);
     btn.textContent=on?'♫':'♪';
@@ -1081,34 +1082,35 @@ updateHeroParallax();
   function ensureChorusPosition(){
     if(audio.currentTime<CHORUS_START-1)seekToChorus();
   }
-  function unmuteAudio(){
-    audio.muted=false;
-  }
   function playFromChorus(){
+    if(starting||(unlocked&&!audio.paused))return Promise.resolve();
+    starting=true;
     return whenReady(()=>{
       seekToChorus();
       audio.muted=true;
       return audio.play().then(()=>{
         ensureChorusPosition();
-        unmuteAudio();
+        audio.muted=false;
         unlocked=true;
         setPlaying(true);
-      }).catch(()=>{audio.muted=false;});
+      }).catch(()=>{audio.muted=false;}).finally(()=>{starting=false;});
     });
   }
   function autoStart(){
     playFromChorus().catch(()=>{});
   }
   audio.addEventListener('playing',ensureChorusPosition);
-  audio.addEventListener('canplaythrough',autoStart,{once:true});
+  audio.addEventListener('loadeddata',autoStart,{once:true});
+  audio.addEventListener('canplay',autoStart,{once:true});
   audio.addEventListener('ended',()=>{seekToChorus();audio.play().catch(()=>{});});
   btn.addEventListener('click',e=>{
     e.stopPropagation();
-    if(audio.paused){unmuteAudio();playFromChorus();}
+    if(audio.paused)playFromChorus();
     else{audio.pause();setPlaying(false);}
   });
   window.addEventListener('pageshow',autoStart);
-  autoStart();
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',autoStart,{once:true});
+  else autoStart();
 })();
 
 // ===== NAV DROPDOWN =====
