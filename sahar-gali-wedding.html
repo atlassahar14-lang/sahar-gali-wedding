@@ -33,6 +33,10 @@ nav a:hover{color:var(--gold);}
 .admin-btn:hover{border-color:#C49A3C;color:#C49A3C;background:rgba(30,15,5,0.9);}
 .music-toggle{position:fixed;bottom:22px;right:22px;z-index:300;width:44px;height:44px;border-radius:50%;background:rgba(30,15,5,.7);border:.5px solid rgba(196,154,60,.35);color:rgba(196,154,60,.7);cursor:pointer;font-size:18px;line-height:1;transition:all .3s;backdrop-filter:blur(4px);}
 .music-toggle:hover,.music-toggle.playing{border-color:#C49A3C;color:#C49A3C;background:rgba(30,15,5,.9);}
+.site-entry{position:fixed;inset:0;z-index:400;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(20,10,5,.55);backdrop-filter:blur(6px);cursor:pointer;transition:opacity .5s ease,visibility .5s ease;}
+.site-entry.hidden{opacity:0;visibility:hidden;pointer-events:none;}
+.site-entry-title{font-family:'Cormorant Garamond',serif;font-size:clamp(40px,9vw,72px);font-weight:300;color:var(--gold);letter-spacing:2px;}
+.site-entry-hint{margin-top:18px;font-size:11px;letter-spacing:5px;text-transform:uppercase;color:rgba(250,247,242,.75);font-family:'Lato',sans-serif;}
 
 /* HERO + COUNTDOWN shared background */
 .hero-countdown-block{position:relative;z-index:1;}
@@ -268,6 +272,11 @@ footer{background:var(--bg);text-align:center;padding:80px 24px 100px;border-top
 </style>
 </head>
 <body>
+
+<div id="siteEntry" class="site-entry" role="button" tabindex="0" aria-label="כניסה לאתר">
+  <p class="site-entry-title">סהר & גלי</p>
+  <p class="site-entry-hint">לחצו להיכנס</p>
+</div>
 
 <!-- NAV -->
 <nav id="nav">
@@ -1062,6 +1071,7 @@ updateHeroParallax();
   const CHORUS_START=48;
   const audio=document.getElementById('siteMusic');
   const btn=document.getElementById('musicToggle');
+  const entry=document.getElementById('siteEntry');
   if(!audio||!btn)return;
   audio.volume=.65;
   let unlocked=false;
@@ -1070,6 +1080,9 @@ updateHeroParallax();
     btn.classList.toggle('playing',on);
     btn.textContent=on?'♫':'♪';
     btn.title=on?'השתק מוזיקה':'הפעל מוזיקה';
+  }
+  function hideEntry(){
+    if(entry)entry.classList.add('hidden');
   }
   function whenReady(fn){
     if(audio.readyState>=1)return Promise.resolve().then(fn);
@@ -1082,35 +1095,45 @@ updateHeroParallax();
   function ensureChorusPosition(){
     if(audio.currentTime<CHORUS_START-1)seekToChorus();
   }
-  function playFromChorus(){
+  function playFromChorus(withSound){
     if(starting||(unlocked&&!audio.paused))return Promise.resolve();
     starting=true;
     return whenReady(()=>{
       seekToChorus();
-      audio.muted=true;
+      audio.muted=!withSound;
       return audio.play().then(()=>{
         ensureChorusPosition();
-        audio.muted=false;
+        if(withSound)audio.muted=false;
+        else{audio.muted=false;}
         unlocked=true;
         setPlaying(true);
+        hideEntry();
       }).catch(()=>{audio.muted=false;}).finally(()=>{starting=false;});
     });
   }
-  function autoStart(){
-    playFromChorus().catch(()=>{});
+  function enterSite(){
+    hideEntry();
+    playFromChorus(true);
+  }
+  function tryAutoplay(){
+    playFromChorus(false).then(()=>{
+      if(!audio.paused&&!audio.muted)hideEntry();
+    }).catch(()=>{});
+  }
+  if(entry){
+    entry.addEventListener('click',enterSite);
+    entry.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' ')enterSite();});
   }
   audio.addEventListener('playing',ensureChorusPosition);
-  audio.addEventListener('loadeddata',autoStart,{once:true});
-  audio.addEventListener('canplay',autoStart,{once:true});
+  audio.addEventListener('loadeddata',tryAutoplay,{once:true});
   audio.addEventListener('ended',()=>{seekToChorus();audio.play().catch(()=>{});});
   btn.addEventListener('click',e=>{
     e.stopPropagation();
-    if(audio.paused)playFromChorus();
+    if(audio.paused)playFromChorus(true);
     else{audio.pause();setPlaying(false);}
   });
-  window.addEventListener('pageshow',autoStart);
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',autoStart,{once:true});
-  else autoStart();
+  window.addEventListener('pageshow',tryAutoplay);
+  tryAutoplay();
 })();
 
 // ===== NAV DROPDOWN =====
