@@ -31,6 +31,8 @@ nav a:hover{color:var(--gold);}
 .nav-dropdown-menu a:hover{background:rgba(201,168,76,.08);}
 .admin-btn{position:fixed;bottom:22px;left:22px;z-index:300;padding:8px 14px;border-radius:2px;background:rgba(30,15,5,0.7);border:0.5px solid rgba(196,154,60,0.2);color:rgba(196,154,60,0.45);cursor:pointer;font-size:10px;letter-spacing:2px;font-family:'Heebo',sans-serif;text-transform:uppercase;transition:all .3s;backdrop-filter:blur(4px);}
 .admin-btn:hover{border-color:#C49A3C;color:#C49A3C;background:rgba(30,15,5,0.9);}
+.music-toggle{position:fixed;bottom:22px;right:22px;z-index:300;width:44px;height:44px;border-radius:50%;background:rgba(30,15,5,.7);border:.5px solid rgba(196,154,60,.35);color:rgba(196,154,60,.7);cursor:pointer;font-size:18px;line-height:1;transition:all .3s;backdrop-filter:blur(4px);}
+.music-toggle:hover,.music-toggle.playing{border-color:#C49A3C;color:#C49A3C;background:rgba(30,15,5,.9);}
 
 /* HERO + COUNTDOWN shared background */
 .hero-countdown-block{position:relative;z-index:1;}
@@ -286,6 +288,8 @@ footer{background:var(--bg);text-align:center;padding:80px 24px 100px;border-top
 
 <!-- Admin Button -->
 <button class="admin-btn" id="adminToggle" title="כניסת מנהלים">ניהול</button>
+<audio id="siteMusic" loop preload="auto" src="feel.mp3"></audio>
+<button type="button" class="music-toggle" id="musicToggle" aria-label="מוזיקת רקע" title="מוזיקה">♪</button>
 
 <div class="hero-countdown-block">
   <div class="hcb-bg" aria-hidden="true"></div>
@@ -1051,6 +1055,33 @@ updateHeroParallax();
     video.addEventListener('loadeddata',()=>clearTimeout(t),{once:true});
     video.play().catch(useFallback);
   }
+})();
+
+// ===== SITE MUSIC =====
+(function(){
+  const audio=document.getElementById('siteMusic');
+  const btn=document.getElementById('musicToggle');
+  if(!audio||!btn)return;
+  audio.volume=.65;
+  let unlocked=false;
+  function setPlaying(on){
+    btn.classList.toggle('playing',on);
+    btn.textContent=on?'♫':'♪';
+    btn.title=on?'השתק מוזיקה':'הפעל מוזיקה';
+  }
+  function startMusic(){
+    if(unlocked&& !audio.paused)return;
+    return audio.play().then(()=>{unlocked=true;setPlaying(true);}).catch(()=>{});
+  }
+  btn.addEventListener('click',e=>{
+    e.stopPropagation();
+    if(audio.paused)startMusic();
+    else{audio.pause();setPlaying(false);}
+  });
+  ['click','touchstart','keydown'].forEach(ev=>{
+    document.addEventListener(ev,()=>{startMusic();},{once:true,passive:true});
+  });
+  startMusic();
 })();
 
 // ===== NAV DROPDOWN =====
