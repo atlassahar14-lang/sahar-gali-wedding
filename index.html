@@ -33,10 +33,8 @@ nav a:hover{color:var(--gold);}
 .admin-btn:hover{border-color:#C49A3C;color:#C49A3C;background:rgba(30,15,5,0.9);}
 .music-toggle{position:fixed;bottom:22px;right:22px;z-index:300;width:44px;height:44px;border-radius:50%;background:rgba(30,15,5,.7);border:.5px solid rgba(196,154,60,.35);color:rgba(196,154,60,.7);cursor:pointer;font-size:18px;line-height:1;transition:all .3s;backdrop-filter:blur(4px);}
 .music-toggle:hover,.music-toggle.playing{border-color:#C49A3C;color:#C49A3C;background:rgba(30,15,5,.9);}
-.site-entry{position:fixed;inset:0;z-index:400;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(20,10,5,.55);backdrop-filter:blur(6px);cursor:pointer;transition:opacity .5s ease,visibility .5s ease;}
-.site-entry.hidden{opacity:0;visibility:hidden;pointer-events:none;}
-.site-entry-title{font-family:'Cormorant Garamond',serif;font-size:clamp(40px,9vw,72px);font-weight:300;color:var(--gold);letter-spacing:2px;}
-.site-entry-hint{margin-top:18px;font-size:11px;letter-spacing:5px;text-transform:uppercase;color:rgba(250,247,242,.75);font-family:'Lato',sans-serif;}
+.music-toggle.needs-tap{animation:musicPulse 1.4s ease-in-out infinite;border-color:#C49A3C;color:#C49A3C;}
+@keyframes musicPulse{0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(201,168,76,.45)}50%{transform:scale(1.08);box-shadow:0 0 0 10px rgba(201,168,76,0)}}
 
 /* HERO + COUNTDOWN shared background */
 .hero-countdown-block{position:relative;z-index:1;}
@@ -273,10 +271,20 @@ footer{background:var(--bg);text-align:center;padding:80px 24px 100px;border-top
 </head>
 <body>
 
-<div id="siteEntry" class="site-entry" role="button" tabindex="0" aria-label="כניסה לאתר">
-  <p class="site-entry-title">סהר & גלי</p>
-  <p class="site-entry-hint">לחצו להיכנס</p>
-</div>
+<audio id="siteMusic" autoplay muted preload="auto" playsinline src="feel.mp3#t=48"></audio>
+<script>
+(function(){
+  var a=document.getElementById('siteMusic'),C=48;
+  if(!a)return;
+  a.volume=.65;
+  function boot(){
+    if(a.readyState<1){a.addEventListener('loadedmetadata',boot,{once:true});return;}
+    a.currentTime=C;
+    a.play().catch(function(){});
+  }
+  boot();
+})();
+</script>
 
 <!-- NAV -->
 <nav id="nav">
@@ -297,7 +305,6 @@ footer{background:var(--bg);text-align:center;padding:80px 24px 100px;border-top
 
 <!-- Admin Button -->
 <button class="admin-btn" id="adminToggle" title="כניסת מנהלים">ניהול</button>
-<audio id="siteMusic" autoplay muted preload="auto" playsinline src="feel.mp3#t=48"></audio>
 <button type="button" class="music-toggle" id="musicToggle" aria-label="מוזיקת רקע" title="מוזיקה">♪</button>
 
 <div class="hero-countdown-block">
@@ -1071,69 +1078,64 @@ updateHeroParallax();
   const CHORUS_START=48;
   const audio=document.getElementById('siteMusic');
   const btn=document.getElementById('musicToggle');
-  const entry=document.getElementById('siteEntry');
   if(!audio||!btn)return;
   audio.volume=.65;
-  let unlocked=false;
-  let starting=false;
+  let withSound=false;
   function setPlaying(on){
+    withSound=on;
     btn.classList.toggle('playing',on);
+    btn.classList.toggle('needs-tap',!on);
     btn.textContent=on?'♫':'♪';
     btn.title=on?'השתק מוזיקה':'הפעל מוזיקה';
   }
-  function hideEntry(){
-    if(entry)entry.classList.add('hidden');
-  }
-  function whenReady(fn){
-    if(audio.readyState>=1)return Promise.resolve().then(fn);
-    return new Promise(res=>audio.addEventListener('loadedmetadata',()=>res(fn()),{once:true}));
+  function whenReady(){
+    if(audio.readyState>=1)return Promise.resolve();
+    return new Promise(r=>audio.addEventListener('loadedmetadata',r,{once:true}));
   }
   function seekToChorus(){
-    if(!Number.isFinite(audio.duration)||audio.duration<=CHORUS_START)return;
-    audio.currentTime=CHORUS_START;
+    if(Number.isFinite(audio.duration)&&audio.duration>CHORUS_START)audio.currentTime=CHORUS_START;
   }
-  function ensureChorusPosition(){
-    if(audio.currentTime<CHORUS_START-1)seekToChorus();
+  async function tryPlay(unmuted){
+    await whenReady();
+    seekToChorus();
+    audio.muted=!unmuted;
+    try{
+      await audio.play();
+      if(audio.currentTime<CHORUS_START-1)seekToChorus();
+      if(unmuted){audio.muted=false;setPlaying(true);return true;}
+      audio.muted=false;
+      await audio.play();
+      setPlaying(true);
+      return true;
+    }catch(e){
+      if(!unmuted){audio.muted=true;try{await audio.play();}catch(e2){}}
+      return false;
+    }
   }
-  function playFromChorus(withSound){
-    if(starting||(unlocked&&!audio.paused))return Promise.resolve();
-    starting=true;
-    return whenReady(()=>{
-      seekToChorus();
-      audio.muted=!withSound;
-      return audio.play().then(()=>{
-        ensureChorusPosition();
-        if(withSound)audio.muted=false;
-        else{audio.muted=false;}
-        unlocked=true;
-        setPlaying(true);
-        hideEntry();
-      }).catch(()=>{audio.muted=false;}).finally(()=>{starting=false;});
-    });
+  async function boot(){
+    if(await tryPlay(true))return;
+    if(await tryPlay(false))btn.classList.add('needs-tap');
   }
-  function enterSite(){
-    hideEntry();
-    playFromChorus(true);
+  function unlockSound(){
+    btn.classList.remove('needs-tap');
+    seekToChorus();
+    audio.muted=false;
+    audio.play().then(()=>setPlaying(true)).catch(()=>{});
   }
-  function tryAutoplay(){
-    playFromChorus(false).then(()=>{
-      if(!audio.paused&&!audio.muted)hideEntry();
-    }).catch(()=>{});
-  }
-  if(entry){
-    entry.addEventListener('click',enterSite);
-    entry.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' ')enterSite();});
-  }
-  audio.addEventListener('playing',ensureChorusPosition);
-  audio.addEventListener('loadeddata',tryAutoplay,{once:true});
+  ['pointerdown','touchstart','keydown'].forEach(ev=>{
+    window.addEventListener(ev,unlockSound,{once:true,capture:true,passive:true});
+  });
+  audio.addEventListener('playing',()=>{if(audio.currentTime<CHORUS_START-1)seekToChorus();});
   audio.addEventListener('ended',()=>{seekToChorus();audio.play().catch(()=>{});});
   btn.addEventListener('click',e=>{
     e.stopPropagation();
-    if(audio.paused)playFromChorus(true);
+    if(audio.paused||audio.muted||!withSound)unlockSound();
     else{audio.pause();setPlaying(false);}
   });
-  window.addEventListener('pageshow',tryAutoplay);
-  tryAutoplay();
+  boot();
+  let n=0;
+  const t=setInterval(()=>{if(withSound||++n>10)return clearInterval(t);boot();},500);
+  window.addEventListener('pageshow',boot);
 })();
 
 // ===== NAV DROPDOWN =====
