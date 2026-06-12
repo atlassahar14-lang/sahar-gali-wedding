@@ -288,7 +288,7 @@ footer{background:var(--bg);text-align:center;padding:80px 24px 100px;border-top
 
 <!-- Admin Button -->
 <button class="admin-btn" id="adminToggle" title="כניסת מנהלים">ניהול</button>
-<audio id="siteMusic" preload="auto" src="feel.mp3#t=58"></audio>
+<audio id="siteMusic" autoplay muted preload="auto" playsinline src="feel.mp3#t=54"></audio>
 <button type="button" class="music-toggle" id="musicToggle" aria-label="מוזיקת רקע" title="מוזיקה">♪</button>
 
 <div class="hero-countdown-block">
@@ -1059,7 +1059,7 @@ updateHeroParallax();
 
 // ===== SITE MUSIC =====
 (function(){
-  const CHORUS_START=58;
+  const CHORUS_START=54;
   const audio=document.getElementById('siteMusic');
   const btn=document.getElementById('musicToggle');
   if(!audio||!btn)return;
@@ -1081,30 +1081,34 @@ updateHeroParallax();
   function ensureChorusPosition(){
     if(audio.currentTime<CHORUS_START-1)seekToChorus();
   }
-  function playFromChorus(useMutedAutoplay){
+  function unmuteAudio(){
+    audio.muted=false;
+  }
+  function playFromChorus(){
     return whenReady(()=>{
       seekToChorus();
-      if(useMutedAutoplay)audio.muted=true;
-      else audio.muted=false;
+      audio.muted=true;
       return audio.play().then(()=>{
         ensureChorusPosition();
-        audio.muted=false;
+        unmuteAudio();
         unlocked=true;
         setPlaying(true);
       }).catch(()=>{audio.muted=false;});
     });
   }
+  function autoStart(){
+    playFromChorus().catch(()=>{});
+  }
   audio.addEventListener('playing',ensureChorusPosition);
+  audio.addEventListener('canplaythrough',autoStart,{once:true});
   audio.addEventListener('ended',()=>{seekToChorus();audio.play().catch(()=>{});});
   btn.addEventListener('click',e=>{
     e.stopPropagation();
-    if(audio.paused)playFromChorus(false);
+    if(audio.paused){unmuteAudio();playFromChorus();}
     else{audio.pause();setPlaying(false);}
   });
-  ['click','touchstart','keydown'].forEach(ev=>{
-    document.addEventListener(ev,()=>{if(!unlocked)playFromChorus(false);},{once:true,passive:true});
-  });
-  playFromChorus(true);
+  window.addEventListener('pageshow',autoStart);
+  autoStart();
 })();
 
 // ===== NAV DROPDOWN =====
