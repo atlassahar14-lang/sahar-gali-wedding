@@ -9,9 +9,9 @@
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;} html{scroll-behavior:smooth;}
 :root{
-  --bg:#FBFAF7;--text:#444444;--gold:#BFB194;--white:#FFFFFF;
-  --stone:#6B6256;--blush:#947955;--terra:#947955;
-  --card-shadow:0 12px 40px rgba(68,58,42,.08);
+  --bg:#FAF7F2;--text:#3D2B1F;--gold:#C9A84C;--white:#FFFFFF;
+  --stone:#7A6A5C;--blush:#6B5344;--terra:#A67B5B;
+  --card-shadow:0 12px 40px rgba(61,43,31,.08);hh
   --section-pad:clamp(100px,12vw,160px);
 }
 body{background:var(--bg);font-family:'Lato',sans-serif;color:var(--text);overflow-x:hidden;}
@@ -49,7 +49,7 @@ nav a:hover{color:var(--gold);}
 #gallery,#countdown,#itinerary,#guest-arrival,#guest-villa,#guest-dress,#rsvp,footer,.section-rule{position:relative;z-index:2;}
 .hero-label,.hero-names,.hero-divider,.hero-date,.hero-venue,.scroll-btn{opacity:0;}
 .hero-label{font-size:16.5px;letter-spacing:6px;text-transform:uppercase;color:var(--gold);margin-bottom:20px;animation:heroFade .9s .2s cubic-bezier(.22,1,.36,1) both;}
-.hero-names{font-family:'Cormorant Garamond',serif;font-size:clamp(72px,14vw,148px);font-weight:300;line-height:.95;color:#444444;letter-spacing:2px;animation:heroRise 1.5s .45s cubic-bezier(.22,1,.36,1) both;}
+.hero-names{font-family:'Cormorant Garamond',serif;font-size:clamp(72px,14vw,148px);font-weight:300;line-height:.95;color:#3D2B1F;letter-spacing:2px;animation:heroRise 1.5s .45s cubic-bezier(.22,1,.36,1) both;}
 .amp{color:var(--gold);font-style:italic;font-size:.78em;display:block;line-height:.85;margin-top:.05em;}
 .hero-divider{width:1px;height:64px;background:linear-gradient(to bottom,transparent,var(--gold),transparent);margin:28px auto;animation:heroFade 1s .85s ease both;}
 .hero-date{font-family:'Cormorant Garamond',serif;font-size:clamp(20px,3.5vw,28px);font-weight:300;letter-spacing:3px;color:var(--text);margin-top:12px;animation:heroFade 1s .7s cubic-bezier(.22,1,.36,1) both;}
@@ -121,7 +121,7 @@ section{padding:var(--section-pad) 24px;position:relative;}
 .tl-name{font-family:'Cormorant Garamond',serif;font-size:clamp(22px,3vw,28px);font-weight:400;color:var(--text);margin-bottom:6px;}
 .tl-desc{font-size:14px;color:var(--stone);line-height:1.8;margin-bottom:10px;}
 .map-link{display:inline-flex;align-items:center;gap:5px;font-size:11px;letter-spacing:2px;color:#FFFFFF;text-decoration:none;background:var(--gold);border:none;padding:8px 16px;border-radius:4px;transition:all .3s;}
-.map-link:hover,.map-link:visited{color:#FFFFFF;background:#A89A7B;}
+.map-link:hover,.map-link:visited{color:#FFFFFF;background:#B8943F;}
 .t-card .map-link{color:#FFFFFF;}
 
 /* GUEST INFO PAGES */
@@ -140,7 +140,7 @@ section{padding:var(--section-pad) 24px;position:relative;}
 .t-card li{margin-bottom:6px;}
 .t-card a:not(.map-link):not(.site-link){color:var(--gold);text-decoration:none;}
 .t-card .site-link{display:inline-block;margin-top:10px;padding:8px 16px;background:var(--gold);color:#FFFFFF;border-radius:4px;font-size:11px;letter-spacing:2px;text-decoration:none;transition:background .3s;}
-.t-card .site-link:hover{background:#A89A7B;}
+.t-card .site-link:hover{background:#B8943F;}
 
 /* RSVP */
 #rsvp{background:var(--bg);text-align:center;}
@@ -153,7 +153,7 @@ section{padding:var(--section-pad) 24px;position:relative;}
 .fg select option{background:var(--white);color:var(--text);}
 .fg textarea{resize:vertical;min-height:88px;}
 .rsvp-btn{width:100%;margin-top:12px;padding:16px;background:var(--gold);color:#FFFFFF;border:none;border-radius:8px;font-family:'Lato',sans-serif;font-size:12px;letter-spacing:4px;text-transform:uppercase;cursor:pointer;transition:all .3s;font-weight:600;}
-.rsvp-btn:hover{background:#A89A7B;color:#FFFFFF;}
+.rsvp-btn:hover{background:#B8943F;color:#FFFFFF;}
 .rsvp-ok{display:none;font-family:'Cormorant Garamond',serif;font-size:clamp(24px,4vw,32px);color:var(--gold);padding:24px;text-align:center;}
 
 /* FOOTER */
@@ -161,10 +161,6 @@ footer{background:var(--bg);text-align:center;padding:80px 24px 100px;border-top
 .ft-names{font-family:'Cormorant Garamond',serif;font-size:clamp(36px,8vw,72px);font-weight:300;color:var(--text);opacity:.1;letter-spacing:6px;}
 .ft-txt{font-size:11px;letter-spacing:4px;color:var(--stone);margin-top:18px;text-transform:uppercase;}
 .ft-sep{color:var(--gold);margin:0 12px;opacity:.5;}
-
-/* ── Droushia Heights style alignment: sharp corners like the hotel ── */
-.map-link,.site-link,.t-card .site-link,.rsvp-btn,.day-tabs,.day-tab{border-radius:0;}
-.t-card,.day-panel,.rsvp-box,.gallery-item,.villa-showcase img,.gallery-lightbox img{border-radius:2px;}
 
 /* ======= ADMIN OVERLAY ======= */
 .overlay,#admin{
@@ -283,7 +279,7 @@ footer{background:var(--bg);text-align:center;padding:80px 24px 100px;border-top
     <span class="nav-dropdown-trigger" tabindex="0">מידע לאורח</span>
     <div class="nav-dropdown-menu">
       <a href="#guest-arrival">הגעה והתניידות</a>
-      <a href="#guest-villa">המלון</a>
+      <a href="#guest-villa">הווילה</a>
       <a href="#guest-dress">קוד לבוש ומה להביא</a>
     </div>
   </div>
@@ -310,7 +306,7 @@ footer{background:var(--bg);text-align:center;padding:80px 24px 100px;border-top
       <span>גלול למטה</span>
       <span class="scroll-arrow" aria-hidden="true">↓</span>
     </button>
-    <p class="hero-venue" style="opacity:0;">Droushia Heights Hotel · Droushia · Cyprus</p>
+    <p class="hero-venue" style="opacity:0;">Villa Pitiana · Tuscany · Italy</p>
   </section>
 
   <!-- COUNTDOWN -->
@@ -337,7 +333,7 @@ footer{background:var(--bg);text-align:center;padding:80px 24px 100px;border-top
   <div class="inner">
     <div class="reveal">
       <span class="s-tag">לוז האירוע</span>
-      <h2 class="s-title">שלושה ימים בקפריסין</h2>
+      <h2 class="s-title">שלושה ימים של טוסקנה</h2>
       <div class="gold-line"></div>
     </div>
     <div class="reveal">
@@ -352,13 +348,13 @@ footer{background:var(--bg);text-align:center;padding:80px 24px 100px;border-top
           <div class="tl-item">
             <div class="tl-time">15:00 – 19:00</div>
             <div class="tl-name">הגעה ולינה</div>
-            <div class="tl-desc">כניסה לחדרים ב־Droushia Heights. פנאי חופשי — בריכה חיצונית, ספא Aura ונוף להרי צפון־מערב קפריסין.</div>
-            <a class="map-link" href="https://maps.google.com/?q=Droushia+Heights+Hotel+Droushia+Cyprus" target="_blank">Droushia Heights, Droushia</a>
+            <div class="tl-desc">כניסה לחדרים בוילה פיטיאנה. פנאי חופשי לטייל בגינות, בריכה ושדרות הברושים.</div>
+            <a class="map-link" href="https://maps.google.com/?q=Villa+Pitiana+Donnini+Tuscany" target="_blank">Villa Pitiana, Donnini</a>
           </div>
           <div class="tl-item">
             <div class="tl-time">20:00</div>
             <div class="tl-name">ארוחת ערב פתיחה</div>
-            <div class="tl-desc">ארוחה משפחתית ולא פורמלית במלון — יין מקומי, מֶזֶה קפריסאי ופגישות ראשונות.</div>
+            <div class="tl-desc">ארוחה משפחתית ולא פורמלית בחצר הוילה — יין טוסקני, אנטיפסטי ופגישות ראשונות.</div>
           </div>
         </div>
       </div>
@@ -368,18 +364,18 @@ footer{background:var(--bg);text-align:center;padding:80px 24px 100px;border-top
           <div class="tl-item">
             <div class="tl-time">10:00</div>
             <div class="tl-name">ברנץ' בוקר</div>
-            <div class="tl-desc">ארוחת בוקר מורחבת עם מבט לים התיכון ולעמקים הירוקים של דרושיה.</div>
+            <div class="tl-desc">ארוחת בוקר מורחבת בגינה האנגלית עם מבט לגבעות הוואלדארנו.</div>
           </div>
           <div class="tl-item">
             <div class="tl-time">16:00 – 16:45</div>
             <div class="tl-name">כניסת אורחים לטקס</div>
-            <div class="tl-desc">קבלת פנים בטרסה הפנורמית מול הים, מוזיקת רקע חיה.</div>
-            <a class="map-link" href="https://maps.google.com/?q=Droushia+Heights+Hotel" target="_blank">הטרסה הפנורמית</a>
+            <div class="tl-desc">קבלת פנים בחצר הימי-ביניימית, מוזיקת רקע חיה.</div>
+            <a class="map-link" href="https://maps.google.com/?q=Villa+Pitiana+Donnini+cloister" target="_blank">החצר הימי-ביניימית</a>
           </div>
           <div class="tl-item">
             <div class="tl-time">17:00</div>
             <div class="tl-name">טקס החתונה</div>
-            <div class="tl-desc">הטקס בטרסה עם נוף לים התיכון, בשקיעה קפריסאית. רגע שלא יישכח.</div>
+            <div class="tl-desc">הטקס בחצר הקמורה של המנזר, בשקיעת שמש טוסקנית. רגע שלא ישכח.</div>
           </div>
           <div class="tl-item">
             <div class="tl-time">18:30</div>
@@ -389,7 +385,7 @@ footer{background:var(--bg);text-align:center;padding:80px 24px 100px;border-top
           <div class="tl-item">
             <div class="tl-time">20:30</div>
             <div class="tl-name">ארוחת ערב חגיגית</div>
-            <div class="tl-desc">בחדר האוכל של המלון — תפריט שף ים־תיכוני, יינות קפריסאיים ואווירה חמה.</div>
+            <div class="tl-desc">בסלון המצוייר בפרסקאות — תפריט שף טוסקני מלא, יינות הוילה ואווירה של פעם.</div>
           </div>
           <div class="tl-item">
             <div class="tl-time">23:00 →</div>
@@ -404,18 +400,18 @@ footer{background:var(--bg);text-align:center;padding:80px 24px 100px;border-top
           <div class="tl-item">
             <div class="tl-time">09:30</div>
             <div class="tl-name">ברנץ' פרידה</div>
-            <div class="tl-desc">ארוחת בוקר עצלנית עם ריחות קפה, גבינות קפריסאיות ולחם בית.</div>
+            <div class="tl-desc">ארוחת בוקר עצלנית עם ריחות קפה, גבינות טריות ולחם בית.</div>
           </div>
           <div class="tl-item">
             <div class="tl-time">12:00</div>
             <div class="tl-name">בריכה ופנאי</div>
-            <div class="tl-desc">זמן חופשי בבריכה החיצונית עם נוף לים — מי שרוצה.</div>
-            <a class="map-link" href="https://maps.google.com/?q=Droushia+Heights+Hotel+pool" target="_blank">בריכת המלון</a>
+            <div class="tl-desc">זמן חופשי בבריכה הפנורמית עם נוף לגבעות — מי שרוצה.</div>
+            <a class="map-link" href="https://maps.google.com/?q=Villa+Pitiana+pool" target="_blank">בריכת הוילה</a>
           </div>
           <div class="tl-item">
             <div class="tl-time">15:00</div>
             <div class="tl-name">פרידה ונסיעה</div>
-            <div class="tl-desc">Αντίο! נתראה בארץ עם זיכרונות מלאים.</div>
+            <div class="tl-desc">Arrivederci! נתראה בארץ עם זיכרונות מלאים.</div>
           </div>
         </div>
       </div>
@@ -437,15 +433,18 @@ footer{background:var(--bg);text-align:center;padding:80px 24px 100px;border-top
       <div class="t-card">
         <h3>שדות תעופה</h3>
         <ul>
-          <li><strong style="color:var(--text)">Paphos PFO</strong> — 40 דק'</li>
-          <li><strong style="color:var(--text)">Larnaca LCA</strong> — כשעתיים</li>
+          <li><strong style="color:var(--text)">Florence FLR</strong> — 35 דק'</li>
+          <li><strong style="color:var(--text)">Pisa PSA</strong> — 90 דק'</li>
+          <li><strong style="color:var(--text)">Bologna BLQ</strong> — 90 דק'</li>
+          <li><strong style="color:var(--text)">Rome FCO</strong> — 2.5 שעות</li>
+          <li><strong style="color:var(--text)">Milano</strong> — 2.5 שעות</li>
         </ul>
       </div>
       <div class="t-card">
         <h3>התניידות</h3>
-        <p>מומלץ לשכור רכב משדה התעופה בפאפוס — כ־40 דק' דרך פוליס. יש חנייה חינם במלון.</p>
+        <p>מומלץ לשכור רכב — מסלול S222 (Chiantigiana). יש חנייה בווילה.</p>
         <br>
-        <a class="map-link" href="https://maps.google.com/?q=Droushia+Heights+Hotel,+8700+Droushia,+Paphos,+Cyprus" target="_blank">נווט למלון</a>
+        <a class="map-link" href="https://maps.google.com/?q=Villa+Pitiana,+Via+Pitiana+7,+Donnini,+Reggello" target="_blank">נווט לווילה</a>
       </div>
       <div class="t-card">
         <h3>שאטלים</h3>
@@ -462,17 +461,17 @@ footer{background:var(--bg);text-align:center;padding:80px 24px 100px;border-top
   <div class="inner">
     <div class="reveal">
       <span class="s-tag">מידע לאורח</span>
-      <h2 class="s-title"><em>המלון</em></h2>
+      <h2 class="s-title">ה<em>ווילה</em></h2>
       <div class="gold-line"></div>
     </div>
     <div class="villa-showcase reveal">
-      <img src="WhatsApp Image 2026-06-11 at 10.14.42.jpeg" alt="Droushia Heights Hotel">
+      <img src="WhatsApp Image 2026-06-11 at 10.14.42.jpeg" alt="Villa Pitiana">
       <div class="villa-info">
-        <p>Droushia Heights Hotel · 8700 Droushia, Paphos, Cyprus · טל׳ +357 26332200</p>
-        <a class="site-link" href="https://www.droushiaheights.com" target="_blank">לאתר המלון</a>
+        <p>Villa Pitiana, Via Pitiana 7, Donnini–Reggello (FI), Tuscany, Italy</p>
+        <a class="site-link" href="https://www.villapitiana.com" target="_blank">לצפייה בווילה</a>
         <div class="t-card">
           <h3>לינה</h3>
-          <p>חדרים וסוויטות בסגנון eco-chic · בריכה חיצונית · ספא Aura · 636 מ׳ מעל פני הים, מול הים התיכון.</p>
+          <p>59 חדרים עם שירות מלוני מהשורה הראשונה</p>
         </div>
       </div>
     </div>
@@ -496,7 +495,7 @@ footer{background:var(--bg);text-align:center;padding:80px 24px 100px;border-top
       </div>
       <div class="t-card">
         <h3>מה להביא</h3>
-        <p>נעליים נוחות, קרם הגנה, מצב רוח חגיגי</p>
+        <p>נעליים נוחות לדשא, קרם הגנה, מצב רוח חגיגי</p>
       </div>
     </div>
   </div>
@@ -521,13 +520,13 @@ footer{background:var(--bg);text-align:center;padding:80px 24px 100px;border-top
           <select id="rf-count"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5+</option></select>
         </div>
         <div class="fg"><label>צריכים הסעה?</label>
-          <select id="rf-transfer"><option value="לא">לא, יש לי רכב</option><option value="כן - מPFO">כן, מפאפוס (PFO)</option><option value="כן - מLCA">כן, מלרנקה (LCA)</option></select>
+          <select id="rf-transfer"><option value="לא">לא, יש לי רכב</option><option value="כן - מFCO">כן, מרומא (FCO)</option><option value="כן - מMXP">כן, ממילאנו (MXP)</option></select>
         </div>
         <div class="fg"><label>הגבלות תזונתיות / בקשות מיוחדות</label><textarea id="rf-notes" placeholder="טבעוני, ללא גלוטן, אלרגיה..."></textarea></div>
         <button type="submit" class="rsvp-btn">אשרו הגעה</button>
       </form>
       <div class="rsvp-ok" id="rsvpOk">
-        תודה! נתראה בקפריסין<br>
+        תודה! נתראה בטוסקנה<br>
         <span style="font-size:13px;color:var(--stone);font-family:'Lato',sans-serif;font-weight:300;">פרטיכם נרשמו</span>
       </div>
     </div>
@@ -543,7 +542,7 @@ footer{background:var(--bg);text-align:center;padding:80px 24px 100px;border-top
     <h2 class="s-title">גלריית <em>תמונות</em></h2>
     <div class="gold-line"></div>
   </div>
-  <div class="gallery-grid reveal" id="galleryGrid"><div class="gallery-item"><img src="WhatsApp Image 2026-06-11 at 10.17.19.jpeg" alt="סהר וגלי" loading="lazy" onclick="openGalleryLightbox(this.src)"></div><div class="gallery-item"><img src="WhatsApp Image 2026-06-11 at 10.17.48.jpeg" alt="הצעת נישואין" loading="lazy" onclick="openGalleryLightbox(this.src)"></div><div class="gallery-item"><img src="WhatsApp Image 2026-06-11 at 10.14.42.jpeg" alt="Droushia Heights" loading="lazy" onclick="openGalleryLightbox(this.src)"></div></div>
+  <div class="gallery-grid reveal" id="galleryGrid"><div class="gallery-item"><img src="WhatsApp Image 2026-06-11 at 10.17.19.jpeg" alt="סהר וגלי" loading="lazy" onclick="openGalleryLightbox(this.src)"></div><div class="gallery-item"><img src="WhatsApp Image 2026-06-11 at 10.17.48.jpeg" alt="הצעת נישואין" loading="lazy" onclick="openGalleryLightbox(this.src)"></div><div class="gallery-item"><img src="WhatsApp Image 2026-06-11 at 10.14.42.jpeg" alt="הווילה" loading="lazy" onclick="openGalleryLightbox(this.src)"></div></div>
   <p class="gallery-empty reveal" id="galleryEmpty" style="display:none;">עדיין אין תמונות בגלריה — בקרוב יעלו תמונות מהחתונה.</p>
 </section>
 <div class="gallery-lightbox" id="galleryLightbox" onclick="if(event.target===this)closeGalleryLightbox()">
@@ -554,7 +553,7 @@ footer{background:var(--bg);text-align:center;padding:80px 24px 100px;border-top
 <!-- FOOTER -->
 <footer>
   <div class="ft-names">סהר & גלי</div>
-  <p class="ft-txt">6–8.05.2027 <span class="ft-sep">—</span> Droushia Heights · Cyprus</p>
+  <p class="ft-txt">07.05.2027 <span class="ft-sep">—</span> Villa Pitiana, Tuscany</p>
   <p style="font-size:10px;color:rgba(122,106,92,.35);margin-top:20px;letter-spacing:2px;">CON AMORE · באהבה</p>
 </footer>
 
@@ -625,14 +624,14 @@ footer{background:var(--bg);text-align:center;padding:80px 24px 100px;border-top
 
     <!-- ROOMS -->
     <div class="adm-panel" id="panel-rooms">
-      <div class="adm-section-title">חלוקת חדרים במלון</div>
+      <div class="adm-section-title">חילוק חדרים בוילה</div>
       <div class="stats-row" id="roomStats"></div>
       <div class="adm-card">
         <h3>הוספת חדר</h3>
         <div class="adm-row">
-          <input class="adm-input" id="r-name" placeholder="מספר / שם חדר (למשל 12, Junior Suite)">
-          <select class="adm-input" id="r-building" style="max-width:200px;">
-            <option>חדר סטנדרט</option><option>Junior Suite</option><option>Deluxe Family Suite</option><option>אחר</option>
+          <input class="adm-input" id="r-name" placeholder="מספר / שם חדר (למשל 12, סוויטה ארנו)">
+          <select class="adm-input" id="r-building" style="max-width:160px;">
+            <option>וילה עיקרית</option><option>בית חווה</option><option>סוויטה</option><option>אחר</option>
           </select>
           <input class="adm-input" id="r-capacity" type="number" placeholder="קיבולת" min="1" max="10" style="max-width:100px;">
           <input class="adm-input" id="r-notes" placeholder="הערות (קומה, נוף...)">
@@ -690,7 +689,7 @@ footer{background:var(--bg);text-align:center;padding:80px 24px 100px;border-top
           <select class="adm-input" id="s-cat" style="max-width:170px;">
             <option>צלם / וידאו</option><option>קייטרינג / שף</option><option>פרחים</option>
             <option>מוזיקה / DJ</option><option>עיצוב / דקור</option><option>איפור / שיער</option>
-            <option>שמלה / חליפה</option><option>הסעות</option><option>מלון / אירוח</option>
+            <option>שמלה / חליפה</option><option>הסעות</option><option>וילה / אירוח</option>
             <option>רב / טקס</option><option>אחר</option>
           </select>
           <input class="adm-input" id="s-phone" placeholder="טלפון" style="max-width:140px;direction:ltr;">
@@ -1261,7 +1260,7 @@ function guestNamesInRoom(roomId,guests){
   return guests.filter(g=>normRoomId(g.roomId)===String(roomId)).map(g=>g.name).filter(Boolean);
 }
 function escAttr(v){return String(v??'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');}
-const ROOM_BUILDINGS=['חדר סטנדרט','Junior Suite','Deluxe Family Suite','אחר'];
+const ROOM_BUILDINGS=['וילה עיקרית','בית חווה','סוויטה','אחר'];
 function roomBuildingOpts(selected){return ROOM_BUILDINGS.map(b=>`<option${b===selected?' selected':''}>${b}</option>`).join('');}
 let editingRoomId=null;
 function startEditRoom(id){editingRoomId=id;updateRoomSummary();}
@@ -1407,8 +1406,10 @@ function refreshRooms(){
 function needsTransfer(g){return g.transfer&&g.transfer.startsWith('כן');}
 function transferLabel(t){
   if(!t||t.startsWith('לא'))return '—';
-  if(t.includes('PFO'))return 'פאפוס (PFO)';
-  if(t.includes('LCA'))return 'לרנקה (LCA)';
+  if(t.includes('FCO'))return 'רומא (FCO)';
+  if(t.includes('MXP'))return 'מילאנו (MXP)';
+  if(t.includes('FLR'))return 'פירנצה (FLR)';
+  if(t.includes('PSA'))return 'פיזה (PSA)';
   return t.replace(/^כן\s*-\s*/,'');
 }
 function refreshTransfers(){
@@ -1566,7 +1567,7 @@ async function removeExp(id){
 
 // ===== TASKS =====
 const defaultTasks=[
-  {name:'הזמנת Droushia Heights Hotel',due:'2025-12-01',cat:'מקום האירוע',done:false},
+  {name:'הזמנת וילה פיטיאנה',due:'2025-12-01',cat:'מקום האירוע',done:false},
   {name:'בחירת שמלת כלה',due:'2026-06-01',cat:'ביגוד',done:false},
   {name:'הזמנת צלם וצלמת וידאו',due:'2026-03-01',cat:'ספקים',done:false},
   {name:'שליחת הזמנות לאורחים',due:'2026-11-01',cat:'אורחים',done:false},
