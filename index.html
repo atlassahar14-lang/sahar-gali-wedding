@@ -299,7 +299,7 @@ footer{background:var(--bg);text-align:center;padding:80px 24px 100px;border-top
 
 <!-- Admin Button -->
 <button class="admin-btn" id="adminToggle" title="כניסת מנהלים">ניהול</button>
-<button type="button" class="music-toggle playing" id="musicToggle" aria-label="השתקת מוזיקה" aria-pressed="true" title="השתק מוזיקה">♫</button>
+<button type="button" class="music-toggle playing" id="musicToggle" aria-label="השתקת מוזיקה" aria-pressed="true" title="השתק מוזיקה" style="display:none;">♫</button>
 
 <div class="hero-countdown-block">
   <div class="hcb-bg" aria-hidden="true"></div>
@@ -307,8 +307,8 @@ footer{background:var(--bg);text-align:center;padding:80px 24px 100px;border-top
 
   <!-- HERO -->
   <section id="hero">
-    <video class="hero-video-bg" autoplay loop playsinline src="hero-video-with-song.mp4?v=2" poster="hero-poster.jpg" aria-hidden="true"></video>
-    <div class="hero-video-overlay" aria-hidden="true"></div>
+    <!-- static photo background (.hcb-bg); moving video removed per request -->
+    <div class="hero-video-overlay" aria-hidden="true" style="display:none;"></div>
     <p class="hero-label" style="opacity:0;">מתחתנים!</p>
     <h1 class="hero-names" id="heroTitle" style="opacity:0;">סהר<span class="amp">&</span>גלי</h1>
     <div class="hero-divider" style="opacity:0;"></div>
