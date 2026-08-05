@@ -321,22 +321,6 @@ footer{background:var(--bg);text-align:center;padding:80px 24px 100px;border-top
   </section>
 </div>
 
-<!-- COUNTDOWN -->
-<section id="countdown" class="reveal" style="padding-top:clamp(60px,8vw,90px);">
-  <div class="cd-box">
-    <p class="cd-label">עוד כמה זמן עד לחתונה</p>
-    <div class="cd-grid countdown">
-      <div class="cd-unit"><div class="cd-num unit" id="cd-d">000</div><div class="cd-name">ימים</div></div>
-      <div class="cd-sep">·</div>
-      <div class="cd-unit"><div class="cd-num unit" id="cd-h">00</div><div class="cd-name">שעות</div></div>
-      <div class="cd-sep">·</div>
-      <div class="cd-unit"><div class="cd-num unit" id="cd-m">00</div><div class="cd-name">דקות</div></div>
-      <div class="cd-sep">·</div>
-      <div class="cd-unit"><div class="cd-num unit" id="cd-s">00</div><div class="cd-name">שניות</div></div>
-    </div>
-  </div>
-</section>
-
 <div class="section-rule"></div>
 
 <!-- ITINERARY -->
@@ -557,6 +541,24 @@ footer{background:var(--bg);text-align:center;padding:80px 24px 100px;border-top
   <button type="button" class="gallery-lightbox-close" onclick="closeGalleryLightbox()" aria-label="סגור">✕</button>
   <img id="galleryLightboxImg" alt="">
 </div>
+
+<div class="section-rule"></div>
+
+<!-- COUNTDOWN -->
+<section id="countdown" class="reveal">
+  <div class="cd-box">
+    <p class="cd-label">עוד כמה זמן עד לחתונה</p>
+    <div class="cd-grid countdown">
+      <div class="cd-unit"><div class="cd-num unit" id="cd-d">000</div><div class="cd-name">ימים</div></div>
+      <div class="cd-sep">·</div>
+      <div class="cd-unit"><div class="cd-num unit" id="cd-h">00</div><div class="cd-name">שעות</div></div>
+      <div class="cd-sep">·</div>
+      <div class="cd-unit"><div class="cd-num unit" id="cd-m">00</div><div class="cd-name">דקות</div></div>
+      <div class="cd-sep">·</div>
+      <div class="cd-unit"><div class="cd-num unit" id="cd-s">00</div><div class="cd-name">שניות</div></div>
+    </div>
+  </div>
+</section>
 
 <!-- FOOTER -->
 <footer>
@@ -894,8 +896,7 @@ const BUDGET_ID=1;
 const DB={guests:[],rooms:[],expenses:[],tasks:[],files:[],gallery:[],suppliers:[],content:{id:null,title:'',wedding_date:'',msg:''},budget:{id:BUDGET_ID,total_budget:0}};
 const DEFAULT_GALLERY=[
   {src:'WhatsApp Image 2026-06-11 at 10.17.19.jpeg',alt:'סהר וגלי'},
-  {src:'WhatsApp Image 2026-06-11 at 10.17.48.jpeg',alt:'סהר וגלי'},
-  {src:'WhatsApp Image 2026-06-11 at 10.14.42.jpeg',alt:'סהר וגלי'}
+  {src:'WhatsApp Image 2026-06-11 at 10.17.48.jpeg',alt:'סהר וגלי'}
 ];
 function defaultContent(){return{id:null,title:'',wedding_date:'',msg:''};}
 function defaultBudget(){return{id:BUDGET_ID,total_budget:0};}
