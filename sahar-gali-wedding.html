@@ -910,7 +910,7 @@ function mapFile(f){
   return{id:f.id,name:f.name,size:f.size,date:f.date||f.file_date||'',type:f.mime_type||'',storage_path:path};
 }
 function fileHasStorage(f){return!!(f?.storage_path&&String(f.storage_path).trim());}
-function storagePath(name){return Date.now()+'_'+String(name).replace(/[^a-zA-Z0-9._\u0590-\u05FF-]/g,'_');}
+function storagePath(name){const dot=String(name).lastIndexOf('.');const ext=dot>-1?String(name).slice(dot).replace(/[^a-zA-Z0-9.]/g,''):'';return Date.now()+'_file'+ext.replace(/[^a-zA-Z0-9._-]/g,'_');}
 function galleryStoragePath(name){return'gallery/'+storagePath(name);}
 const GALLERY_COLS='id,caption,storage_path,mime_type,sort_order,created_at';
 function mapGallery(g){return{id:g.id,caption:g.caption||'',storage_path:String(g.storage_path||'').trim(),mime_type:g.mime_type||'',sort_order:g.sort_order||0};}
