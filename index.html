@@ -319,23 +319,23 @@ footer{background:var(--bg);text-align:center;padding:80px 24px 100px;border-top
     </button>
     <p class="hero-venue" style="opacity:0;">Droushia Heights Hotel · Droushia · Cyprus</p>
   </section>
-
-  <!-- COUNTDOWN -->
-  <section id="countdown" class="reveal">
-    <div class="cd-box">
-      <p class="cd-label">עוד כמה זמן עד לחתונה</p>
-      <div class="cd-grid countdown">
-        <div class="cd-unit"><div class="cd-num unit" id="cd-d">000</div><div class="cd-name">ימים</div></div>
-        <div class="cd-sep">·</div>
-        <div class="cd-unit"><div class="cd-num unit" id="cd-h">00</div><div class="cd-name">שעות</div></div>
-        <div class="cd-sep">·</div>
-        <div class="cd-unit"><div class="cd-num unit" id="cd-m">00</div><div class="cd-name">דקות</div></div>
-        <div class="cd-sep">·</div>
-        <div class="cd-unit"><div class="cd-num unit" id="cd-s">00</div><div class="cd-name">שניות</div></div>
-      </div>
-    </div>
-  </section>
 </div>
+
+<!-- COUNTDOWN -->
+<section id="countdown" class="reveal" style="padding-top:clamp(60px,8vw,90px);">
+  <div class="cd-box">
+    <p class="cd-label">עוד כמה זמן עד לחתונה</p>
+    <div class="cd-grid countdown">
+      <div class="cd-unit"><div class="cd-num unit" id="cd-d">000</div><div class="cd-name">ימים</div></div>
+      <div class="cd-sep">·</div>
+      <div class="cd-unit"><div class="cd-num unit" id="cd-h">00</div><div class="cd-name">שעות</div></div>
+      <div class="cd-sep">·</div>
+      <div class="cd-unit"><div class="cd-num unit" id="cd-m">00</div><div class="cd-name">דקות</div></div>
+      <div class="cd-sep">·</div>
+      <div class="cd-unit"><div class="cd-num unit" id="cd-s">00</div><div class="cd-name">שניות</div></div>
+    </div>
+  </div>
+</section>
 
 <div class="section-rule"></div>
 
@@ -550,7 +550,7 @@ footer{background:var(--bg);text-align:center;padding:80px 24px 100px;border-top
     <h2 class="s-title">גלריית <em>תמונות</em></h2>
     <div class="gold-line"></div>
   </div>
-  <div class="gallery-grid reveal" id="galleryGrid"><div class="gallery-item"><img src="WhatsApp Image 2026-06-11 at 10.17.19.jpeg" alt="סהר וגלי" loading="lazy" onclick="openGalleryLightbox(this.src)"></div><div class="gallery-item"><img src="WhatsApp Image 2026-06-11 at 10.17.48.jpeg" alt="הצעת נישואין" loading="lazy" onclick="openGalleryLightbox(this.src)"></div><div class="gallery-item"><img src="droushia-entrance.jpg" alt="Droushia Heights" loading="lazy" onclick="openGalleryLightbox(this.src)"></div></div>
+  <div class="gallery-grid reveal" id="galleryGrid"><div class="gallery-item"><img src="WhatsApp Image 2026-06-11 at 10.17.19.jpeg" alt="סהר וגלי" loading="lazy" onclick="openGalleryLightbox(this.src)"></div><div class="gallery-item"><img src="WhatsApp Image 2026-06-11 at 10.17.48.jpeg" alt="הצעת נישואין" loading="lazy" onclick="openGalleryLightbox(this.src)"></div></div>
   <p class="gallery-empty reveal" id="galleryEmpty" style="display:none;">עדיין אין תמונות בגלריה — בקרוב יעלו תמונות מהחתונה.</p>
 </section>
 <div class="gallery-lightbox" id="galleryLightbox" onclick="if(event.target===this)closeGalleryLightbox()">
