@@ -1116,6 +1116,10 @@ updateHeroParallax();
     const t=setTimeout(()=>{if(video.error||video.readyState<2)useFallback();},3000);
     video.addEventListener('loadeddata',()=>clearTimeout(t),{once:true});
   }
+  document.addEventListener('visibilitychange',()=>{
+    if(document.hidden)video.pause();
+    else if(!hero.classList.contains('hero-video-fallback'))video.play().catch(()=>{});
+  });
   tryPlay();
 })();
 
