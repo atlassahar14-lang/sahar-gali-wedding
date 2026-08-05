@@ -39,9 +39,14 @@ nav a:hover{color:var(--gold);}
 .hcb-bg{position:absolute;inset:0;background:url("WhatsApp Image 2026-06-11 at 10.17.19.jpeg") center 20%/cover no-repeat;z-index:0;}
 .hcb-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(250,247,242,.28) 0%,rgba(250,247,242,.38) 55%,rgba(250,247,242,.48) 100%);pointer-events:none;z-index:0;}
 #hero{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:100px 24px 80px;background:none;overflow:hidden;}
-.hero-video-bg{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:contain;background:#0e1720;z-index:0;}
-.hero-video-overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.35);z-index:1;pointer-events:none;}
-#hero > :not(.hero-video-bg):not(.hero-video-overlay){position:relative;z-index:2;}
+.hero-video-blur{display:none;position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;filter:blur(32px) brightness(.5);transform:scale(1.15);z-index:0;pointer-events:none;}
+.hero-video-bg{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:contain;background:#0e1720;z-index:1;}
+.hero-video-overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.35);z-index:2;pointer-events:none;}
+#hero > :not(.hero-video-blur):not(.hero-video-bg):not(.hero-video-overlay){position:relative;z-index:3;}
+@media(min-width:769px){
+  .hero-video-blur{display:block;}
+  .hero-video-bg{background:transparent;}
+}
 @media(max-width:768px){
   #hero.hero-video-fallback .hero-video-bg{display:none;}
   #hero.hero-video-fallback{background:url("hero-poster.jpg") center/cover no-repeat;}
@@ -307,6 +312,7 @@ footer{background:var(--bg);text-align:center;padding:80px 24px 100px;border-top
 
   <!-- HERO -->
   <section id="hero">
+    <video class="hero-video-blur" autoplay loop muted playsinline src="hero-video-with-song.mp4?v=2" aria-hidden="true"></video>
     <video class="hero-video-bg" autoplay loop playsinline src="hero-video-with-song.mp4?v=2" poster="hero-poster.jpg" aria-hidden="true"></video>
     <div class="hero-video-overlay" aria-hidden="true"></div>
     <p class="hero-label" style="opacity:0;">מתחתנים!</p>
