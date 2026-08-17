@@ -51,6 +51,9 @@ nav a:hover{color:var(--gold);}
   #hero.hero-video-fallback .hero-video-bg{display:none;}
   #hero.hero-video-fallback{background:url("hero-poster.jpg") center/cover no-repeat;}
 }
+#hero.hero-invite{background:#6D7B59 url("invitation-hero.png?v=1") center/contain no-repeat;justify-content:flex-end;padding-bottom:34px;}
+#hero.hero-invite .hero-label,#hero.hero-invite .hero-names,#hero.hero-invite .hero-divider,#hero.hero-invite .hero-date,#hero.hero-invite .hero-venue{display:none;}
+#hero.hero-invite .scroll-btn{opacity:1;}
 #gallery,#countdown,#itinerary,#guest-arrival,#guest-villa,#guest-dress,#rsvp,footer,.section-rule{position:relative;z-index:2;}
 .hero-label,.hero-names,.hero-divider,.hero-date,.hero-venue,.scroll-btn{opacity:0;}
 .hero-label{font-size:16.5px;letter-spacing:6px;text-transform:uppercase;color:var(--gold);margin-bottom:20px;animation:heroFade .9s .2s cubic-bezier(.22,1,.36,1) both;}
@@ -304,22 +307,19 @@ footer{background:var(--bg);text-align:center;padding:80px 24px 100px;border-top
 
 <!-- Admin Button -->
 <button class="admin-btn" id="adminToggle" title="כניסת מנהלים">ניהול</button>
-<button type="button" class="music-toggle playing" id="musicToggle" aria-label="השתקת מוזיקה" aria-pressed="true" title="השתק מוזיקה">♫</button>
+<button type="button" class="music-toggle playing" id="musicToggle" aria-label="השתקת מוזיקה" aria-pressed="true" title="השתק מוזיקה" style="display:none;">♫</button>
 
 <div class="hero-countdown-block">
   <div class="hcb-bg" aria-hidden="true"></div>
   <div class="hcb-overlay" aria-hidden="true"></div>
 
   <!-- HERO -->
-  <section id="hero">
-    <video class="hero-video-blur" autoplay loop muted playsinline src="hero-video-with-song.mp4?v=2" aria-hidden="true"></video>
-    <video class="hero-video-bg" autoplay loop playsinline src="hero-video-with-song.mp4?v=2" poster="hero-poster.jpg" aria-hidden="true"></video>
-    <div class="hero-video-overlay" aria-hidden="true"></div>
+  <section id="hero" class="hero-invite">
     <p class="hero-label" style="opacity:0;">מתחתנים!</p>
     <h1 class="hero-names" id="heroTitle" style="opacity:0;">סהר<span class="amp">&</span>גלי</h1>
     <div class="hero-divider" style="opacity:0;"></div>
     <p class="hero-date" id="heroDate" style="opacity:0;">27–29 במאי 2027</p>
-    <button type="button" class="scroll-btn" style="opacity:0;" onclick="document.getElementById('countdown').scrollIntoView({behavior:'smooth'})">
+    <button type="button" class="scroll-btn" onclick="document.getElementById('itinerary').scrollIntoView({behavior:'smooth'})">
       <span>גלול למטה</span>
       <span class="scroll-arrow" aria-hidden="true">↓</span>
     </button>
