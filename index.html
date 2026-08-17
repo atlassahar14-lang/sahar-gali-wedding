@@ -1097,7 +1097,7 @@ updateHeroParallax();
   const btn=document.getElementById('musicToggle');
   if(!audio)return;
   audio.volume=0.6;
-  let userWants=true;
+  let userWants=false;
   function syncBtn(){
     if(!btn)return;
     btn.classList.toggle('playing',userWants);
@@ -1121,7 +1121,6 @@ updateHeroParallax();
     else playIfWanted();
   });
   syncBtn();
-  audio.play().catch(()=>{});
 })();
 
 // ===== NAV DROPDOWN =====
