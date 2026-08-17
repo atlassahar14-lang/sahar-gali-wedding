@@ -51,7 +51,7 @@ nav a:hover{color:var(--gold);}
   #hero.hero-video-fallback .hero-video-bg{display:none;}
   #hero.hero-video-fallback{background:url("hero-poster.jpg") center/cover no-repeat;}
 }
-#hero.hero-invite{background:#6D7B59 url("invitation-hero.png?v=1") center/contain no-repeat;justify-content:flex-end;padding-bottom:34px;}
+#hero.hero-invite{background:#6D7B59 url("invitation-hero.png?v=2") center/contain no-repeat;justify-content:flex-end;padding-bottom:34px;}
 #hero.hero-invite .hero-label,#hero.hero-invite .hero-names,#hero.hero-invite .hero-divider,#hero.hero-invite .hero-date,#hero.hero-invite .hero-venue{display:none;}
 #hero.hero-invite .scroll-btn{opacity:1;}
 #gallery,#countdown,#itinerary,#guest-arrival,#guest-villa,#guest-dress,#rsvp,footer,.section-rule{position:relative;z-index:2;}
@@ -307,7 +307,8 @@ footer{background:var(--bg);text-align:center;padding:80px 24px 100px;border-top
 
 <!-- Admin Button -->
 <button class="admin-btn" id="adminToggle" title="כניסת מנהלים">ניהול</button>
-<button type="button" class="music-toggle playing" id="musicToggle" aria-label="השתקת מוזיקה" aria-pressed="true" title="השתק מוזיקה" style="display:none;">♫</button>
+<button type="button" class="music-toggle playing" id="musicToggle" aria-label="השתקת מוזיקה" aria-pressed="true" title="השתק מוזיקה">♫</button>
+<audio id="bgMusic" loop preload="auto" src="hero-song.mp3?v=1"></audio>
 
 <div class="hero-countdown-block">
   <div class="hcb-bg" aria-hidden="true"></div>
@@ -1083,49 +1084,35 @@ window.addEventListener('scroll',onPageScroll,{passive:true});
 window.addEventListener('resize',updateHeroParallax);
 updateHeroParallax();
 (function(){
-  const hero=document.getElementById('hero');
-  const video=hero?.querySelector('.hero-video-bg');
+  const audio=document.getElementById('bgMusic');
   const btn=document.getElementById('musicToggle');
-  if(!video)return;
-  const useFallback=()=>hero.classList.add('hero-video-fallback');
-  video.addEventListener('error',useFallback);
-  function syncMuteBtn(){
+  if(!audio)return;
+  audio.volume=0.6;
+  let userWants=true;
+  function syncBtn(){
     if(!btn)return;
-    const on=!video.muted;
-    btn.classList.toggle('playing',on);
-    btn.textContent=on?'♫':'♪';
-    btn.title=on?'השתק מוזיקה':'הפעל מוזיקה';
-    btn.setAttribute('aria-label',on?'השתקת מוזיקה':'הפעלת מוזיקה');
-    btn.setAttribute('aria-pressed',on?'true':'false');
+    btn.classList.toggle('playing',userWants);
+    btn.textContent=userWants?'♫':'♪';
+    btn.title=userWants?'השתק מוזיקה':'הפעל מוזיקה';
+    btn.setAttribute('aria-label',userWants?'השתקת מוזיקה':'הפעלת מוזיקה');
+    btn.setAttribute('aria-pressed',userWants?'true':'false');
   }
-  async function tryPlay(){
-    try{video.muted=false;await video.play();}
-    catch(e){video.muted=true;try{await video.play();}catch(e2){useFallback();}}
-    syncMuteBtn();
-  }
-  function unmuteVideo(){
-    video.muted=false;
-    video.play().catch(()=>{});
-    syncMuteBtn();
-  }
+  function playIfWanted(){ if(userWants)audio.play().catch(()=>{}); }
   btn?.addEventListener('click',e=>{
     e.stopPropagation();
-    video.muted=!video.muted;
-    if(!video.muted)video.play().catch(()=>{});
-    syncMuteBtn();
+    userWants=!userWants;
+    if(userWants)audio.play().catch(()=>{}); else audio.pause();
+    syncBtn();
   });
   ['pointerdown','touchstart','keydown'].forEach(ev=>{
-    window.addEventListener(ev,unmuteVideo,{once:true,capture:true,passive:true});
+    window.addEventListener(ev,()=>playIfWanted(),{once:true,capture:true,passive:true});
   });
-  if(window.matchMedia('(max-width:768px)').matches){
-    const t=setTimeout(()=>{if(video.error||video.readyState<2)useFallback();},3000);
-    video.addEventListener('loadeddata',()=>clearTimeout(t),{once:true});
-  }
   document.addEventListener('visibilitychange',()=>{
-    if(document.hidden)video.pause();
-    else if(!hero.classList.contains('hero-video-fallback'))video.play().catch(()=>{});
+    if(document.hidden)audio.pause();
+    else playIfWanted();
   });
-  tryPlay();
+  syncBtn();
+  audio.play().catch(()=>{});
 })();
 
 // ===== NAV DROPDOWN =====
