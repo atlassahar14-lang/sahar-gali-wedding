@@ -42,7 +42,7 @@ nav a:hover{color:var(--gold);}
 .hero-video-blur{display:none;position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;filter:blur(32px) brightness(.5);transform:scale(1.15);z-index:0;pointer-events:none;}
 .hero-video-bg{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:contain;background:#0e1720;z-index:1;}
 .hero-video-overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.35);z-index:2;pointer-events:none;}
-#hero > :not(.hero-video-blur):not(.hero-video-bg):not(.hero-video-overlay){position:relative;z-index:3;}
+#hero > :not(.hero-video-blur):not(.hero-video-bg):not(.hero-video-overlay):not(.hero-invite-img){position:relative;z-index:3;}
 @media(min-width:769px){
   .hero-video-blur{display:block;}
   .hero-video-bg{background:transparent;}
@@ -51,9 +51,14 @@ nav a:hover{color:var(--gold);}
   #hero.hero-video-fallback .hero-video-bg{display:none;}
   #hero.hero-video-fallback{background:url("hero-poster.jpg") center/cover no-repeat;}
 }
-#hero.hero-invite{background:#6D7B59 url("invitation-hero.png?v=2") center/contain no-repeat;justify-content:flex-end;padding-bottom:34px;}
+#hero.hero-invite{background:#6D7B59;justify-content:flex-end;padding-bottom:34px;}
+.hero-invite-img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:contain;z-index:0;}
 #hero.hero-invite .hero-label,#hero.hero-invite .hero-names,#hero.hero-invite .hero-divider,#hero.hero-invite .hero-date,#hero.hero-invite .hero-venue{display:none;}
 #hero.hero-invite .scroll-btn{opacity:1;}
+@media(max-width:768px){
+  #hero.hero-invite{min-height:auto;justify-content:center;padding:96px 0 30px;}
+  .hero-invite-img{position:static;width:100%;height:auto;object-fit:unset;margin-bottom:24px;}
+}
 #gallery,#countdown,#itinerary,#guest-arrival,#guest-villa,#guest-dress,#rsvp,footer,.section-rule{position:relative;z-index:2;}
 .hero-label,.hero-names,.hero-divider,.hero-date,.hero-venue,.scroll-btn{opacity:0;}
 .hero-label{font-size:16.5px;letter-spacing:6px;text-transform:uppercase;color:var(--gold);margin-bottom:20px;animation:heroFade .9s .2s cubic-bezier(.22,1,.36,1) both;}
@@ -316,6 +321,7 @@ footer{background:var(--bg);text-align:center;padding:80px 24px 100px;border-top
 
   <!-- HERO -->
   <section id="hero" class="hero-invite">
+    <img class="hero-invite-img" src="invitation-hero.png?v=2" alt="Gali & Sahar — 27–29 May 2027 · Droushia Heights Hotel, Cyprus">
     <p class="hero-label" style="opacity:0;">מתחתנים!</p>
     <h1 class="hero-names" id="heroTitle" style="opacity:0;">סהר<span class="amp">&</span>גלי</h1>
     <div class="hero-divider" style="opacity:0;"></div>
