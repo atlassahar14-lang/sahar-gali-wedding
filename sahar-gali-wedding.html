@@ -1543,6 +1543,9 @@ function exportSuppliersCSV(){
 }
 
 // ===== BUDGET =====
+let editingExpId=null;
+const EXP_CATS=['מקום האירוע','קייטרינג','צלם/וידאו','פרחים','מוזיקה','לבוש','נסיעות','מגורים','הפקה','שונות'];
+const EXP_STATUSES=['שולם','מקדמה','לא שולם'];
 function refreshBudget(){
   const exps=DB.expenses;
   const totalBudget=parseInt(DB.budget?.total_budget||0,10);
@@ -1560,15 +1563,24 @@ function refreshBudget(){
   document.getElementById('b-bar').style.width=pct+'%';
   document.getElementById('b-pct').textContent=pct+'% הוצאה מהתקציב';
   const tbody=document.getElementById('expTable');
+  const selOpts=(arr,sel)=>{const list=arr.includes(sel)?arr:[sel,...arr];return list.map(o=>`<option${o===sel?' selected':''}>${escAttr(o)}</option>`).join('');};
   tbody.innerHTML=exps.length===0?`<tr><td colspan="7" style="text-align:center;padding:20px;color:var(--stone);">אין הוצאות</td></tr>`:
-    exps.map((e,i)=>`<tr>
+    exps.map((e,i)=>String(e.id)===String(editingExpId)?`<tr>
+      <td><input class="adm-input" id="ed-name" value="${escAttr(e.name)}" style="min-width:120px;"></td>
+      <td><select class="adm-input" id="ed-cat" style="max-width:150px;">${selOpts(EXP_CATS,e.cat)}</select></td>
+      <td><input class="adm-input" id="ed-total" type="number" value="${e.total}" style="max-width:100px;"></td>
+      <td><input class="adm-input" id="ed-paid" type="number" value="${e.paid}" style="max-width:100px;"></td>
+      <td style="color:var(--stone);">—</td>
+      <td><select class="adm-input" id="ed-status" style="max-width:120px;">${selOpts(EXP_STATUSES,e.status)}</select></td>
+      <td style="white-space:nowrap;"><button class="adm-btn adm-btn-sm" onclick="saveEditExp('${e.id}')">שמור</button> <button class="adm-btn adm-btn-sm" onclick="cancelEditExp()">ביטול</button></td>
+    </tr>`:`<tr>
       <td style="color:var(--cream);">${e.name}</td>
       <td><span class="expense-cat">${e.cat}</span></td>
       <td>${fmt(e.total)}</td>
       <td>${fmt(e.paid)}</td>
       <td style="color:${parseInt(e.total)-parseInt(e.paid)>0?'#E08888':'#8FC890'}">${fmt(parseInt(e.total)-parseInt(e.paid))}</td>
       <td><span class="badge ${e.status==='שולם'?'badge-yes':e.status==='מקדמה'?'badge-maybe':'badge-no'}">${e.status}</span></td>
-      <td><button class="adm-btn adm-btn-sm adm-btn-red" onclick="removeExp('${e.id}')">✕</button></td>
+      <td style="white-space:nowrap;"><button class="adm-btn adm-btn-sm" onclick="startEditExp('${e.id}')" title="ערוך">✎</button> <button class="adm-btn adm-btn-sm adm-btn-red" onclick="removeExp('${e.id}')">✕</button></td>
     </tr>`).join('');
 }
 async function saveBudget(){
@@ -1597,6 +1609,24 @@ async function addExpense(){
 async function removeExp(id){
   if(!sbReady())return;
   await sb.from('expenses').delete().eq('id',id);
+  await dbLoadAll();
+  refreshBudget();
+}
+function startEditExp(id){editingExpId=id;refreshBudget();const el=document.getElementById('ed-name');if(el){el.focus();el.select();}}
+function cancelEditExp(){editingExpId=null;refreshBudget();}
+async function saveEditExp(id){
+  if(!sbReady())return;
+  const name=(document.getElementById('ed-name').value||'').trim();
+  if(!name){alert('צריך תיאור להוצאה');return;}
+  const {error}=await sb.from('expenses').update({
+    name,
+    cat:document.getElementById('ed-cat').value,
+    total:document.getElementById('ed-total').value||0,
+    paid:document.getElementById('ed-paid').value||0,
+    status:document.getElementById('ed-status').value
+  }).eq('id',id);
+  if(error){alert(dbError('update expense',error));return;}
+  editingExpId=null;
   await dbLoadAll();
   refreshBudget();
 }
