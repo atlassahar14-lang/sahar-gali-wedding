@@ -753,7 +753,8 @@ footer{background:var(--bg);text-align:center;padding:80px 24px 100px;border-top
           </select>
           <input class="adm-input" id="s-arrival" type="date" style="max-width:160px;" title="תאריך הגעה צפוי">
           <input class="adm-input" id="s-notes" placeholder="הערות (מחיר, שעות, בקשות...)">
-          <button class="adm-btn" onclick="addSupplier()">הוסף ספק</button>
+          <button class="adm-btn" id="s-submit-btn" onclick="addSupplier()">הוסף ספק</button>
+          <button class="adm-btn adm-btn-sm" id="s-cancel-btn" onclick="cancelEditSupplier()" style="display:none;">ביטול עריכה</button>
         </div>
       </div>
       <div class="adm-card">
@@ -1475,10 +1476,11 @@ function supplierStatusBadge(s){
   if(s==='בוטל')return'badge-no';
   return'badge-maybe';
 }
+let editingSupplierId=null;
 async function addSupplier(){
   const name=document.getElementById('s-name').value.trim();
   if(!name||!sbReady())return;
-  const {error}=await sb.from('suppliers').insert({
+  const payload={
     name,company:document.getElementById('s-company').value.trim(),
     cat:document.getElementById('s-cat').value,
     phone:document.getElementById('s-phone').value.trim(),
@@ -1489,11 +1491,33 @@ async function addSupplier(){
     status:document.getElementById('s-status').value,
     arrival:document.getElementById('s-arrival').value||null,
     notes:document.getElementById('s-notes').value.trim()
-  });
+  };
+  const {error}=editingSupplierId
+    ? await sb.from('suppliers').update(payload).eq('id',editingSupplierId)
+    : await sb.from('suppliers').insert(payload);
   if(error){alert('שגיאה בשמירה');return;}
   await dbLoadAll();
-  ['s-name','s-company','s-phone','s-email','s-from','s-arrival','s-notes'].forEach(id=>document.getElementById(id).value='');
+  cancelEditSupplier();
   refreshSuppliers();
+}
+function startEditSupplier(id){
+  const s=DB.suppliers.find(x=>String(x.id)===String(id));
+  if(!s)return;
+  const set=(f,v)=>{const el=document.getElementById(f);if(el)el.value=(v==null?'':v);};
+  set('s-name',s.name);set('s-company',s.company);set('s-cat',s.cat);
+  set('s-phone',s.phone);set('s-email',s.email);set('s-from',s.from);
+  set('s-lodging',s.lodging||'לא');set('s-transfer',s.transfer||'לא');
+  set('s-status',s.status);set('s-arrival',s.arrival||'');set('s-notes',s.notes);
+  editingSupplierId=id;
+  const btn=document.getElementById('s-submit-btn');if(btn)btn.textContent='עדכן ספק';
+  const c=document.getElementById('s-cancel-btn');if(c)c.style.display='';
+  const nm=document.getElementById('s-name');if(nm){nm.scrollIntoView({behavior:'smooth',block:'center'});nm.focus();}
+}
+function cancelEditSupplier(){
+  editingSupplierId=null;
+  ['s-name','s-company','s-phone','s-email','s-from','s-arrival','s-notes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  const btn=document.getElementById('s-submit-btn');if(btn)btn.textContent='הוסף ספק';
+  const c=document.getElementById('s-cancel-btn');if(c)c.style.display='none';
 }
 async function removeSupplier(id){
   if(!sbReady())return;
@@ -1525,7 +1549,7 @@ function refreshSuppliers(){
       <td><span class="badge ${supplierStatusBadge(s.status)}">${s.status}</span></td>
       <td style="font-size:12px;">${s.arrival||'—'}</td>
       <td style="font-size:12px;max-width:140px;">${s.notes||'—'}</td>
-      <td><button class="adm-btn adm-btn-sm adm-btn-red" onclick="removeSupplier('${s.id}')">✕</button></td>
+      <td style="white-space:nowrap;"><button class="adm-btn adm-btn-sm" onclick="startEditSupplier('${s.id}')" title="ערוך">✎</button> <button class="adm-btn adm-btn-sm adm-btn-red" onclick="removeSupplier('${s.id}')">✕</button></td>
     </tr>`).join('');
 }
 function exportSuppliersCSV(){
