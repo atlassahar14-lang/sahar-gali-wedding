@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>#hero{background-color:transparent}#hero .hero-label,#hero .hero-names,#hero .hero-date,#hero .hero-venue,#hero .hero-divider,#hero .scroll-btn{opacity:0}</style>
 <title>סהר & גלי | 27–29 במאי 2027</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Lato:wght@300;400;700&family=Heebo:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Lato:wght@300;400;700&family=Heebo:wght@300;400;500;600&family=Tenor+Sans&family=Oswald:wght@300;400&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;} html{scroll-behavior:smooth;}
 :root{
@@ -291,6 +291,112 @@ footer{background:var(--bg);text-align:center;padding:80px 24px 100px;border-top
 .content-field input:focus,.content-field textarea:focus{border-color:var(--gold);}
 .content-field textarea{resize:vertical;min-height:80px;}
 .save-toast{display:none;font-size:12px;color:#8FC890;margin-top:8px;letter-spacing:1px;}
+
+/* ======= CANVA DESIGN (Gali) ======= */
+:root{
+  --cv-olive:#6D7B59;--cv-olive2:#77856A;--cv-beige:#E6D8BF;--cv-slate:#8698AF;
+  --cv-butter:#F1DC90;--cv-mustard:#A4873F;--cv-ink:#4F5B3F;--cv-cream:#F3EBDC;
+  --bg:var(--cv-beige);--text:#6F8098;--gold:var(--cv-mustard);--stone:#6F8098;
+}
+body{background:var(--cv-beige);font-family:'Heebo',sans-serif;}
+.section-rule{display:none !important;}
+
+/* nav */
+nav{border-bottom:none;}
+nav a,.nav-dropdown-trigger{font-family:'Heebo',sans-serif;font-size:15px;letter-spacing:1.5px;color:var(--cv-cream);}
+nav a:hover,.nav-dropdown:hover .nav-dropdown-trigger{color:var(--cv-butter);}
+nav.scrolled{background:rgba(109,123,89,.94);border-bottom:none;}
+.nav-dropdown-menu{background:var(--cv-olive);border:none;}
+.nav-dropdown-menu a{color:var(--cv-cream);}
+.nav-dropdown-menu a:hover{background:rgba(255,255,255,.08);}
+.hamburger span{background:var(--cv-cream);}
+@media(max-width:600px){nav.mob-open{background:rgba(109,123,89,.97);}.hamburger{color:var(--cv-cream);}}
+.scroll-btn span:first-child{color:var(--cv-cream);}
+.scroll-arrow{border-color:rgba(243,235,220,.6);color:var(--cv-cream);}
+
+/* sections */
+.cv-sec{padding:clamp(56px,9vw,110px) 20px;text-align:center;}
+.cv-inner{max-width:900px;margin:0 auto;}
+.cv-beige{background:var(--cv-beige) !important;}
+.cv-slate{background:var(--cv-slate) !important;}
+.cv-butter{background:var(--cv-butter) !important;}
+.cv-olive{background:var(--cv-olive2) !important;}
+.cv-title{font-family:'Tenor Sans','Heebo',sans-serif;font-weight:400;font-size:clamp(28px,6vw,58px);letter-spacing:clamp(1px,.3vw,3px);line-height:1.15;margin:0 0 10px;}
+.cv-sub{font-family:'Oswald','Heebo',sans-serif;font-weight:300;font-size:clamp(15px,2.2vw,19px);letter-spacing:.5px;margin-bottom:clamp(28px,5vw,48px);}
+.cv-beige .cv-title,.cv-beige .cv-sub{color:var(--cv-slate);}
+.cv-slate .cv-title{color:var(--cv-butter);}
+.cv-slate .cv-sub{color:var(--cv-butter);}
+.cv-butter .cv-title,.cv-butter .cv-sub{color:var(--cv-olive2);}
+.cv-olive .cv-title{color:var(--cv-beige);margin-bottom:clamp(28px,5vw,48px);}
+
+/* timeline */
+.cv-days{display:flex;flex-direction:column;gap:clamp(28px,4vw,40px);max-width:640px;margin:0 auto;}
+.cv-day{display:grid;grid-template-columns:120px 1fr;gap:20px;text-align:right;align-items:start;}
+.cv-day-name{font-family:'Tenor Sans','Heebo',sans-serif;font-size:clamp(18px,2.6vw,22px);color:var(--cv-slate);white-space:nowrap;}
+.cv-day-list{list-style:none;color:var(--cv-slate);font-size:15px;line-height:1.5;}
+.cv-day-list li{margin-bottom:10px;}
+.cv-t{display:inline-block;min-width:52px;margin-left:10px;font-variant-numeric:tabular-nums;direction:ltr;}
+.cv-day-list small{display:block;margin-right:62px;font-size:13px;opacity:.8;font-weight:300;}
+@media(max-width:560px){.cv-day{grid-template-columns:1fr;gap:8px;}.cv-day-name{border-bottom:1px solid rgba(134,152,175,.35);padding-bottom:6px;}}
+
+/* travel blobs */
+.cv-blobs{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(16px,3vw,30px);align-items:center;}
+.cv-blob{background:var(--cv-butter);color:var(--cv-ink);padding:clamp(24px,3vw,34px) 22px;min-height:220px;display:flex;flex-direction:column;justify-content:center;gap:8px;border-radius:38% 30% 34% 28% / 30% 36% 30% 38%;font-size:14px;line-height:1.6;}
+.cv-blob:nth-child(1){transform:rotate(-2deg);}
+.cv-blob:nth-child(2){transform:translateY(14px) rotate(1.5deg);border-radius:30% 38% 28% 36% / 36% 28% 38% 30%;}
+.cv-blob:nth-child(3){transform:translateY(-12px) rotate(-1deg);border-radius:34% 28% 38% 30% / 28% 38% 30% 36%;}
+.cv-blob h3{font-family:'Tenor Sans','Heebo',sans-serif;font-weight:400;font-size:20px;color:var(--cv-olive);margin-bottom:4px;}
+@media(max-width:700px){.cv-blobs{grid-template-columns:1fr;max-width:340px;margin:0 auto;}.cv-blob,.cv-blob:nth-child(n){transform:none;}}
+.cv-link{display:inline-block;align-self:center;margin-top:6px;padding:7px 16px;border-radius:20px;background:var(--cv-olive);color:var(--cv-cream);text-decoration:none;font-size:13px;}
+.cv-link:hover{background:var(--cv-ink);}
+
+/* hotel */
+.cv-hotel{display:grid;grid-template-columns:1.1fr 1fr;gap:clamp(20px,4vw,40px);align-items:center;text-align:right;}
+.cv-hotel img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:18px;display:block;}
+.cv-hotel-info{display:flex;flex-direction:column;gap:12px;color:var(--cv-ink);font-size:15px;line-height:1.8;align-items:flex-start;}
+.cv-hotel-link{font-size:clamp(20px,3vw,26px);color:#222;text-decoration:none;border-bottom:1px solid currentColor;}
+.cv-muted{opacity:.75;font-size:13px;}
+@media(max-width:700px){.cv-hotel{grid-template-columns:1fr;text-align:center;}.cv-hotel-info{align-items:center;}}
+
+/* dress */
+.cv-dress{display:grid;grid-template-columns:1fr 1fr;gap:clamp(20px,4vw,48px);max-width:700px;margin:0 auto;color:var(--cv-beige);}
+.cv-dress h3{font-family:'Tenor Sans','Heebo',sans-serif;font-weight:400;font-size:22px;color:var(--cv-butter);margin-bottom:8px;}
+.cv-dress p{font-size:16px;line-height:1.8;font-weight:300;}
+@media(max-width:560px){.cv-dress{grid-template-columns:1fr;}}
+
+/* rsvp */
+#rsvp .rsvp-box{max-width:520px;margin:0 auto;padding:0;background:none;box-shadow:none;border-radius:0;}
+#rsvp .fg label{font-size:14px;letter-spacing:0;font-weight:600;color:var(--cv-mustard);text-transform:none;text-align:right;}
+#rsvp .fg input,#rsvp .fg select,#rsvp .fg textarea{background:transparent;border:1px solid #C4AE86;border-radius:10px;color:var(--cv-ink);font-family:'Heebo',sans-serif;font-size:15px;}
+#rsvp .fg input:focus,#rsvp .fg select:focus,#rsvp .fg textarea:focus{border-color:var(--cv-mustard);box-shadow:0 0 0 3px rgba(164,135,63,.15);}
+#rsvp .fg select option{background:var(--cv-beige);}
+.cv-choices{display:flex;flex-direction:column;gap:10px;}
+.cv-choice{width:100%;padding:16px 18px;border:1px solid transparent;border-radius:10px;background:#DCCBAA;color:var(--cv-mustard);font-family:'Heebo',sans-serif;font-size:15px;text-align:right;cursor:pointer;transition:all .2s;}
+.cv-choice:hover{background:#D5C29C;}
+.cv-choice.active{border-color:var(--cv-mustard);background:#D2BD93;color:var(--cv-ink);font-weight:500;}
+#rsvp .rsvp-btn{background:var(--cv-butter);color:var(--cv-mustard);border-radius:22px;font-family:'Tenor Sans','Heebo',sans-serif;font-size:15px;letter-spacing:3px;font-weight:400;}
+#rsvp .rsvp-btn:hover{background:#EBD27A;color:var(--cv-ink);}
+#rsvp .rsvp-ok{color:var(--cv-slate);font-family:'Tenor Sans','Heebo',sans-serif;}
+
+/* gallery + countdown */
+#gallery.cv-sec{padding:clamp(56px,9vw,110px) 20px;}
+#gallery .gallery-head{margin-bottom:0;}
+.gallery-item{border-radius:18px;box-shadow:none;background:var(--cv-beige);}
+.gallery-empty{color:var(--cv-butter);}
+#countdown.cv-sec{padding:clamp(56px,9vw,100px) 20px;}
+#countdown .cd-box{padding:0;}
+.cd-label{font-family:'Tenor Sans','Heebo',sans-serif;color:var(--cv-olive2);letter-spacing:2px;}
+.cd-num{font-family:'Tenor Sans',sans-serif;color:var(--cv-olive);}
+.cd-name{color:var(--cv-olive);font-family:'Heebo',sans-serif;letter-spacing:1px;font-size:12px;}
+.cd-sep{color:var(--cv-olive);}
+
+/* footer */
+footer{background:var(--cv-olive);border-top:none;}
+.ft-names{font-family:'Tenor Sans','Heebo',sans-serif;color:var(--cv-cream);opacity:.35;}
+.ft-txt{color:var(--cv-cream);}
+.ft-sep{color:var(--cv-butter);}
+footer p[style]{color:rgba(243,235,220,.5) !important;}
+.footer-decor{display:none;}
 </style>
 </head>
 <body>
@@ -337,164 +443,92 @@ footer{background:var(--bg);text-align:center;padding:80px 24px 100px;border-top
   </section>
 </div>
 
-<div class="section-rule"></div>
-
 <!-- ITINERARY -->
-<section id="itinerary">
-  <div class="inner">
-    <div class="reveal" style="text-align:center;">
-      <span class="s-tag" style="font-size:13px;">לוז האירוע</span>
-      <h2 class="s-title" style="white-space:nowrap;font-size:clamp(38px,8.5vw,92px);direction:ltr;text-align:center;">A Private Affair</h2>
-      <p style="font-size:16px;letter-spacing:1px;color:var(--stone);margin-top:8px;">מביאים את טוסקנה לקפריסין</p>
-      <div class="gold-line" style="margin:24px auto;"></div>
-    </div>
-    <div class="reveal">
-      <div class="day-tabs">
-        <button class="day-tab active" onclick="showDay(0)">חמישי 27.5</button>
-        <button class="day-tab" onclick="showDay(1)">שישי 28.5</button>
-        <button class="day-tab" onclick="showDay(2)">שבת 29.5</button>
-      </div>
-
-      <div class="day-panel active" id="day0">
-        <div class="tl">
-          <div class="tl-item">
-            <div class="tl-time">15:00 – 16:00</div>
-            <div class="tl-name">הגעה וצ'ק אין</div>
-            <div class="tl-desc">קבלת פנים נעימה וקבלת חדרים.</div>
-            <a class="map-link" href="https://maps.google.com/?q=Droushia+Heights+Hotel,+8700+Droushia,+Paphos,+Cyprus" target="_blank">Droushia Heights Hotel, פאפוס</a>
-          </div>
-          <div class="tl-item">
-            <div class="tl-time">16:00 – 19:00</div>
-            <div class="tl-name">זמן חופשי במלון</div>
-            <div class="tl-desc">זמן בריכה ומנוחה במלון, למי שרוצה.</div>
-          </div>
-          <div class="tl-item">
-            <div class="tl-time">20:00 – 23:00</div>
-            <div class="tl-name">אירוע וולקם פרטי</div>
-            <div class="tl-desc">אירוע חגיגי בסגנון איטלקי.</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="day-panel" id="day1">
-        <div class="tl">
-          <div class="tl-item">
-            <div class="tl-time">08:30 – 11:00</div>
-            <div class="tl-name">ארוחת בוקר</div>
-          </div>
-          <div class="tl-item">
-            <div class="tl-time">12:00 – 14:00</div>
-            <div class="tl-name">זמן בריכה</div>
-            <div class="tl-desc">שמש, מים וקוקטיילים — הרוגע המתוק שלפני הערב הגדול.</div>
-          </div>
-          <div class="tl-item">
-            <div class="tl-time">14:00 – 17:00</div>
-            <div class="tl-name">שנ״צ והתארגנות</div>
-            <div class="tl-desc">מנוחה קצרה והתארגנות לקראת האירוע.</div>
-          </div>
-          <div class="tl-item">
-            <div class="tl-time">17:30 – 03:00</div>
-            <div class="tl-name">אירוע החתונה</div>
-            <div class="tl-desc">החופה, החגיגה — ואפטר חלומות עד השעות הקטנות.</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="day-panel" id="day2">
-        <div class="tl">
-          <div class="tl-item">
-            <div class="tl-time">09:30</div>
-            <div class="tl-name">ברנץ' פרידה</div>
-            <div class="tl-desc">ארוחת בוקר עצלנית עם ריחות קפה, גבינות טריות ולחם בית.</div>
-          </div>
-          <div class="tl-item">
-            <div class="tl-time">12:00</div>
-            <div class="tl-name">בריכה ופנאי</div>
-            <div class="tl-desc">זמן חופשי בבריכה החיצונית עם נוף לים — מי שרוצה.</div>
-            <a class="map-link" href="https://maps.google.com/?q=Droushia+Heights+Hotel+pool" target="_blank">בריכת המלון</a>
-          </div>
-          <div class="tl-item">
-            <div class="tl-time">15:00</div>
-            <div class="tl-name">פרידה ונסיעה</div>
-            <div class="tl-desc">Αντίο! נתראה בארץ עם זיכרונות מלאים.</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<div class="section-rule"></div>
-
-<!-- GUEST: ARRIVAL -->
-<section id="guest-arrival">
-  <div class="inner">
-    <div class="reveal">
-      <span class="s-tag" style="font-size:13px;">מידע לאורח</span>
-      <h2 class="s-title">הגעה <em>והתניידות</em></h2>
-      <div class="gold-line"></div>
-    </div>
-    <div class="travel-grid reveal">
-      <div class="t-card">
-        <h3>שדות תעופה</h3>
-        <ul>
-          <li><strong style="color:var(--text)">Paphos PFO</strong> — 40 דק'</li>
-          <li><strong style="color:var(--text)">Larnaca LCA</strong> — כשעתיים</li>
+<section id="itinerary" class="cv-sec cv-beige">
+  <div class="cv-inner reveal">
+    <h2 class="cv-title" dir="ltr">Wedding Weekend Timeline</h2>
+    <p class="cv-sub" dir="ltr">Thursday–Saturday</p>
+    <div class="cv-days">
+      <div class="cv-day">
+        <div class="cv-day-name">חמישי 27.5</div>
+        <ul class="cv-day-list">
+          <li><span class="cv-t">15:00</span>הגעה וצ'ק אין<small>קבלת פנים נעימה וקבלת חדרים</small></li>
+          <li><span class="cv-t">16:00</span>זמן חופשי במלון<small>זמן בריכה ומנוחה, למי שרוצה</small></li>
+          <li><span class="cv-t">20:00</span>אירוע וולקם פרטי<small>אירוע חגיגי בסגנון איטלקי</small></li>
         </ul>
       </div>
-      <div class="t-card">
+      <div class="cv-day">
+        <div class="cv-day-name">שישי 28.5</div>
+        <ul class="cv-day-list">
+          <li><span class="cv-t">08:30</span>ארוחת בוקר</li>
+          <li><span class="cv-t">12:00</span>זמן בריכה<small>שמש, מים וקוקטיילים — הרוגע המתוק שלפני הערב הגדול</small></li>
+          <li><span class="cv-t">14:00</span>שנ״צ והתארגנות</li>
+          <li><span class="cv-t">17:30</span>אירוע החתונה<small>החופה, החגיגה — ואפטר חלומות עד השעות הקטנות</small></li>
+        </ul>
+      </div>
+      <div class="cv-day">
+        <div class="cv-day-name">שבת 29.5</div>
+        <ul class="cv-day-list">
+          <li><span class="cv-t">09:30</span>ברנץ' פרידה<small>ארוחת בוקר עצלנית עם קפה, גבינות טריות ולחם בית</small></li>
+          <li><span class="cv-t">12:00</span>בריכה ופנאי<small>זמן חופשי בבריכה עם נוף לים</small></li>
+          <li><span class="cv-t">15:00</span>פרידה ונסיעה<small>Αντίο! נתראה בארץ עם זיכרונות מלאים</small></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GUEST: ARRIVAL -->
+<section id="guest-arrival" class="cv-sec cv-slate">
+  <div class="cv-inner reveal">
+    <h2 class="cv-title" dir="ltr">Travel Details</h2>
+    <p class="cv-sub" dir="ltr">flights, transfers &amp; shuttles</p>
+    <div class="cv-blobs">
+      <div class="cv-blob">
+        <h3>שדות תעופה</h3>
+        <p><strong dir="ltr">Paphos PFO</strong><br>כ־40 דקות</p>
+        <p><strong dir="ltr">Larnaca LCA</strong><br>כשעתיים</p>
+      </div>
+      <div class="cv-blob">
         <h3>התניידות</h3>
-        <p>מומלץ לשכור רכב משדה התעופה בפאפוס — כ־40 דק' דרך פוליס אל Droushia Heights Hotel. יש חנייה חינם במלון.</p>
-        <br>
-        <a class="map-link" href="https://maps.google.com/?q=Droushia+Heights+Hotel,+8700+Droushia,+Paphos,+Cyprus" target="_blank">נווט למלון</a>
+        <p>מומלץ לשכור רכב משדה התעופה בפאפוס — כ־40 דקות דרך פוליס. יש חנייה חינם במלון.</p>
+        <a class="cv-link" href="https://maps.google.com/?q=Droushia+Heights+Hotel,+8700+Droushia,+Paphos,+Cyprus" target="_blank">נווטו למלון</a>
       </div>
-      <div class="t-card">
+      <div class="cv-blob">
         <h3>שאטלים</h3>
-        <p>יסופקו שאטלים הלוך וחזור משדות התעופה. אנא ציינו בטופס האישור.</p>
+        <p>יסופקו שאטלים הלוך וחזור משדות התעופה. אנא ציינו זאת בטופס אישור ההגעה.</p>
       </div>
     </div>
   </div>
 </section>
 
-<div class="section-rule"></div>
-
-<!-- GUEST: VILLA -->
-<section id="guest-villa">
-  <div class="inner">
-    <div class="reveal">
-      <h2 class="s-title"><em>המלון</em></h2>
-      <div class="gold-line"></div>
-    </div>
-    <div class="villa-showcase reveal">
+<!-- GUEST: HOTEL -->
+<section id="guest-villa" class="cv-sec cv-butter">
+  <div class="cv-inner reveal">
+    <h2 class="cv-title" dir="ltr">The Hotel</h2>
+    <p class="cv-sub" dir="ltr">Droushia Heights Hotel</p>
+    <div class="cv-hotel">
       <img src="droushia-hotel.jpg" alt="Droushia Heights Hotel">
-      <div class="villa-info">
-        <p>Droushia Heights Hotel · 8700 Droushia, Paphos, Cyprus · טל׳ +357 26332200</p>
-        <a class="site-link" href="https://www.droushiaheights.com" target="_blank">לאתר המלון</a>
-        <div class="t-card">
-          <h3>לינה</h3>
-          <p>חדרים וסוויטות בסגנון eco-chic · בריכה חיצונית · ספא Aura · 636 מ׳ מעל פני הים, מול הים התיכון.</p>
-        </div>
+      <div class="cv-hotel-info">
+        <a class="cv-hotel-link" href="https://www.droushiaheights.com" target="_blank">לאתר המלון</a>
+        <p>חדרים וסוויטות בסגנון eco-chic · בריכה חיצונית · ספא Aura · 636 מ׳ מעל פני הים, מול הים התיכון.</p>
+        <p class="cv-muted" dir="ltr">8700 Droushia, Paphos, Cyprus · +357 26332200</p>
+        <a class="cv-link" href="https://maps.google.com/?q=Droushia+Heights+Hotel,+8700+Droushia,+Paphos,+Cyprus" target="_blank">מפה וניווט</a>
       </div>
     </div>
   </div>
 </section>
-
-<div class="section-rule"></div>
 
 <!-- GUEST: DRESS CODE -->
-<section id="guest-dress">
-  <div class="inner">
-    <div class="reveal">
-      <span class="s-tag" style="font-size:13px;">מידע לאורח</span>
-      <h2 class="s-title">קוד לבוש <em>ומה להביא</em></h2>
-      <div class="gold-line"></div>
-    </div>
-    <div class="travel-grid reveal">
-      <div class="t-card">
+<section id="guest-dress" class="cv-sec cv-olive">
+  <div class="cv-inner reveal">
+    <h2 class="cv-title" dir="ltr">Dress code &amp; Essentials</h2>
+    <div class="cv-dress">
+      <div>
         <h3>קוד לבוש</h3>
         <p>אלגנטי-קז'ואל, צבעי אדמה וטבע, ללא לבן</p>
       </div>
-      <div class="t-card">
+      <div>
         <h3>מה להביא</h3>
         <p>נעליים נוחות לדשא, קרם הגנה, מצב רוח חגיגי</p>
       </div>
@@ -502,46 +536,42 @@ footer{background:var(--bg);text-align:center;padding:80px 24px 100px;border-top
   </div>
 </section>
 
-<div class="section-rule"></div>
-
 <!-- RSVP -->
-<section id="rsvp">
-  <div class="inner">
-    <div class="reveal">
-      <span class="s-tag" style="font-size:13px;">אישור הגעה</span>
-      <h2 class="s-title">אנחנו רוצים<br>אתכם <em>שם</em></h2>
-      <div class="gold-line" style="margin:0 auto 20px;"></div>
-      <p class="s-body">אנא אשרו הגעה עד <strong style="color:var(--text)">1 בינואר 2027</strong></p>
-    </div>
-    <div class="rsvp-box reveal">
+<section id="rsvp" class="cv-sec cv-beige">
+  <div class="cv-inner reveal">
+    <h2 class="cv-title" dir="ltr">We Want You With Us!</h2>
+    <p class="cv-sub">אנא אשרו הגעתכם עד ה־1 לינואר 2027</p>
+    <div class="rsvp-box">
       <form id="rsvpForm">
-        <div class="fg"><label>שם מלא</label><input type="text" id="rf-name" placeholder="שם מלא" required></div>
-        <div class="fg"><label>מספר טלפון לאיש קשר</label><input type="tel" id="rf-phone" placeholder="050-1234567" required style="direction:ltr;text-align:right;"></div>
-        <div class="fg"><label>מספר מגיעים</label>
+        <div class="fg"><label for="rf-name">שם מלא*</label><input type="text" id="rf-name" required></div>
+        <div class="fg"><label for="rf-phone">מספר טלפון*</label><input type="tel" id="rf-phone" required style="direction:ltr;text-align:right;"></div>
+        <div class="fg"><label for="rf-count">כמה תגיעו*</label>
           <select id="rf-count"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5+</option></select>
         </div>
-        <div class="fg"><label>צריכים הסעה?</label>
-          <select id="rf-transfer"><option value="לא">לא, יש לי רכב</option><option value="כן - מPFO">כן, מפאפוס (PFO)</option><option value="כן - מLCA">כן, מלרנקה (LCA)</option></select>
+        <div class="fg"><label>צריכים הסעה?*</label>
+          <select id="rf-transfer" hidden><option value="לא">לא, יש לי רכב</option><option value="כן - מPFO">כן, מפאפוס (PFO)</option><option value="כן - מLCA">כן, מלרנקה (LCA)</option></select>
+          <div class="cv-choices" role="radiogroup">
+            <button type="button" class="cv-choice active" data-v="לא" role="radio" aria-checked="true">לא, מגיע עצמאית</button>
+            <button type="button" class="cv-choice" data-v="כן - מLCA" role="radio" aria-checked="false">כן, משדה התעופה בלרנקה</button>
+            <button type="button" class="cv-choice" data-v="כן - מPFO" role="radio" aria-checked="false">כן, משדה התעופה בפאפוס</button>
+          </div>
         </div>
-        <div class="fg"><label>הגבלות תזונתיות / בקשות מיוחדות</label><textarea id="rf-notes" placeholder="טבעוני, ללא גלוטן, אלרגיה..."></textarea></div>
-        <button type="submit" class="rsvp-btn">אשרו הגעה</button>
+        <div class="fg"><label for="rf-notes">הגבלות תזונתיות / בקשות מיוחדות</label><textarea id="rf-notes"></textarea></div>
+        <button type="submit" class="rsvp-btn">RSVP</button>
       </form>
       <div class="rsvp-ok" id="rsvpOk">
         תודה! נתראה בקפריסין<br>
-        <span style="font-size:13px;color:var(--stone);font-family:'Lato',sans-serif;font-weight:300;">פרטיכם נרשמו</span>
+        <span style="font-size:14px;font-family:'Heebo',sans-serif;font-weight:300;">פרטיכם נרשמו</span>
       </div>
     </div>
   </div>
 </section>
 
-<div class="section-rule"></div>
-
 <!-- GALLERY -->
-<section id="gallery">
+<section id="gallery" class="cv-sec cv-slate">
   <div class="gallery-head reveal">
-    <span class="s-tag">זכרונות</span>
-    <h2 class="s-title">גלריית <em>תמונות</em></h2>
-    <div class="gold-line"></div>
+    <h2 class="cv-title" dir="ltr">Gallery</h2>
+    <p class="cv-sub" dir="ltr">moments &amp; memories</p>
   </div>
   <div class="gallery-grid reveal" id="galleryGrid"><div class="gallery-item"><img src="WhatsApp Image 2026-06-11 at 10.17.19.jpeg" alt="סהר וגלי" loading="lazy" onclick="openGalleryLightbox(this.src)"></div><div class="gallery-item"><img src="WhatsApp Image 2026-06-11 at 10.17.48.jpeg" alt="הצעת נישואין" loading="lazy" onclick="openGalleryLightbox(this.src)"></div></div>
   <p class="gallery-empty reveal" id="galleryEmpty" style="display:none;">עדיין אין תמונות בגלריה — בקרוב יעלו תמונות מהחתונה.</p>
@@ -551,10 +581,8 @@ footer{background:var(--bg);text-align:center;padding:80px 24px 100px;border-top
   <img id="galleryLightboxImg" alt="">
 </div>
 
-<div class="section-rule"></div>
-
 <!-- COUNTDOWN -->
-<section id="countdown" class="reveal">
+<section id="countdown" class="cv-sec cv-butter reveal">
   <div class="cd-box">
     <p class="cd-label">עוד כמה זמן עד לחתונה</p>
     <div class="cd-grid countdown">
@@ -1922,6 +1950,11 @@ async function refreshAll(){
   refreshGuests();refreshRooms();refreshTransfers();refreshSuppliers();refreshBudget();refreshTasks();refreshFiles();refreshGalleryAdmin();loadContent();refreshGuestGallery();
 }
 (async function init(){await dbInit();})();
+// ===== RSVP transfer choices (Canva design) =====
+document.querySelectorAll('.cv-choice').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.cv-choice').forEach(x=>{x.classList.toggle('active',x===b);x.setAttribute('aria-checked',x===b?'true':'false');});
+  document.getElementById('rf-transfer').value=b.dataset.v;
+}));
 </script>
 </body>
 </html>
