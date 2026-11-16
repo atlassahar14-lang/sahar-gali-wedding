@@ -375,6 +375,8 @@ nav.scrolled{background:rgba(109,123,89,.94);border-bottom:none;}
 #guest-dress .cv-inner{max-width:1100px;position:relative;}
 .cv-dress{max-width:1080px;}
 .cv-suitcase{position:absolute;left:clamp(12px,2.5vw,60px);top:calc(clamp(56px,9vw,110px) + clamp(30px,4vw,60px));width:clamp(80px,9vw,135px);height:auto;pointer-events:none;}
+.cv-hearts-top{position:absolute;right:clamp(16px,3vw,70px);top:clamp(24px,4vw,60px);width:clamp(90px,10vw,150px);height:auto;transform:rotate(-18deg) scaleX(-1);pointer-events:none;}
+@media(max-width:560px){.cv-hearts-top{width:70px;top:16px;right:12px;}}
 .cv-hearts{display:block;width:clamp(120px,13vw,190px);height:auto;margin:clamp(36px,5vw,60px) auto 0;transform:translateX(18%);}
 .cv-bring li{display:flex;align-items:center;gap:16px;text-align:right;}
 .cv-bring li::before{content:'';width:14px;height:14px;border-radius:50%;background:var(--cv-butter);flex:none;}
@@ -553,6 +555,7 @@ footer p[style]{color:rgba(243,235,220,.5) !important;}
 <!-- GUEST: DRESS CODE -->
 <section id="guest-dress" class="cv-sec cv-olive">
   <img class="cv-suitcase" src="suitcase.png?v=1" alt="" aria-hidden="true">
+  <img class="cv-hearts-top" src="hearts.png?v=1" alt="" aria-hidden="true">
   <div class="cv-inner reveal">
     <h2 class="cv-title" dir="ltr">Dress code &amp; Essentials</h2>
     <div class="cv-dress">
