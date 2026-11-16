@@ -367,12 +367,13 @@ nav.scrolled{background:rgba(109,123,89,.94);border-bottom:none;}
 .cv-dress-v{font-size:clamp(14px,1.8vw,17px);line-height:1.5;font-weight:300;}
 .cv-bring{list-style:none;display:inline-flex;flex-direction:column;gap:4px;font-size:clamp(20px,2.6vw,26px);font-weight:300;}
 .cv-dress>div:last-child{text-align:center;}
-.cv-dress{grid-template-columns:1.6fr auto 1fr;align-items:center;max-width:1080px;}
-#guest-dress .cv-inner{max-width:1100px;}
-.cv-suitcase{width:clamp(90px,11vw,140px);height:auto;display:block;margin:0 auto;}
+#guest-dress .cv-inner{max-width:1100px;position:relative;}
+.cv-dress{max-width:1080px;}
+.cv-suitcase{position:absolute;left:0;top:clamp(-30px,-2vw,-10px);width:clamp(90px,10vw,145px);height:auto;pointer-events:none;}
+.cv-hearts{display:block;width:clamp(120px,13vw,190px);height:auto;margin:clamp(36px,5vw,60px) auto 0;transform:translateX(-8%);}
 .cv-bring li{display:flex;align-items:center;gap:16px;text-align:right;}
 .cv-bring li::before{content:'';width:14px;height:14px;border-radius:50%;background:var(--cv-butter);flex:none;}
-@media(max-width:560px){.cv-dress{grid-template-columns:1fr;}.cv-suitcase{width:90px;order:-1;}.cv-dress-row{flex-direction:column;gap:2px;text-align:center;margin-bottom:16px;}}
+@media(max-width:560px){.cv-dress{grid-template-columns:1fr;}.cv-suitcase{position:static;display:block;width:90px;margin:0 auto 16px;}.cv-dress-row{flex-direction:column;gap:2px;text-align:center;margin-bottom:16px;}}
 
 /* rsvp */
 #rsvp .rsvp-box{max-width:520px;margin:0 auto;padding:0;background:none;box-shadow:none;border-radius:0;}
@@ -543,6 +544,7 @@ footer p[style]{color:rgba(243,235,220,.5) !important;}
 <!-- GUEST: DRESS CODE -->
 <section id="guest-dress" class="cv-sec cv-olive">
   <div class="cv-inner reveal">
+    <img class="cv-suitcase" src="suitcase.png?v=1" alt="" aria-hidden="true">
     <h2 class="cv-title" dir="ltr">Dress code &amp; Essentials</h2>
     <div class="cv-dress">
       <div>
@@ -550,7 +552,6 @@ footer p[style]{color:rgba(243,235,220,.5) !important;}
         <div class="cv-dress-row"><span class="cv-dress-k">ערב ראשון-</span><span class="cv-dress-v">חגיגה לבנה! כולם מגיעים בלבן.</span></div>
         <div class="cv-dress-row"><span class="cv-dress-k">ערב שני- החתונה-</span><span class="cv-dress-v">גווני ירוק/ כחול/ צהוב,<br>רק לא שחור או לבן (גם הגברים 😉)</span></div>
       </div>
-      <img class="cv-suitcase" src="suitcase.png?v=1" alt="" aria-hidden="true">
       <div>
         <h3>מה להביא?</h3>
         <ul class="cv-bring">
@@ -560,6 +561,7 @@ footer p[style]{color:rgba(243,235,220,.5) !important;}
         </ul>
       </div>
     </div>
+    <img class="cv-hearts" src="hearts.png?v=1" alt="" aria-hidden="true">
   </div>
 </section>
 
