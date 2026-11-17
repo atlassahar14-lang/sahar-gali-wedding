@@ -330,14 +330,19 @@ nav.mob-open.nav-light>a,nav.mob-open.nav-light .nav-dropdown-trigger{color:var(
 .cv-suitcase{transform-origin:50% 100%;animation:decoSway 4.5s ease-in-out infinite;}
 .cv-hearts{animation:decoBeat 2.6s ease-in-out infinite;}
 .cv-hearts-top{animation:decoDrift 6s ease-in-out infinite;}
-.cv-cincin{transform-origin:55% 100%;animation:decoClink 3.6s ease-in-out infinite;}
+.cv-cincin{aspect-ratio:1216/1584;}
+.cv-cincin img{position:absolute;height:auto;}
+.cin-text{transform-origin:80% 80%;animation:cinText 3.6s ease-in-out infinite;}
+.cin-glass{transform-origin:50% 100%;animation:cinGlass 3.6s ease-in-out infinite;}
+@keyframes cinText{0%,100%{transform:translate(0,0) rotate(0)}50%{transform:translate(-6%,-3%) rotate(-7deg)}}
+@keyframes cinGlass{0%,100%{transform:rotate(0)}50%{transform:rotate(6deg)}}
 @keyframes decoFloat{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-4%) rotate(-2deg)}}
 @keyframes decoPop{0%,100%{transform:rotate(0)}30%{transform:rotate(-4deg)}60%{transform:rotate(3deg)}}
 @keyframes decoSway{0%,100%{rotate:0deg}50%{rotate:-4deg}}
 @keyframes decoBeat{0%,100%{scale:1}15%{scale:1.08}30%{scale:1}45%{scale:1.05}}
 @keyframes decoDrift{0%,100%{translate:0 0}50%{translate:0 -10px}}
 @keyframes decoClink{0%,100%{rotate:0deg}40%{rotate:5deg}55%{rotate:-2deg}}
-@media(prefers-reduced-motion:reduce){.hero-deco,.cv-suitcase,.cv-hearts,.cv-hearts-top,.cv-cincin{animation:none !important;}}
+@media(prefers-reduced-motion:reduce){.hero-deco,.cv-suitcase,.cv-hearts,.cv-hearts-top,.cin-text,.cin-glass{animation:none !important;}}
 .cv-cincin{position:absolute;left:clamp(40px,12vw,200px);top:58%;transform:translateY(-50%);width:clamp(140px,16vw,250px);height:auto;pointer-events:none;}
 @media(max-width:800px){.cv-cincin{width:90px;top:auto;bottom:18px;left:34px;transform:none;}#itinerary.cv-sec{padding-bottom:140px;}}
 .gallery-carousel{position:relative;max-width:1100px;margin:0 auto;}
@@ -519,7 +524,10 @@ footer p[style]{color:rgba(243,235,220,.5) !important;}
 
 <!-- ITINERARY -->
 <section id="itinerary" class="cv-sec cv-beige">
-  <img class="cv-cincin" src="cin-cin.png?v=3" alt="" aria-hidden="true">
+  <div class="cv-cincin" aria-hidden="true">
+    <img class="cin-text" src="cin-text.png?v=1" alt="" style="left:0;top:0;width:48.52%">
+    <img class="cin-glass" src="cin-glass.png?v=1" alt="" style="left:45.97%;top:30.43%;width:54.03%">
+  </div>
   <div class="cv-inner reveal">
     <h2 class="cv-title" dir="ltr">Wedding Weekend Timeline</h2>
     <p class="cv-sub" dir="ltr">Thursday-Saturday</p>
