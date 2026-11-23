@@ -641,7 +641,7 @@ footer p[style]{color:rgba(243,235,220,.5) !important;}
       <div>
         <h3>קוד לבוש</h3>
         <div class="cv-dress-row"><span class="cv-dress-k"><span dir="ltr">Welcome Party</span> | <span dir="ltr">All White Night 🤍</span></span><span class="cv-dress-v">פותחים את החגיגות בלבן!<br>מכף רגל ועד ראש, כולנו בלבן.</span></div>
-        <div class="cv-dress-row"><span class="cv-dress-k">החתונה | <span dir="ltr">Let's Get Colorful 🌈</span></span><span class="cv-dress-v">הגיע הזמן להכניס קצת צבע!<br>ירוק, כחול או צהוב – תבחרו את הגוון שלכם ותבואו לחגוג איתנו.<br>שחור ולבן? הפעם נשאיר אותם בארון.<br>וכן, זה כולל גם את הגברים 😉</span></div>
+        <div class="cv-dress-row"><span class="cv-dress-k"><span dir="ltr">The Wedding Evening</span> | <span dir="ltr">Let's Get Colorful 🌈</span></span><span class="cv-dress-v">הגיע הזמן להכניס קצת צבע!<br>ירוק, כחול או צהוב – תבחרו את הגוון שלכם ותבואו לחגוג איתנו.<br>שחור ולבן? הפעם נשאיר אותם בארון.<br>וכן, זה כולל גם את הגברים 😉</span></div>
       </div>
       <div>
         <h3>מה להביא?</h3>
@@ -669,11 +669,19 @@ footer p[style]{color:rgba(243,235,220,.5) !important;}
           <select id="rf-count"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5+</option></select>
         </div>
         <div class="fg"><label>צריכים הסעה?*</label>
-          <select id="rf-transfer" hidden><option value="לא">לא, יש לי רכב</option><option value="כן - מPFO">כן, מפאפוס (PFO)</option><option value="כן - מLCA">כן, מלרנקה (LCA)</option></select>
-          <div class="cv-choices" role="radiogroup">
-            <button type="button" class="cv-choice active" data-v="לא" role="radio" aria-checked="true">לא, מגיע עצמאית</button>
-            <button type="button" class="cv-choice" data-v="כן - מLCA" role="radio" aria-checked="false">כן, משדה התעופה בלרנקה</button>
-            <button type="button" class="cv-choice" data-v="כן - מPFO" role="radio" aria-checked="false">כן, משדה התעופה בפאפוס</button>
+          <input type="hidden" id="rf-transfer" value="לא">
+          <div class="cv-choices" role="radiogroup" data-target="rf-transfer">
+            <button type="button" class="cv-choice active" data-v="לא" role="radio" aria-checked="true">לא, מגיעים עצמאית</button>
+            <button type="button" class="cv-choice" data-v="כן - הלוך מפאפוס 27.05" data-flight="1" role="radio" aria-checked="false">כן, רק משדה התעופה בפאפוס ב-27.05</button>
+            <button type="button" class="cv-choice" data-v="כן - חזור לפאפוס 29.05" role="radio" aria-checked="false">כן, רק מהמלון לשדה התעופה בפאפוס ב-29.05</button>
+            <button type="button" class="cv-choice" data-v="כן - הלוך וחזור" data-flight="1" role="radio" aria-checked="false">כן, גם הלוך וגם חזור</button>
+          </div>
+        </div>
+        <div class="fg" id="rf-flight-wrap" hidden><label>באיזו טיסה אתם מגיעים ב-27.05?*</label>
+          <input type="hidden" id="rf-flight" value="">
+          <div class="cv-choices" role="radiogroup" data-target="rf-flight">
+            <button type="button" class="cv-choice" data-v="ישראייר 6H591 13:50" role="radio" aria-checked="false">ישראייר | <span dir="ltr">6H591</span> | המראה 13:50</button>
+            <button type="button" class="cv-choice" data-v="ארקיע IZ151 15:35" role="radio" aria-checked="false">ארקיע | <span dir="ltr">IZ151</span> | המראה 15:35</button>
           </div>
         </div>
         <div class="fg"><label for="rf-notes">הגבלות תזונתיות / בקשות מיוחדות</label><textarea id="rf-notes"></textarea></div>
@@ -1324,8 +1332,14 @@ function showDay(i){
 }
 
 // ===== RSVP =====
+function rsvpTransferValue(){
+  const t=document.getElementById('rf-transfer').value;
+  const f=document.getElementById('rf-flight').value;
+  return (!document.getElementById('rf-flight-wrap').hidden&&f)?t+' | '+f:t;
+}
 document.getElementById('rsvpForm').addEventListener('submit',async function(e){
   e.preventDefault();
+  if(!document.getElementById('rf-flight-wrap').hidden&&!document.getElementById('rf-flight').value){alert('אנא בחרו באיזו טיסה אתם מגיעים');return;}
   if(!sbReady()){console.error('RSVP: Supabase not ready');alert('החיבור לענן לא מוגדר. פנו לסהר וגלי.');return;}
   const btn=this.querySelector('.rsvp-btn');
   const prev=btn.textContent;
@@ -1334,7 +1348,7 @@ document.getElementById('rsvpForm').addEventListener('submit',async function(e){
     name:document.getElementById('rf-name').value.trim(),
     phone:document.getElementById('rf-phone').value.trim(),
     count:parseInt(document.getElementById('rf-count').value,10)||1,
-    transfer:document.getElementById('rf-transfer').value,
+    transfer:rsvpTransferValue(),
     notes:document.getElementById('rf-notes').value.trim(),
     status:'מגיע'
   };
@@ -1622,8 +1636,8 @@ function refreshRooms(){
 function needsTransfer(g){return g.transfer&&g.transfer.startsWith('כן');}
 function transferLabel(t){
   if(!t||t.startsWith('לא'))return '-';
-  if(t.includes('PFO'))return 'פאפוס (PFO)';
-  if(t.includes('LCA'))return 'לרנקה (LCA)';
+  if(t==='כן - מPFO')return 'פאפוס (PFO)';
+  if(t==='כן - מLCA')return 'לרנקה (LCA)';
   return t.replace(/^כן\s*-\s*/,'');
 }
 function refreshTransfers(){
@@ -2107,8 +2121,10 @@ async function refreshAll(){
 (async function init(){await dbInit();})();
 // ===== RSVP transfer choices (Canva design) =====
 document.querySelectorAll('.cv-choice').forEach(b=>b.addEventListener('click',()=>{
-  document.querySelectorAll('.cv-choice').forEach(x=>{x.classList.toggle('active',x===b);x.setAttribute('aria-checked',x===b?'true':'false');});
-  document.getElementById('rf-transfer').value=b.dataset.v;
+  const grp=b.closest('.cv-choices');
+  grp.querySelectorAll('.cv-choice').forEach(x=>{x.classList.toggle('active',x===b);x.setAttribute('aria-checked',x===b?'true':'false');});
+  document.getElementById(grp.dataset.target).value=b.dataset.v;
+  if(grp.dataset.target==='rf-transfer')document.getElementById('rf-flight-wrap').hidden=!b.dataset.flight;
 }));
 </script>
 </body>
