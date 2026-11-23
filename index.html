@@ -486,8 +486,8 @@ button.cv-link{border:none;cursor:pointer;font-family:inherit;}
 .cv-bring li::before{content:'';width:14px;height:14px;border-radius:50%;background:var(--cv-beige);flex:none;}
 @media(max-width:560px){.cv-dress{grid-template-columns:1fr;}.cv-suitcase{position:static;display:block;width:90px;margin:0 auto 16px;}}
 /* phone: suitcase next to "what to bring" on the left */
-.cv-suitcase-m{display:none;}
-@media(max-width:560px){#guest-dress>.cv-suitcase{display:none;}.cv-dress>div:last-child{position:relative;}.cv-suitcase.cv-suitcase-m{display:block;position:absolute;left:-4px;top:calc(50% - 50px);width:62px;margin:0;}.cv-dress-row{flex-direction:column;gap:2px;text-align:center;margin-bottom:16px;}}
+.cv-suitcase-m,.cv-hearts-m{display:none;}
+@media(max-width:560px){#guest-dress>.cv-suitcase{display:none;}.cv-dress>div:last-child{position:relative;}.cv-suitcase.cv-suitcase-m{display:block;position:absolute;left:-4px;top:calc(50% - 50px);width:62px;margin:0;}#guest-dress .cv-inner>.cv-hearts{display:none;}.cv-hearts-m{display:block;position:absolute;right:6px;top:-26px;width:70px;height:auto;transform:rotate(-12deg);pointer-events:none;}.cv-dress-row{flex-direction:column;gap:2px;text-align:center;margin-bottom:16px;}}
 
 /* rsvp */
 #rsvp .rsvp-box{max-width:520px;margin:0 auto;padding:0;background:none;box-shadow:none;border-radius:0;}
@@ -707,6 +707,7 @@ footer p[style]{color:rgba(243,235,220,.5) !important;}
       </div>
       <div>
         <img class="cv-suitcase cv-suitcase-m" src="suitcase.png?v=1" alt="" aria-hidden="true">
+        <img class="cv-hearts-m" src="hearts.png?v=1" alt="" aria-hidden="true">
         <h3>מה להביא?</h3>
         <ul class="cv-bring">
           <li>מתאם חשמל <small class="cv-bring-note">(בריטי/<span dir="ltr">Type G</span>)</small></li>
