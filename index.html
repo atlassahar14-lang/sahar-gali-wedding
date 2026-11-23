@@ -448,6 +448,11 @@ nav.mob-open.nav-light>a,nav.mob-open.nav-light .nav-dropdown-trigger{color:var(
 .cv-bring{list-style:none;display:inline-flex;flex-direction:column;gap:4px;font-size:clamp(20px,2.6vw,26px);font-weight:300;}
 .cv-dress>div:last-child{text-align:center;}
 button.cv-link{border:none;cursor:pointer;font-family:inherit;}
+.cv-rsvp-pop{max-width:min(440px,90vw);}
+.cv-rsvp-pop .cv-flights-in{padding-top:44px;}
+.cv-rsvp-pop p{font-size:17px;margin-bottom:22px;}
+.cv-pop-btn{font-size:16px;padding:11px 30px;}
+.cv-pop-later{display:block;margin:14px auto 0;background:none;border:none;color:var(--cv-olive);font-family:inherit;font-size:14px;text-decoration:underline;cursor:pointer;opacity:.8;}
 .cv-flights{margin:auto;inset:0;border:none;padding:0;border-radius:28px;background:var(--cv-cream);color:var(--cv-ink);max-width:min(560px,92vw);max-height:88vh;font-family:'Heebo',sans-serif;direction:rtl;box-shadow:0 20px 60px rgba(0,0,0,.25);}
 .cv-flights::backdrop{background:rgba(60,70,50,.55);backdrop-filter:blur(3px);}
 .cv-flights-in{padding:clamp(28px,5vw,44px) clamp(22px,5vw,44px);text-align:center;position:relative;line-height:1.65;font-size:16px;}
@@ -650,6 +655,15 @@ footer p[style]{color:rgba(243,235,220,.5) !important;}
 </section>
 
 <!-- GUEST: DRESS CODE -->
+<dialog id="rsvpPrompt" class="cv-flights cv-rsvp-pop" onclick="if(event.target===this)this.close()">
+  <div class="cv-flights-in">
+    <button type="button" class="cv-flights-x" aria-label="סגירה" onclick="this.closest('dialog').close()">×</button>
+    <h3 dir="ltr">We Want You With Us!</h3>
+    <p>כדי שנוכל להתכונן כמו שצריך, נשמח מאוד שתאשרו את הגעתכם עד ה-1 לינואר 2027 🤍</p>
+    <button type="button" class="cv-link cv-pop-btn" onclick="goToRsvp()">לאישור הגעה</button>
+    <button type="button" class="cv-pop-later" onclick="this.closest('dialog').close()">אחר כך</button>
+  </div>
+</dialog>
 <dialog id="flightsDialog" class="cv-flights" onclick="if(event.target===this)this.close()">
   <div class="cv-flights-in">
     <button type="button" class="cv-flights-x" aria-label="סגירה" onclick="this.closest('dialog').close()">×</button>
@@ -1392,6 +1406,7 @@ document.getElementById('rsvpForm').addEventListener('submit',async function(e){
     await dbLoadAll();
     this.style.display='none';
     document.getElementById('rsvpOk').style.display='block';
+    try{localStorage.setItem('rsvpSent','1');}catch(e){}
   }catch(err){
     console.error('RSVP unexpected error',err);
     alert('שגיאה בשמירה. נסו שוב או פנו לסהר וגלי.');
@@ -2164,6 +2179,23 @@ async function refreshAll(){
   refreshGuests();refreshRooms();refreshTransfers();refreshSuppliers();refreshBudget();refreshTasks();refreshFiles();refreshGalleryAdmin();loadContent();refreshGuestGallery();
 }
 (async function init(){await dbInit();})();
+// ===== RSVP popup on entry =====
+function goToRsvp(){
+  document.getElementById('rsvpPrompt').close();
+  document.getElementById('rsvp').scrollIntoView({behavior:'smooth'});
+}
+(function(){
+  let seen=false;
+  try{seen=sessionStorage.getItem('rsvpPromptSeen')==='1'||localStorage.getItem('rsvpSent')==='1';}catch(e){}
+  if(seen||location.hash==='#rsvp')return;
+  setTimeout(()=>{
+    const d=document.getElementById('rsvpPrompt');
+    const adm=document.getElementById('admin');
+    if(!d||d.open||(adm&&adm.classList.contains('show'))||document.querySelector('dialog[open]'))return;
+    d.showModal();
+    try{sessionStorage.setItem('rsvpPromptSeen','1');}catch(e){}
+  },2500);
+})();
 // ===== RSVP transfer choices (Canva design) =====
 document.querySelectorAll('.cv-choice').forEach(b=>b.addEventListener('click',()=>{
   const grp=b.closest('.cv-choices');
