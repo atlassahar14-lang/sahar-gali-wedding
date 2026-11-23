@@ -488,7 +488,8 @@ button.cv-link{border:none;cursor:pointer;font-family:inherit;}
 .cv-bring li::before{content:'';width:14px;height:14px;border-radius:50%;background:var(--cv-beige);flex:none;}
 @media(max-width:560px){.cv-dress{grid-template-columns:1fr;}.cv-suitcase{position:static;display:block;width:90px;margin:0 auto 16px;}}
 /* phone: suitcase next to "what to bring" on the left */
-.cv-suitcase-m,.cv-hearts-m{display:none;}
+.cv-suitcase-m,.cv-hearts-m,.cv-hearts-dc{display:none;}
+@media(max-width:560px){#guest-dress>.cv-hearts-top{display:none;}.cv-dress>div:first-child{position:relative;}.cv-hearts-dc{display:block;position:absolute;left:14px;top:-6px;width:76px;height:auto;transform:rotate(2deg) scaleX(-1);pointer-events:none;animation:decoDrift 6s ease-in-out infinite;}}
 .br-m{display:none;}@media(max-width:560px){.br-m{display:inline;}}
 @media(min-width:561px){#guest-dress .cv-inner>.cv-hearts{margin-top:clamp(-140px,-9vw,-60px);transform:translateX(-115%);}}
 @media(max-width:560px){#guest-dress>.cv-suitcase{display:none;}.cv-dress>div:last-child{position:relative;}.cv-suitcase.cv-suitcase-m{display:block;position:absolute;left:-4px;top:calc(50% - 50px);width:62px;margin:0;}#guest-dress .cv-inner>.cv-hearts{display:none;}.cv-hearts-m{display:block;position:absolute;right:6px;top:-26px;width:70px;height:auto;transform:rotate(-12deg);pointer-events:none;}.cv-dress-row{flex-direction:column;gap:2px;text-align:center;margin-bottom:16px;}}
@@ -536,6 +537,7 @@ footer{background:var(--cv-olive);border-top:none;}
 .ft-names{font-family:'Tenor Sans','Heebo',sans-serif;color:var(--cv-cream);opacity:.35;}
 .ft-txt{color:var(--cv-cream);}
 .ft-sep{color:var(--cv-butter);}
+.ft-names-img{display:block;margin:0 auto;width:min(420px,78vw);height:auto;}
 footer p[style]{color:rgba(243,235,220,.5) !important;}
 .footer-decor{display:none;}
 </style>
@@ -571,12 +573,12 @@ footer p[style]{color:rgba(243,235,220,.5) !important;}
   <!-- HERO -->
   <section id="hero" class="hero-invite">
     <div class="hero-invite-img hero-invite-desktop hero-stage"><div class="hero-art">
-      <img class="hero-base" src="invitation-hero-base.jpg?v=4" alt="Gali & Sahar - 27-29 May 2027 · Paphos, Cyprus">
+      <img class="hero-base" src="invitation-hero-base.jpg?v=5" alt="Gali & Sahar - 27-29 May 2027 · Paphos, Cyprus">
       <img class="hero-deco deco-hearts" src="hero-hearts.png?v=1" alt="" aria-hidden="true" style="left:10.80%;top:18.89%;width:15.97%">
       <img class="hero-deco deco-bottle" src="hero-bottle.png?v=1" alt="" aria-hidden="true" style="left:76.81%;top:10.43%;width:16.67%">
     </div></div>
     <div class="hero-invite-img hero-invite-mobile hero-stage"><div class="hero-art">
-      <img class="hero-base" src="invitation-portrait-base.jpg?v=5" alt="Gali & Sahar - 27-29 May 2027 · Paphos, Cyprus">
+      <img class="hero-base" src="invitation-portrait-base.jpg?v=6" alt="Gali & Sahar - 27-29 May 2027 · Paphos, Cyprus">
       <img class="hero-deco deco-hearts hearts-m-top" src="hero-hearts-m-top.png?v=1" alt="" aria-hidden="true">
       <img class="hero-deco deco-bottle" src="hero-bottle-m.png?v=1" alt="" aria-hidden="true" style="left:67.29%;top:29%;width:23.89%">
     </div></div>
@@ -710,6 +712,7 @@ footer p[style]{color:rgba(243,235,220,.5) !important;}
     <h2 class="cv-title" dir="ltr">Dress Code &amp; Essentials</h2>
     <div class="cv-dress">
       <div>
+        <img class="cv-hearts-dc" src="hearts.png?v=1" alt="" aria-hidden="true">
         <h3>קוד לבוש</h3>
         <div class="cv-dress-row"><span class="cv-dress-k"><span dir="ltr">Welcome Party</span> | <span dir="ltr">All White Night</span></span><span class="cv-dress-v">פותחים את החגיגות בלבן!<br>מכף רגל ועד ראש, כולנו בלבן.</span></div>
         <div class="cv-dress-row"><span class="cv-dress-k"><span dir="ltr">Wedding Event</span> | <span dir="ltr">Colorful Evening</span></span><span class="cv-dress-v">הגיע הזמן להכניס קצת צבע!<br>נא להגיע בגווני <strong>כחול, ירוק או צהוב</strong>.<br>שחור ולבן? הפעם נשאיר בארון.<br>וכן, זה כולל גם את הגברים</span></div>
@@ -826,8 +829,8 @@ footer p[style]{color:rgba(243,235,220,.5) !important;}
       <circle cx="44" cy="42" r="2.2" fill="#CB9A26"/>
     </svg>
   </div>
-  <div class="ft-names">סהר & גלי</div>
-  <p class="ft-txt" dir="ltr">27-29.05.2027 <span class="ft-sep">-</span> Droushia Heights · Cyprus</p>
+  <img class="ft-names-img" src="footer-names.png?v=1" alt="Gali and Sahar">
+  <p class="ft-txt" dir="ltr">27-29.05.2027 <span class="ft-sep">-</span> Paphos · Cyprus</p>
   <p style="font-size:10px;color:rgba(95,110,136,.35);margin-top:20px;letter-spacing:2px;">CON AMORE · באהבה</p>
 </footer>
 
