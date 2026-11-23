@@ -413,6 +413,16 @@ nav.mob-open.nav-light>a,nav.mob-open.nav-light .nav-dropdown-trigger{color:var(
 .cv-dress-v{font-size:clamp(14px,1.8vw,17px);line-height:1.5;font-weight:300;}
 .cv-bring{list-style:none;display:inline-flex;flex-direction:column;gap:4px;font-size:clamp(20px,2.6vw,26px);font-weight:300;}
 .cv-dress>div:last-child{text-align:center;}
+button.cv-link{border:none;cursor:pointer;font-family:inherit;}
+.cv-flights{margin:auto;inset:0;border:none;padding:0;border-radius:28px;background:var(--cv-cream);color:var(--cv-ink);max-width:min(560px,92vw);max-height:88vh;font-family:'Heebo',sans-serif;direction:rtl;box-shadow:0 20px 60px rgba(0,0,0,.25);}
+.cv-flights::backdrop{background:rgba(60,70,50,.55);backdrop-filter:blur(3px);}
+.cv-flights-in{padding:clamp(28px,5vw,44px) clamp(22px,5vw,44px);text-align:center;position:relative;line-height:1.65;font-size:16px;}
+.cv-flights h3{font-family:'Tenor Sans','Heebo',sans-serif;font-weight:400;font-size:clamp(22px,3vw,28px);color:var(--cv-olive);margin-bottom:14px;}
+.cv-flights h4{font-weight:500;font-size:18px;color:var(--cv-olive);margin:22px 0 6px;padding-top:16px;border-top:1px solid rgba(109,123,89,.25);}
+.cv-flights p{margin-bottom:10px;}
+.cv-flights .cv-route{color:var(--cv-mustard);}
+.cv-flights .cv-note{font-size:14px;font-style:italic;opacity:.8;margin-top:18px;}
+.cv-flights-x{position:absolute;top:12px;left:16px;background:none;border:none;font-size:30px;line-height:1;color:var(--cv-olive);cursor:pointer;}
 #guest-dress .cv-inner{max-width:1100px;position:relative;}
 .cv-dress{max-width:1080px;}
 .cv-dress-row{flex-direction:column;align-items:center;text-align:center;gap:6px;margin-bottom:26px;}.cv-dress-k{font-size:clamp(22px,2.6vw,28px);white-space:normal;}.cv-dress-v{font-size:clamp(15px,1.8vw,18px);}
@@ -571,6 +581,7 @@ footer p[style]{color:rgba(243,235,220,.5) !important;}
       <div class="cv-blob">
         <h3>טיסות</h3>
         <p>ישנן שתי טיסות של חברות ישראליות שאנו ממליצים לכם לסגור, ולהגעתן יהיו הסעות.</p>
+        <button type="button" class="cv-link" onclick="document.getElementById('flightsDialog').showModal()">לטיסות המומלצות</button>
       </div>
       <div class="cv-blob">
         <h3>שאטלים</h3>
@@ -605,6 +616,22 @@ footer p[style]{color:rgba(243,235,220,.5) !important;}
 </section>
 
 <!-- GUEST: DRESS CODE -->
+<dialog id="flightsDialog" class="cv-flights" onclick="if(event.target===this)this.close()">
+  <div class="cv-flights-in">
+    <button type="button" class="cv-flights-x" aria-label="סגירה" onclick="this.closest('dialog').close()">×</button>
+    <h3>טיסות | <span dir="ltr">Let's Fly Together ✈️</span></h3>
+    <p>בחרנו עבורכם את הטיסות שהכי מתאימות לסופ״ש שלנו, וכדי לעשות לכם את החיים קלים, נדאג גם לשאטלים מהשדה למלון ובחזרה!</p>
+    <h4>🛫 הלוך | יום חמישי, 27.5.2027</h4>
+    <p class="cv-route">תל אביב (TLV) ← פאפוס (PFO)</p>
+    <p><strong>ישראייר | <span dir="ltr">6H591</span></strong><br>המראה: 13:50</p>
+    <p><strong>ארקיע | <span dir="ltr">IZ151</span></strong><br>המראה: 15:35</p>
+    <h4>🛬 חזור | יום שבת, 29.5.2027</h4>
+    <p class="cv-route">פאפוס (PFO) ← תל אביב (TLV)</p>
+    <p><strong>ישראייר | <span dir="ltr">6H596</span></strong><br>המראה: 16:55</p>
+    <p>ממליצים לשריין את הטיסות מראש כדי שנוכל כולנו להתחיל את החגיגות יחד! 🤍</p>
+    <p class="cv-note">שימו לב: השאטלים שלנו יפעלו עבור הטיסות המפורטות כאן בלבד. בחרתם לטוס בטיסה אחרת? בשמחה! רק חשוב לדאוג להגעה עצמאית למלון ולשדה התעופה.</p>
+  </div>
+</dialog>
 <section id="guest-dress" class="cv-sec cv-olive">
   <img class="cv-suitcase" src="suitcase.png?v=1" alt="" aria-hidden="true">
   <img class="cv-hearts-top" src="hearts.png?v=1" alt="" aria-hidden="true">
