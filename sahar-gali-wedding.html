@@ -448,6 +448,7 @@ nav.mob-open.nav-light>a,nav.mob-open.nav-light .nav-dropdown-trigger{color:var(
 .cv-bring{list-style:none;display:inline-flex;flex-direction:column;gap:4px;font-size:clamp(20px,2.6vw,26px);font-weight:300;}
 .cv-dress>div:last-child{text-align:center;}
 button.cv-link{border:none;cursor:pointer;font-family:inherit;}
+@media(max-width:600px){nav .nav-dropdown-menu{display:none !important;}nav .nav-dropdown.open .nav-dropdown-menu{display:block !important;}nav .nav-dropdown-trigger::after{display:inline-block;transition:transform .2s;}nav .nav-dropdown.open .nav-dropdown-trigger::after{transform:rotate(180deg);}}
 .cv-bring-note{font-size:.6em;opacity:.85;white-space:nowrap;}
 .cv-rsvp-pop{max-width:min(440px,90vw);}
 .cv-rsvp-pop .cv-flights-in{padding-top:44px;}
