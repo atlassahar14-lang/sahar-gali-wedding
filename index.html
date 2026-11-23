@@ -484,7 +484,10 @@ button.cv-link{border:none;cursor:pointer;font-family:inherit;}
 .cv-hearts{display:block;width:clamp(120px,13vw,190px);height:auto;margin:clamp(8px,1.5vw,20px) auto 0;transform:translateX(-12%);}
 .cv-bring li{display:flex;align-items:center;gap:16px;text-align:right;}
 .cv-bring li::before{content:'';width:14px;height:14px;border-radius:50%;background:var(--cv-beige);flex:none;}
-@media(max-width:560px){.cv-dress{grid-template-columns:1fr;}.cv-suitcase{position:static;display:block;width:90px;margin:0 auto 16px;}.cv-dress-row{flex-direction:column;gap:2px;text-align:center;margin-bottom:16px;}}
+@media(max-width:560px){.cv-dress{grid-template-columns:1fr;}.cv-suitcase{position:static;display:block;width:90px;margin:0 auto 16px;}}
+/* phone: suitcase next to "what to bring" on the left */
+.cv-suitcase-m{display:none;}
+@media(max-width:560px){#guest-dress>.cv-suitcase{display:none;}.cv-dress>div:last-child{position:relative;}.cv-suitcase.cv-suitcase-m{display:block;position:absolute;left:-4px;top:calc(50% - 50px);width:62px;margin:0;}.cv-dress-row{flex-direction:column;gap:2px;text-align:center;margin-bottom:16px;}}
 
 /* rsvp */
 #rsvp .rsvp-box{max-width:520px;margin:0 auto;padding:0;background:none;box-shadow:none;border-radius:0;}
@@ -703,6 +706,7 @@ footer p[style]{color:rgba(243,235,220,.5) !important;}
         <div class="cv-dress-row"><span class="cv-dress-k"><span dir="ltr">The Wedding Evening</span> | <span dir="ltr">Let's Get Colorful 🌈</span></span><span class="cv-dress-v">הגיע הזמן להכניס קצת צבע!<br>ירוק, כחול או צהוב – תבחרו את הגוון שלכם ותבואו לחגוג איתנו.<br>שחור ולבן? הפעם נשאיר אותם בארון.<br>וכן, זה כולל גם את הגברים 😉</span></div>
       </div>
       <div>
+        <img class="cv-suitcase cv-suitcase-m" src="suitcase.png?v=1" alt="" aria-hidden="true">
         <h3>מה להביא?</h3>
         <ul class="cv-bring">
           <li>מתאם חשמל <small class="cv-bring-note">(בריטי/<span dir="ltr">Type G</span>)</small></li>
