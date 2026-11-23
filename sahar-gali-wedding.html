@@ -2186,16 +2186,17 @@ function goToRsvp(){
   document.getElementById('rsvp').scrollIntoView({behavior:'smooth'});
 }
 (function(){
-  let seen=false;
-  try{seen=sessionStorage.getItem('rsvpPromptSeen')==='1'||localStorage.getItem('rsvpSent')==='1';}catch(e){}
-  if(seen||location.hash==='#rsvp')return;
-  setTimeout(()=>{
+  let sent=false;
+  try{sent=localStorage.getItem('rsvpSent')==='1';}catch(e){}
+  if(sent)return;
+  function tryShow(){
     const d=document.getElementById('rsvpPrompt');
     const adm=document.getElementById('admin');
-    if(!d||d.open||(adm&&adm.classList.contains('show'))||document.querySelector('dialog[open]'))return;
+    const busy=!d||d.open||(adm&&adm.classList.contains('show'))||document.querySelector('dialog[open]')||document.querySelector('.overlay.show');
+    if(busy){setTimeout(tryShow,10000);return;}
     d.showModal();
-    try{sessionStorage.setItem('rsvpPromptSeen','1');}catch(e){}
-  },120000);
+  }
+  setTimeout(tryShow,120000);
 })();
 // ===== RSVP transfer choices (Canva design) =====
 document.querySelectorAll('.cv-choice').forEach(b=>b.addEventListener('click',()=>{
