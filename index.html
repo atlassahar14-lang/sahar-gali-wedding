@@ -2194,7 +2194,7 @@ function goToRsvp(){
     if(!d||d.open||(adm&&adm.classList.contains('show'))||document.querySelector('dialog[open]'))return;
     d.showModal();
     try{sessionStorage.setItem('rsvpPromptSeen','1');}catch(e){}
-  },2500);
+  },120000);
 })();
 // ===== RSVP transfer choices (Canva design) =====
 document.querySelectorAll('.cv-choice').forEach(b=>b.addEventListener('click',()=>{
