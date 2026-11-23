@@ -450,6 +450,10 @@ nav.mob-open.nav-light>a,nav.mob-open.nav-light .nav-dropdown-trigger{color:var(
 button.cv-link{border:none;cursor:pointer;font-family:inherit;}
 /* phone hero: hearts above the names, bottle below the text */
 .hero-invite-mobile .hero-art{transform:translateY(-11%);}
+@media(max-width:768px){
+  #hero.hero-invite{min-height:0;height:132vw;}
+  .hero-invite-mobile .hero-art{transform:none;inset:auto;left:0;top:-55vw;margin:0;width:100%;height:177.78vw;}
+}
 .hero-invite-mobile .hearts-m-top{left:6%;top:50.5%;width:16%;}
 .hero-invite-mobile .hearts-m-top{animation:heartsSideFloat 3.6s ease-in-out infinite;}
 @keyframes heartsSideFloat{0%,100%{transform:translateY(0) rotate(0) scale(1)}50%{transform:translateY(-14%) rotate(-6deg) scale(1.06)}}
