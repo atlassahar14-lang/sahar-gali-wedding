@@ -485,6 +485,19 @@ button.cv-link{border:none;cursor:pointer;font-family:inherit;}
 .cv-bring li{display:flex;align-items:center;gap:16px;text-align:right;}
 .cv-bring li::before{content:'';width:14px;height:14px;border-radius:50%;background:var(--cv-beige);flex:none;}
 @media(max-width:560px){.cv-dress{grid-template-columns:1fr;}.cv-suitcase{position:static;display:block;width:90px;margin:0 auto 16px;}}
+/* dress code cards */
+.cv-dc{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:clamp(14px,2vw,22px);margin-top:6px;}
+.cv-dc-card{background:var(--cv-cream);color:var(--cv-ink);border-radius:28px;padding:clamp(22px,2.6vw,30px) clamp(18px,2vw,24px);text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px;box-shadow:0 10px 30px rgba(0,0,0,.08);}
+.cv-dc-day{font-size:13px;letter-spacing:2px;color:var(--cv-mustard);}
+.cv-dc-name{font-family:'Tenor Sans','Heebo',sans-serif;font-size:clamp(20px,2.2vw,24px);color:var(--cv-olive);line-height:1.2;}
+.cv-dc-theme{font-size:14px;letter-spacing:1.5px;color:var(--cv-slate);text-transform:uppercase;}
+.cv-dc-sw{display:flex;gap:10px;justify-content:center;margin:10px 0 4px;}
+.cv-dc-sw span,.cv-dc-x{width:34px;height:34px;border-radius:50%;background:var(--c);border:1.5px solid rgba(79,91,63,.25);box-shadow:inset 0 -3px 6px rgba(0,0,0,.06);}
+.cv-dc-main{font-size:clamp(18px,2vw,21px);font-weight:500;color:var(--cv-olive);margin:4px 0 0;}
+.cv-dc-sub{font-size:15px;line-height:1.55;font-weight:300;margin:0;}
+.cv-dc-no{display:flex;align-items:center;justify-content:center;gap:8px;margin:8px 0 2px;padding-top:12px;border-top:1px solid rgba(109,123,89,.2);font-size:15px;font-weight:400;color:var(--cv-ink);flex-wrap:wrap;}
+.cv-dc-x{width:24px;height:24px;flex:none;position:relative;}
+.cv-dc-x::after{content:'';position:absolute;left:50%;top:-4px;bottom:-4px;width:2px;background:#B5543F;transform:translateX(-50%) rotate(45deg);border-radius:2px;}
 /* phone: suitcase next to "what to bring" on the left */
 .cv-suitcase-m,.cv-hearts-m{display:none;}
 @media(min-width:561px){#guest-dress .cv-inner>.cv-hearts{margin-top:clamp(-140px,-9vw,-60px);transform:translateX(-115%);}}
@@ -703,8 +716,26 @@ footer p[style]{color:rgba(243,235,220,.5) !important;}
     <div class="cv-dress">
       <div>
         <h3>קוד לבוש</h3>
-        <div class="cv-dress-row"><span class="cv-dress-k"><span dir="ltr">Welcome Party</span> | <span dir="ltr">All White Night 🤍</span></span><span class="cv-dress-v">פותחים את החגיגות בלבן!<br>מכף רגל ועד ראש, כולנו בלבן.</span></div>
-        <div class="cv-dress-row"><span class="cv-dress-k"><span dir="ltr">The Wedding Evening</span> | <span dir="ltr">Let's Get Colorful 🌈</span></span><span class="cv-dress-v">הגיע הזמן להכניס קצת צבע!<br>ירוק, כחול או צהוב – תבחרו את הגוון שלכם ותבואו לחגוג איתנו.<br>שחור ולבן? הפעם נשאיר אותם בארון.<br>וכן, זה כולל גם את הגברים 😉</span></div>
+        <div class="cv-dc">
+          <div class="cv-dc-card">
+            <div class="cv-dc-day">חמישי 27.5</div>
+            <div class="cv-dc-name" dir="ltr">Welcome Party</div>
+            <div class="cv-dc-theme" dir="ltr">All White Night</div>
+            <div class="cv-dc-sw" aria-hidden="true"><span style="--c:#FFFFFF"></span></div>
+            <p class="cv-dc-main">כולנו בלבן, מכף רגל ועד ראש</p>
+            <p class="cv-dc-sub">פותחים את החגיגות בלבן!</p>
+          </div>
+          <div class="cv-dc-card">
+            <div class="cv-dc-day">שישי 28.5</div>
+            <div class="cv-dc-name" dir="ltr">The Wedding Evening</div>
+            <div class="cv-dc-theme" dir="ltr">Let's Get Colorful</div>
+            <div class="cv-dc-sw" aria-hidden="true"><span style="--c:#8FA672"></span><span style="--c:#7F9CC4"></span><span style="--c:#EBCB62"></span></div>
+            <p class="cv-dc-main">ירוק, כחול או צהוב</p>
+            <p class="cv-dc-sub">הגיע הזמן להכניס קצת צבע!<br>תבחרו את הגוון שלכם ותבואו לחגוג איתנו.</p>
+            <div class="cv-dc-no"><span class="cv-dc-x" style="--c:#2B2B2B" aria-hidden="true"></span><span class="cv-dc-x" style="--c:#FFFFFF" aria-hidden="true"></span><span>שחור ולבן? הפעם נשאיר אותם בארון.</span></div>
+            <p class="cv-dc-sub">וכן, זה כולל גם את הגברים 😉</p>
+          </div>
+        </div>
       </div>
       <div>
         <img class="cv-suitcase cv-suitcase-m" src="suitcase.png?v=1" alt="" aria-hidden="true">
