@@ -1438,7 +1438,7 @@ function refreshGuests(){
       <td>${g.count||1}</td>
       <td style="font-size:12px;">${g.days||'-'}</td>
       <td><span class="badge ${g.status==='מגיע'?'badge-yes':g.status==='לא מגיע'?'badge-no':'badge-maybe'}">${g.status}</span></td>
-      <td style="font-size:12px;">${g.transfer||'-'}</td>
+      <td style="font-size:12px;">${transferCell(g.transfer)}</td>
       <td style="font-size:12px;max-width:150px;">${g.notes||'-'}</td>
       <td><button class="adm-btn adm-btn-sm adm-btn-red" onclick="removeGuest('${g.id}')">✕</button></td>
     </tr>`).join('');
@@ -1634,11 +1634,23 @@ function refreshRooms(){
 
 // ===== TRANSFERS =====
 function needsTransfer(g){return g.transfer&&g.transfer.startsWith('כן');}
+function transferParts(t){
+  t=t||'';
+  const [kind,flight]=t.split(' | ');
+  return {kind:(kind||'').replace(/^כן\s*-\s*/,''),flight:flight||''};
+}
+function transferCell(t){
+  if(!t||t==='-')return '-';
+  if(t.startsWith('לא'))return 'מגיעים עצמאית';
+  const p=transferParts(t);
+  const kind=t==='כן - מPFO'?'פאפוס (PFO)':t==='כן - מLCA'?'לרנקה (LCA)':p.kind;
+  return `<span class="badge badge-yes">${kind}</span>`+(p.flight?`<div style="margin-top:4px;">✈️ ${p.flight}</div>`:'');
+}
 function transferLabel(t){
   if(!t||t.startsWith('לא'))return '-';
   if(t==='כן - מPFO')return 'פאפוס (PFO)';
   if(t==='כן - מLCA')return 'לרנקה (LCA)';
-  return t.replace(/^כן\s*-\s*/,'');
+  return transferParts(t).kind;
 }
 function refreshTransfers(){
   const guests=getGuests().filter(g=>needsTransfer(g));
@@ -1659,7 +1671,7 @@ function refreshTransfers(){
       <td style="color:var(--cream);">${g.name||'-'}</td>
       <td style="direction:ltr;font-size:12px;">${g.phone||'-'}</td>
       <td>${g.count||1}</td>
-      <td><span class="badge badge-yes">${transferLabel(g.transfer)}</span></td>
+      <td style="font-size:12px;">${transferCell(g.transfer)}</td>
       <td style="font-size:12px;">${g.days||'-'}</td>
       <td style="font-size:12px;max-width:150px;">${g.notes||'-'}</td>
     </tr>`).join('');
