@@ -379,6 +379,8 @@ nav.mob-open.nav-light>a,nav.mob-open.nav-light .nav-dropdown-trigger{color:var(
 @media(prefers-reduced-motion:reduce){.hero-deco,.cv-suitcase,.cv-hearts,.cv-hearts-top,.cin-text,.cin-glass{animation:none !important;}}
 .cv-cincin{position:absolute;left:clamp(40px,12vw,200px);top:58%;transform:translateY(-50%);width:clamp(140px,16vw,250px);height:auto;pointer-events:none;}
 @media(max-width:800px){.cv-cincin{width:90px;top:auto;bottom:18px;left:34px;transform:none;}#itinerary.cv-sec{padding-bottom:140px;}}
+.cv-cincin-m{display:none;}
+@media(max-width:560px){#itinerary>.cv-cincin{display:none;}#itinerary.cv-sec{padding-bottom:clamp(56px,9vw,110px);}.cv-day{position:relative;}.cv-cincin.cv-cincin-m{display:block;left:6px;top:62px;bottom:auto;width:78px;}}
 .gallery-carousel{position:relative;max-width:1100px;margin:0 auto;}
 #galleryGrid.gallery-grid{display:flex;grid-template-columns:none;gap:clamp(12px,2vw,22px);overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;padding-bottom:12px;scrollbar-width:thin;scrollbar-color:rgba(241,220,144,.6) transparent;-webkit-overflow-scrolling:touch;}
 #galleryGrid .gallery-item{flex:0 0 calc((100% - 2*clamp(12px,2vw,22px))/3);scroll-snap-align:start;}
@@ -609,11 +611,15 @@ footer p[style]{color:rgba(243,235,220,.5) !important;}
       </div>
       <div class="cv-day">
         <div class="cv-day-name">שישי 28.5</div>
+        <div class="cv-cincin cv-cincin-m" aria-hidden="true">
+          <img class="cin-text" src="cin-text.png?v=1" alt="" style="left:0;top:0;width:48.52%">
+          <img class="cin-glass" src="cin-glass.png?v=1" alt="" style="left:45.97%;top:30.43%;width:54.03%">
+        </div>
         <ul class="cv-day-list">
           <li><span class="cv-t">8:30-11:00</span>ארוחת בוקר במלון</li>
           <li><span class="cv-t">17:30</span>קבלת פנים ותחילת החגיגות</li>
           <li><span class="cv-t">19:00</span>טקס החופה</li>
-          <li><span class="cv-t">20:00</span>ארוחת ערב וחגיגה</li>
+          <li><span class="cv-t">20:00</span>ארוחת ערב וריקודים</li>
         </ul>
       </div>
       <div class="cv-day">
